@@ -315,18 +315,4 @@ public int getAlpha() {
 	return 0;
 }
 
-/**
- * Returns an <code>RGBA</code> representing the receiver.
- *
- * @return the RGBA for the color
- *
- * @exception SWTException <ul>
- *    <li>ERROR_GRAPHIC_DISPOSED - if the receiver has been disposed</li>
- * </ul>
- * @since 3.104
- */
-public RGBA getRGBA () {
-	if (isDisposed()) SWT.error(SWT.ERROR_GRAPHIC_DISPOSED);
-	return new RGBA(getRed(), getGreen(), getBlue(), getAlpha());
-}
 }

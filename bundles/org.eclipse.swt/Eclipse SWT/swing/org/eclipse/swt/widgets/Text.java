@@ -11,25 +11,17 @@
 package org.eclipse.swt.widgets;
 
 
-import java.awt.ComponentOrientation;
-import java.awt.Container;
-import java.util.EventObject;
+import java.awt.*;
+import java.util.*;
 
-import javax.swing.JButton;
-import javax.swing.RootPaneContainer;
-import javax.swing.event.DocumentEvent;
-import javax.swing.text.BadLocationException;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.text.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.internal.swing.CText;
-import org.eclipse.swt.internal.swing.TextFilterEvent;
-import org.eclipse.swt.internal.swing.UIThreadUtils;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class are selectable user interface
@@ -42,7 +34,7 @@ import org.eclipse.swt.internal.swing.UIThreadUtils;
  * <dd>DefaultSelection, Modify, Verify</dd>
  * </dl>
  * <p>
- * Note: Only one of the styles MULTI and SINGLE may be specified. 
+ * Note: Only one of the styles MULTI and SINGLE may be specified.
  * </p><p>
  * IMPORTANT: This class is <em>not</em> intended to be subclassed.
  * </p>
@@ -50,7 +42,7 @@ import org.eclipse.swt.internal.swing.UIThreadUtils;
 public class Text extends Scrollable {
 	int tabs, oldStart, oldEnd;
 	boolean doubleClick, ignoreModify, ignoreCharacter;
-	
+
   /**
   * The maximum number of characters that can be entered
   * into a text widget.
@@ -60,19 +52,19 @@ public class Text extends Scrollable {
   * </p>
   */
 	public static final int LIMIT;
-	
+
 	/**
 	* The delimiter used by multi-line text widgets.  When text
 	* is queried and from the widget, it will be delimited using
 	* this delimiter.
 	*/
 	public static final String DELIMITER;
-	
+
 	/*
 	* This code is intentionally commented.
 	*/
 //	static final char PASSWORD;
-	
+
 	/*
 	* These values can be different on different platforms.
 	* Therefore they are not initialized in the declaration
@@ -82,14 +74,14 @@ public class Text extends Scrollable {
 		LIMIT = 0x7FFFFFFF;
 		DELIMITER = System.getProperty("line.separator");//"\n";
 	}
-	
+
 /**
  * Constructs a new instance of this class given its parent
  * and a style value describing its behavior and appearance.
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -342,10 +334,12 @@ public void copy () {
   ((CText)handle).copy();
 }
 
+@Override
 Container createHandle () {
   return (Container)CText.Factory.newInstance(this, style);
 }
 
+@Override
 void createWidget () {
 	super.createWidget ();
 	doubleClick = true;
@@ -449,7 +443,7 @@ public int getCharCount () {
  * default action of the text widget when the user
  * double clicks.
  * </p>
- * 
+ *
  * @return whether or not double click is enabled
  *
  * @exception SWTException <ul>
@@ -469,14 +463,14 @@ public boolean getDoubleClickEnabled () {
  * displayed when the user enters text or the
  * text is changed by the programmer.
  * </p>
- * 
+ *
  * @return the echo character
  *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #setEchoChar
  */
 public char getEchoChar () {
@@ -488,7 +482,7 @@ public char getEchoChar () {
  * Returns the editable state.
  *
  * @return whether or not the receiver is editable
- * 
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
@@ -523,7 +517,7 @@ public int getLineCount () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #DELIMITER
  */
 public String getLineDelimiter () {
@@ -551,14 +545,15 @@ public int getLineHeight () {
  * constants <code>SWT.LEFT_TO_RIGHT</code> or <code>SWT.RIGHT_TO_LEFT</code>.
  *
  * @return the orientation style
- * 
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 2.1.2
  */
+@Override
 public int getOrientation () {
 	checkWidget();
 	return style & (SWT.LEFT_TO_RIGHT | SWT.RIGHT_TO_LEFT);
@@ -608,7 +603,7 @@ public int getSelectionCount () {
  * Gets the selected text, or an empty string if there is no current selection.
  *
  * @return the selected text
- * 
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
@@ -700,19 +695,19 @@ public String getText (int start, int end) {
 }
 
 /**
- * Returns the maximum number of characters that the receiver is capable of holding. 
+ * Returns the maximum number of characters that the receiver is capable of holding.
  * <p>
  * If this has not been changed by <code>setTextLimit()</code>,
  * it will be the constant <code>Text.LIMIT</code>.
  * </p>
- * 
+ *
  * @return the text limit
- * 
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #LIMIT
  */
 public int getTextLimit () {
@@ -831,7 +826,7 @@ public void removeModifyListener (ModifyListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (eventTable == null) return;
-	eventTable.unhook (SWT.Modify, listener);	
+	eventTable.unhook (SWT.Modify, listener);
 }
 
 /**
@@ -856,7 +851,7 @@ public void removeSelectionListener (SelectionListener listener) {
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (eventTable == null) return;
 	eventTable.unhook (SWT.Selection, listener);
-	eventTable.unhook (SWT.DefaultSelection,listener);	
+	eventTable.unhook (SWT.DefaultSelection,listener);
 }
 
 /**
@@ -880,7 +875,7 @@ public void removeVerifyListener (VerifyListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (eventTable == null) return;
-	eventTable.unhook (SWT.Verify, listener);	
+	eventTable.unhook (SWT.Verify, listener);
 }
 
 /**
@@ -910,7 +905,7 @@ public void selectAll () {
 //	if (!hooks (SWT.Verify) && !filters (SWT.Verify)) return true;
 //	char key = event.character;
 //	int stateMask = event.stateMask;
-//	
+//
 //	/*
 //	* Disable all magic keys that could modify the text
 //	* and don't send events when Alt, Shift or Ctrl is
@@ -1018,7 +1013,7 @@ public void selectAll () {
  * Note: This operation is a hint and is not supported on
  * platforms that do not have this concept.
  * </p>
- * 
+ *
  * @param doubleClick the new double click flag
  *
  * @exception SWTException <ul>
@@ -1084,14 +1079,15 @@ public void setEditable (boolean editable) {
  * </p>
  *
  * @param orientation new orientation style
- * 
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 2.1.2
  */
+@Override
 public void setOrientation (int orientation) {
 	checkWidget();
 	int flags = SWT.RIGHT_TO_LEFT | SWT.LEFT_TO_RIGHT;
@@ -1301,7 +1297,7 @@ public void setText (String string) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #LIMIT
  */
 public void setTextLimit (int limit) {
@@ -1336,7 +1332,7 @@ public void setTopIndex (int index) {
  * in the receiver, this method simply returns.  Otherwise,
  * lines are scrolled until the selection is visible.
  * </p>
- * 
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
@@ -1413,7 +1409,7 @@ String verifyText (String string, int start, int end, Event keyEvent) {
 //	if (ignoreCharacter) return null;
 //	LRESULT result = super.WM_CHAR (wParam, lParam);
 //	if (result != null) return result;
-//	
+//
 //	/*
 //	* Bug in Windows.  When the user types CTRL and BS
 //	* in an edit control, a DEL character is generated.
@@ -1427,7 +1423,7 @@ String verifyText (String string, int start, int end, Event keyEvent) {
 //				return LRESULT.ZERO;
 //			}
 //	}
-//	
+//
 //	/*
 //	* Feature in Windows.  For some reason, when the
 //	* widget is a single line text widget, when the
@@ -1462,7 +1458,7 @@ String verifyText (String string, int start, int end, Event keyEvent) {
 //LRESULT WM_GETDLGCODE (int wParam, int lParam) {
 //	LRESULT result = super.WM_GETDLGCODE (wParam, lParam);
 //	if (result != null) return result;
-//	
+//
 //	/*
 //	* Bug in WinCE PPC.  For some reason, sending WM_GETDLGCODE
 //	* to a multi-line edit control causes it to ignore return and
@@ -1478,9 +1474,9 @@ String verifyText (String string, int start, int end, Event keyEvent) {
 //	/*
 //	* Feature in Windows.  Despite the fact that the
 //	* edit control is read only, it still returns a
-//	* dialog code indicating that it wants all keys.  
+//	* dialog code indicating that it wants all keys.
 //	* The fix is to detect this case and clear the bits.
-//	* 
+//	*
 //	* NOTE: A read only edit control processes arrow keys
 //	* so DLGC_WANTARROWS should not be cleared.
 //	*/
@@ -1519,7 +1515,7 @@ String verifyText (String string, int start, int end, Event keyEvent) {
 //		OS.DispatchMessage (msg);
 //	}
 //	ignoreCharacter = false;
-//	
+//
 //	sendKeyEvent (SWT.KeyUp, OS.WM_IME_CHAR, wParam, lParam);
 //	// widget could be disposed at this point
 //	display.lastKey = display.lastAscii = 0;
@@ -1536,7 +1532,7 @@ String verifyText (String string, int start, int end, Event keyEvent) {
 //	sendMouseEvent (SWT.MouseDoubleClick, 1, handle, OS.WM_LBUTTONDBLCLK, wParam, lParam);
 //	if (OS.GetCapture () != handle) OS.SetCapture (handle);
 //	if (!doubleClick) return LRESULT.ZERO;
-//		
+//
 //	/*
 //	* Bug in Windows.  When the last line of text in the
 //	* widget is double clicked and the line is empty, Windows
@@ -1566,7 +1562,7 @@ String verifyText (String string, int start, int end, Event keyEvent) {
 //	* Note: On WinCE PPC, only attempt to recognize the gesture for
 //	* a context menu when the control contains a valid menu or there
 //	* are listeners for the MenuDetect event.
-//	* 
+//	*
 //	* Note: On WinCE PPC, the gesture that brings up a popup menu
 //	* on the text widget must keep the current text selection.  As a
 //	* result, the window proc is only called if the menu is not shown.
@@ -1579,7 +1575,7 @@ String verifyText (String string, int start, int end, Event keyEvent) {
 //		shrg.cbSize = SHRGINFO.sizeof;
 //		shrg.hwndClient = handle;
 //		shrg.ptDown_x = x;
-//		shrg.ptDown_y = y; 
+//		shrg.ptDown_y = y;
 //		shrg.dwFlags = OS.SHRG_RETURNCMD;
 //		int type = OS.SHRecognizeGesture (shrg);
 //		if (type == OS.GN_CONTEXTMENU) {
@@ -1700,6 +1696,7 @@ String verifyText (String string, int start, int end, Event keyEvent) {
 //	return super.wmCommandChild (wParam, lParam);
 //}
 
+@Override
 public void processEvent(EventObject e) {
   if(e instanceof TextFilterEvent) {
     if(!hooks(SWT.Verify)) { super.processEvent(e); return; }
@@ -1723,6 +1720,7 @@ public void processEvent(EventObject e) {
   }
 }
 
+@Override
 protected boolean isTraversalKey(java.awt.event.KeyEvent ke) {
   switch(ke.getKeyCode()) {
   case java.awt.event.KeyEvent.VK_ENTER:
@@ -1731,6 +1729,7 @@ protected boolean isTraversalKey(java.awt.event.KeyEvent ke) {
   return super.isTraversalKey(ke);
 }
 
+@Override
 protected int getTraversalKeyDetail(java.awt.event.KeyEvent ke) {
   switch(ke.getKeyCode()) {
   case java.awt.event.KeyEvent.VK_ENTER:
@@ -1739,6 +1738,7 @@ protected int getTraversalKeyDetail(java.awt.event.KeyEvent ke) {
   return super.getTraversalKeyDetail(ke);
 }
 
+@Override
 protected boolean getTraversalKeyDefault(java.awt.event.KeyEvent ke) {
   switch(ke.getKeyCode()) {
   case java.awt.event.KeyEvent.VK_TAB:
@@ -1752,6 +1752,7 @@ protected boolean getTraversalKeyDefault(java.awt.event.KeyEvent ke) {
   }
 }
 
+@Override
 protected void validateTraversalKey(java.awt.event.KeyEvent ke, Event event) {
   switch(ke.getKeyCode()) {
   case java.awt.event.KeyEvent.VK_ENTER:
@@ -1791,6 +1792,31 @@ public void processEvent(DocumentEvent e) {
   } finally {
     UIThreadUtils.stopExclusiveSection();
   }
+}
+
+/**
+ * Sets the widget message. The message text is displayed
+ * as a hint for the user, indicating the purpose of the field.
+ * <p>
+ * Typically this is used in conjunction with <code>SWT.SEARCH</code>.
+ * </p>
+ *
+ * @param message the new message
+ *
+ * @exception IllegalArgumentException <ul>
+ *    <li>ERROR_NULL_ARGUMENT - if the message is null</li>
+ * </ul>
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @since 3.3
+ */
+public void setMessage (String message) {
+	checkWidget ();
+	if (message == null) error (SWT.ERROR_NULL_ARGUMENT);
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
 }
 
 }
