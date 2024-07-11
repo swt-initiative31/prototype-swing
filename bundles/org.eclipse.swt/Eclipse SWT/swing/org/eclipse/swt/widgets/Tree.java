@@ -11,36 +11,24 @@
 package org.eclipse.swt.widgets;
 
 
-import java.awt.AWTEvent;
-import java.awt.Container;
-import java.awt.event.ItemEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.EventObject;
+import java.util.*;
 
-import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.table.JTableHeader;
+import javax.swing.event.*;
+import javax.swing.table.*;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.events.TreeListener;
-import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.internal.swing.CTree;
-import org.eclipse.swt.internal.swing.CTreeItem;
-import org.eclipse.swt.internal.swing.DefaultMutableTreeTableNode;
-import org.eclipse.swt.internal.swing.UIThreadUtils;
-import org.eclipse.swt.internal.swing.Utils;
-import org.eclipse.swt.internal.swing.CTree.CellPaintEvent;
+import org.eclipse.swt.internal.swing.*;
+import org.eclipse.swt.internal.swing.CTree.*;
 
 /**
  * Instances of this class provide a selectable user interface object
@@ -97,6 +85,8 @@ public class Tree extends Composite {
   ArrayList itemList;
   ArrayList columnList;
   TreeItem currentItem;
+Color headerBackground, headerForeground;
+
 //	TreeColumn [] columns;
 //	int hwndParent, hwndHeader, hAnchor;
 //	ImageList imageList;
@@ -115,7 +105,7 @@ public class Tree extends Composite {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -225,8 +215,9 @@ public void addTreeListener(TreeListener listener) {
 	TypedListener typedListener = new TypedListener (listener);
 	addListener (SWT.Expand, typedListener);
 	addListener (SWT.Collapse, typedListener);
-} 
+}
 
+@Override
 protected void checkSubclass () {
 	if (!isValidSubclass ()) error (SWT.ERROR_INVALID_SUBCLASS);
 }
@@ -272,10 +263,10 @@ boolean checkData (TreeItem item, int index, boolean redraw) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see SWT#VIRTUAL
  * @see SWT#SetData
- * 
+ *
  * @since 3.2
  */
 public void clear (int index, boolean all) {
@@ -299,7 +290,7 @@ public void clear (int index, boolean all) {
  * attributes of the items are set to their default values. If the
  * tree was created with the <code>SWT.VIRTUAL</code> style, these
  * attributes are requested again as needed.
- * 
+ *
  * @param all <code>true</code> if all child items should be cleared
  * recursively, and <code>false</code> otherwise
  *
@@ -307,10 +298,10 @@ public void clear (int index, boolean all) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see SWT#VIRTUAL
  * @see SWT#SetData
- * 
+ *
  * @since 3.2
  */
 public void clearAll (boolean all) {
@@ -325,6 +316,7 @@ public void clearAll (boolean all) {
 //  clearAll (hItem, tvItem, all);
 }
 
+@Override
 public Rectangle computeTrim(int x, int y, int width, int height) {
   CTree cTree = (CTree)handle;
   width += cTree.getVerticalScrollBar().getPreferredSize().width;
@@ -332,11 +324,13 @@ public Rectangle computeTrim(int x, int y, int width, int height) {
   return super.computeTrim(x, y, width, height);
 }
 
+@Override
 void createHandleInit() {
   super.createHandleInit();
   state &= ~(CANVAS | THEME_BACKGROUND);
 }
 
+@Override
 protected Container createHandle () {
   return (Container)CTree.Factory.newInstance(this, style);
 }
@@ -344,7 +338,7 @@ protected Container createHandle () {
 //void createHandle () {
 //	super.createHandle ();
 //	state &= ~CANVAS;
-//	
+//
 //	/*
 //	* Feature in Windows.  In version 5.8 of COMCTL32.DLL,
 //	* if the font is changed for an item, the bounds for the
@@ -360,10 +354,10 @@ protected Container createHandle () {
 //			OS.SendMessage (handle, OS.CCM_SETVERSION, 5, 0);
 //		}
 //	}
-//		
+//
 //	/* Set the checkbox image list */
 //	if ((style & SWT.CHECK) != 0) setCheckboxImageList ();
-//	
+//
 //	/*
 //	* Feature in Windows.  When the control is created,
 //	* it does not use the default system font.  A new HFONT
@@ -433,9 +427,9 @@ void createItem (TreeItem item, TreeItem parentItem, int index) {
 //		super.windowClass (),
 //		null,
 //		newStyle,
-//		rect.left, 
-//		rect.top, 
-//		rect.right - rect.left, 
+//		rect.left,
+//		rect.top,
+//		rect.right - rect.left,
 //		rect.bottom - rect.top,
 //		parent.handle,
 //		0,
@@ -458,7 +452,7 @@ void createItem (TreeItem item, TreeItem parentItem, int index) {
 //	if (OS.IsDBLocale) {
 //		int hIMC = OS.ImmGetContext (handle);
 //		OS.ImmAssociateContext (hwndParent, hIMC);
-//		OS.ImmAssociateContext (hwndHeader, hIMC);		
+//		OS.ImmAssociateContext (hwndHeader, hIMC);
 //		OS.ImmReleaseContext (handle, hIMC);
 //	}
 //	if (!OS.IsPPC) {
@@ -498,6 +492,7 @@ void createItem (TreeItem item, TreeItem parentItem, int index) {
 //	register ();
 //}
 
+@Override
 void createWidget () {
 	super.createWidget ();
   itemList = new ArrayList();
@@ -584,12 +579,12 @@ void destroyItem (TreeItem item) {
  * Returns the width in pixels of a grid line.
  *
  * @return the width of a grid line in pixels
- * 
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.1
  */
 public int getGridLineWidth () {
@@ -598,7 +593,7 @@ public int getGridLineWidth () {
 }
 
 /**
- * Returns the height of the receiver's header 
+ * Returns the height of the receiver's header
  *
  * @return the height of the header or zero if the header is not visible
  *
@@ -606,8 +601,8 @@ public int getGridLineWidth () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
- * @since 3.1 
+ *
+ * @since 3.1
  */
 public int getHeaderHeight () {
 	checkWidget ();
@@ -631,7 +626,7 @@ public int getHeaderHeight () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.1
  */
 public boolean getHeaderVisible () {
@@ -664,13 +659,13 @@ public boolean getHeaderVisible () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see Tree#getColumnOrder()
  * @see Tree#setColumnOrder(int[])
  * @see TreeColumn#getMoveable()
  * @see TreeColumn#setMoveable(boolean)
  * @see SWT#Move
- * 
+ *
  * @since 3.1
  */
 public TreeColumn getColumn (int index) {
@@ -694,7 +689,7 @@ public TreeColumn getColumn (int index) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.1
  */
 public int getColumnCount () {
@@ -714,7 +709,7 @@ public int getColumnCount () {
  * </p><p>
  * Note: This is not the actual structure used by the receiver
  * to maintain its list of items, so modifying the array will
- * not affect the receiver. 
+ * not affect the receiver.
  * </p>
  *
  * @return the current visual order of the receiver's items
@@ -723,12 +718,12 @@ public int getColumnCount () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see Tree#setColumnOrder(int[])
  * @see TreeColumn#getMoveable()
  * @see TreeColumn#setMoveable(boolean)
  * @see SWT#Move
- * 
+ *
  * @since 3.2
  */
 public int[] getColumnOrder () {
@@ -752,7 +747,7 @@ public int[] getColumnOrder () {
  * <p>
  * Note: This is not the actual structure used by the receiver
  * to maintain its list of items, so modifying the array will
- * not affect the receiver. 
+ * not affect the receiver.
  * </p>
  *
  * @return the items in the receiver
@@ -761,13 +756,13 @@ public int[] getColumnOrder () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see Tree#getColumnOrder()
  * @see Tree#setColumnOrder(int[])
  * @see TreeColumn#getMoveable()
  * @see TreeColumn#setMoveable(boolean)
  * @see SWT#Move
- * 
+ *
  * @since 3.1
  */
 public TreeColumn [] getColumns () {
@@ -790,7 +785,7 @@ public TreeColumn [] getColumns () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.1
  */
 public TreeItem getItem (int index) {
@@ -806,8 +801,8 @@ public TreeItem getItem (int index) {
  * coordinate system of the receiver.
  * <p>
  * The item that is returned represents an item that could be selected by the user.
- * For example, if selection only occurs in items in the first column, then null is 
- * returned if the point is outside of the item. 
+ * For example, if selection only occurs in items in the first column, then null is
+ * returned if the point is outside of the item.
  * Note that the SWT.FULL_SELECTION style hint, which specifies the selection policy,
  * determines the extent of the selection.
  * </p>
@@ -884,7 +879,7 @@ public int getItemHeight () {
  * <p>
  * Note: This is not the actual structure used by the receiver
  * to maintain its list of items, so modifying the array will
- * not affect the receiver. 
+ * not affect the receiver.
  * </p>
  *
  * @return the items
@@ -947,7 +942,7 @@ public TreeItem [] getItems () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.1
  */
 public boolean getLinesVisible () {
@@ -975,11 +970,11 @@ public TreeItem getParentItem () {
 /**
  * Returns an array of <code>TreeItem</code>s that are currently
  * selected in the receiver. The order of the items is unspecified.
- * An empty array indicates that no items are selected. 
+ * An empty array indicates that no items are selected.
  * <p>
  * Note: This is not the actual structure used by the receiver
  * to maintain its selection, so modifying the array will
- * not affect the receiver. 
+ * not affect the receiver.
  * </p>
  * @return an array representing the selection
  *
@@ -1022,15 +1017,15 @@ int sortDirection;
  * the receiver. The value may be null if no column shows
  * the sort indicator.
  *
- * @return the sort indicator 
+ * @return the sort indicator
  *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #setSortColumn(TreeColumn)
- * 
+ *
  * @since 3.2
  */
 public TreeColumn getSortColumn () {
@@ -1039,8 +1034,8 @@ public TreeColumn getSortColumn () {
 }
 
 /**
- * Returns the direction of the sort indicator for the receiver. 
- * The value will be one of <code>UP</code>, <code>DOWN</code> 
+ * Returns the direction of the sort indicator for the receiver.
+ * The value will be one of <code>UP</code>, <code>DOWN</code>
  * or <code>NONE</code>.
  *
  * @return the sort direction
@@ -1049,9 +1044,9 @@ public TreeColumn getSortColumn () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #setSortDirection(int)
- * 
+ *
  * @since 3.2
  */
 public int getSortDirection () {
@@ -1064,13 +1059,13 @@ public int getSortDirection () {
  * This item can change when items are expanded, collapsed, scrolled
  * or new items are added or removed.
  *
- * @return the item at the top of the receiver 
- * 
+ * @return the item at the top of the receiver
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 2.1
  */
 public TreeItem getTopItem () {
@@ -1113,7 +1108,7 @@ public TreeItem getTopItem () {
 
 /**
  * Searches the receiver's list starting at the first column
- * (index 0) until a column is found that is equal to the 
+ * (index 0) until a column is found that is equal to the
  * argument, and returns the index of that column. If no column
  * is found, returns -1.
  *
@@ -1127,7 +1122,7 @@ public TreeItem getTopItem () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.1
  */
 public int indexOf (TreeColumn column) {
@@ -1139,7 +1134,7 @@ public int indexOf (TreeColumn column) {
 
 /**
  * Searches the receiver's list starting at the first item
- * (index 0) until an item is found that is equal to the 
+ * (index 0) until an item is found that is equal to the
  * argument, and returns the index of that item. If no item
  * is found, returns -1.
  *
@@ -1154,7 +1149,7 @@ public int indexOf (TreeColumn column) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.1
  */
 public int indexOf (TreeItem item) {
@@ -1197,6 +1192,7 @@ public int indexOf (TreeItem item) {
 //	hwndParent = hwndHeader = 0;
 //}
 
+@Override
 void releaseChildren (boolean destroy) {
   if(itemList != null) {
     for (int i=0; i<itemList.size(); i++) {
@@ -1218,7 +1214,7 @@ void releaseChildren (boolean destroy) {
 //	* messages.  This behavior is unwanted when the tree is being
 //	* disposed.  The fix is to ingore NM_CUSTOMDRAW messages by
 //	* clearing the custom draw flag.
-//	* 
+//	*
 //	* NOTE: This only happens on Windows XP.
 //	*/
 //	customDraw = false;
@@ -1260,7 +1256,7 @@ void releaseItem (TreeItem treeItem, boolean release) {
 
 /**
  * Removes all of the items from the receiver.
- * 
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
@@ -1301,7 +1297,7 @@ public void removeSelectionListener (SelectionListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	eventTable.unhook (SWT.Selection, listener);
-	eventTable.unhook (SWT.DefaultSelection, listener);	
+	eventTable.unhook (SWT.DefaultSelection, listener);
 }
 
 /**
@@ -1331,11 +1327,11 @@ public void removeTreeListener(TreeListener listener) {
 
 /**
  * Display a mark indicating the point at which an item will be inserted.
- * The drop insert item has a visual hint to show where a dragged item 
+ * The drop insert item has a visual hint to show where a dragged item
  * will be inserted when dropped on the tree.
- * 
+ *
  * @param item the insert item.  Null will clear the insertion mark.
- * @param before true places the insert mark above 'item'. false places 
+ * @param before true places the insert mark above 'item'. false places
  *	the insert mark below 'item'.
  *
  * @exception IllegalArgumentException <ul>
@@ -1376,7 +1372,7 @@ public void setItemCount (int count) {
 
 //  itemList.add(index, item);
 //  ((CTree)handle).getRoot().insert((MutableTreeNode)item.handle, index);
-  
+
 //  Utils.notImplemented();
 //  int hItem = OS.SendMessage (handle, OS.TVM_GETNEXTITEM, OS.TVGN_ROOT, 0);
 //  setItemCount (count, OS.TVGN_ROOT, hItem);
@@ -1424,7 +1420,7 @@ void setItemCount (TreeItem parentItem, ArrayList itemList, int count) {
 //////      ((CTree)handle).getModel().nodesWereInserted(((CTree)handle).getRoot(), childIndices);
 //    }
 //  }
-  
+
 //  if(parentItem.itemList == null) {
 //    parentItem.itemList = new ArrayList();
 //  }
@@ -1486,7 +1482,7 @@ void setItemCount (TreeItem parentItem, ArrayList itemList, int count) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.2
  */
 /*public*/ void setItemHeight (int itemHeight) {
@@ -1497,7 +1493,7 @@ void setItemCount (TreeItem parentItem, ArrayList itemList, int count) {
 
 /**
  * Marks the receiver's lines as visible if the argument is <code>true</code>,
- * and marks it invisible otherwise. 
+ * and marks it invisible otherwise.
  * <p>
  * If one of the receiver's ancestors is not visible or some
  * other condition makes the receiver not visible, marking
@@ -1510,7 +1506,7 @@ void setItemCount (TreeItem parentItem, ArrayList itemList, int count) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.1
  */
 public void setLinesVisible (boolean show) {
@@ -1565,7 +1561,7 @@ public void selectAll () {
 //	* is sent from SendMessage(), Windows GP's in the window proc for
 //	* the tree.  The fix is to avoid calling the tree window proc and
 //	* set the cursor for the tree outside of WM_SETCURSOR.
-//	* 
+//	*
 //	* NOTE:  This code assumes that the default cursor for the tree
 //	* is IDC_ARROW.
 //	*/
@@ -1628,7 +1624,7 @@ public void selectAll () {
 //}
 
 /**
- * Sets the order that the items in the receiver should 
+ * Sets the order that the items in the receiver should
  * be displayed in to the given argument which is described
  * in terms of the zero-relative ordering of when the items
  * were added.
@@ -1643,12 +1639,12 @@ public void selectAll () {
  *    <li>ERROR_NULL_ARGUMENT - if the item order is null</li>
  *    <li>ERROR_INVALID_ARGUMENT - if the item order is not the same length as the number of items</li>
  * </ul>
- * 
+ *
  * @see Tree#getColumnOrder()
  * @see TreeColumn#getMoveable()
  * @see TreeColumn#setMoveable(boolean)
  * @see SWT#Move
- * 
+ *
  * @since 3.2
  */
 public void setColumnOrder (int [] order) {
@@ -1704,7 +1700,7 @@ public void setColumnOrder (int [] order) {
 
 /**
  * Marks the receiver's header as visible if the argument is <code>true</code>,
- * and marks it invisible otherwise. 
+ * and marks it invisible otherwise.
  * <p>
  * If one of the receiver's ancestors is not visible or some
  * other condition makes the receiver not visible, marking
@@ -1717,7 +1713,7 @@ public void setColumnOrder (int [] order) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.1
  */
 public void setHeaderVisible (boolean show) {
@@ -1794,7 +1790,7 @@ public void setHeaderVisible (boolean show) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.2
  */
 public void setSelection (TreeItem item) {
@@ -1842,19 +1838,19 @@ public void setSelection (TreeItem [] items) {
 
 /**
  * Sets the column used by the sort indicator for the receiver. A null
- * value will clear the sort indicator.  The current sort column is cleared 
+ * value will clear the sort indicator.  The current sort column is cleared
  * before the new column is set.
  *
  * @param column the column used by the sort indicator or <code>null</code>
- * 
+ *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_INVALID_ARGUMENT - if the column is disposed</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the column is disposed</li>
  * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.2
  */
 public void setSortColumn (TreeColumn column) {
@@ -1865,16 +1861,16 @@ public void setSortColumn (TreeColumn column) {
 }
 
 /**
- * Sets the direction of the sort indicator for the receiver. The value 
+ * Sets the direction of the sort indicator for the receiver. The value
  * can be one of <code>UP</code>, <code>DOWN</code> or <code>NONE</code>.
  *
- * @param direction the direction of the sort indicator 
+ * @param direction the direction of the sort indicator
  *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.2
  */
 public void setSortDirection (int direction) {
@@ -1901,7 +1897,7 @@ public void setSortDirection (int direction) {
  * </ul>
  *
  * @see Tree#getTopItem()
- * 
+ *
  * @since 2.1
  */
 public void setTopItem (TreeItem item) {
@@ -2163,7 +2159,7 @@ public void showSelection () {
 //		case OS.WM_SYSCHAR:
 //		case OS.WM_SYSKEYDOWN:
 //		case OS.WM_SYSKEYUP:
-//			
+//
 //		/* Mouse messages */
 //		case OS.WM_LBUTTONDBLCLK:
 //		case OS.WM_LBUTTONDOWN:
@@ -2181,7 +2177,7 @@ public void showSelection () {
 //		case OS.WM_XBUTTONDBLCLK:
 //		case OS.WM_XBUTTONDOWN:
 //		case OS.WM_XBUTTONUP:
-//			
+//
 //		/* Other messages */
 //		case OS.WM_SIZE:
 //		case OS.WM_SETFONT:
@@ -2273,7 +2269,7 @@ public void showSelection () {
 //						if (OS.COMCTL32_MAJOR >= 6) {
 //							id = OS.SendMessage (handle, OS.TVM_MAPHTREEITEMTOACCID, hItem, 0);
 //						}
-//						OS.NotifyWinEvent (OS.EVENT_OBJECT_FOCUS, handle, OS.OBJID_CLIENT, id);	
+//						OS.NotifyWinEvent (OS.EVENT_OBJECT_FOCUS, handle, OS.OBJID_CLIENT, id);
 //					}
 //				}
 //				tvItem.stateMask = OS.TVIS_SELECTED;
@@ -2320,7 +2316,7 @@ public void showSelection () {
 //					TVITEM tvItem = new TVITEM ();
 //					tvItem.mask = OS.TVIF_STATE;
 //					tvItem.stateMask = OS.TVIS_SELECTED;
-//					int hDeselectItem = hItem;					
+//					int hDeselectItem = hItem;
 //					RECT rect1 = new RECT ();
 //					rect1.left = hAnchor;
 //					OS.SendMessage (handle, OS.TVM_GETITEMRECT, 1, rect1);
@@ -2383,7 +2379,7 @@ public void showSelection () {
 //								hNewItem = OS.SendMessage (handle, OS.TVM_GETNEXTITEM, OS.TVGN_FIRSTVISIBLE, 0);
 //							}
 //							break;
-//						case OS.VK_NEXT:			
+//						case OS.VK_NEXT:
 //							RECT rect = new RECT (), clientRect = new RECT ();
 //							OS.GetClientRect (handle, clientRect);
 //							hNewItem = OS.SendMessage (handle, OS.TVM_GETNEXTITEM, OS.TVGN_FIRSTVISIBLE, 0);
@@ -2489,7 +2485,7 @@ public void showSelection () {
 //			if (OS.GetCapture () != handle) OS.SetCapture (handle);
 //			TVITEM tvItem = new TVITEM ();
 //			tvItem.hItem = lpht.hItem;
-//			tvItem.mask = OS.TVIF_PARAM | OS.TVIF_STATE;	
+//			tvItem.mask = OS.TVIF_PARAM | OS.TVIF_STATE;
 //			tvItem.stateMask = OS.TVIS_STATEIMAGEMASK;
 //			OS.SendMessage (handle, OS.TVM_GETITEM, 0, tvItem);
 //			int state = tvItem.state >> 12;
@@ -2500,12 +2496,12 @@ public void showSelection () {
 //			}
 //			tvItem.state = state << 12;
 //			OS.SendMessage (handle, OS.TVM_SETITEM, 0, tvItem);
-//			if (!OS.IsWinCE) {	
+//			if (!OS.IsWinCE) {
 //				int id = tvItem.hItem;
 //				if (OS.COMCTL32_MAJOR >= 6) {
 //					id = OS.SendMessage (handle, OS.TVM_MAPHTREEITEMTOACCID, tvItem.hItem, 0);
 //				}
-//				OS.NotifyWinEvent (OS.EVENT_OBJECT_FOCUS, handle, OS.OBJID_CLIENT, id);	
+//				OS.NotifyWinEvent (OS.EVENT_OBJECT_FOCUS, handle, OS.OBJID_CLIENT, id);
 //			}
 //			Event event = new Event ();
 //			event.item = items [tvItem.lParam];
@@ -2572,7 +2568,7 @@ public void showSelection () {
 //		}
 //		return new LRESULT (code);
 //	}
-//	
+//
 //	/* Look for check/uncheck */
 //	if ((style & SWT.CHECK) != 0) {
 //		if ((lpht.flags & OS.TVHT_ONITEMSTATEICON) != 0) {
@@ -2580,7 +2576,7 @@ public void showSelection () {
 //			if (OS.GetCapture () != handle) OS.SetCapture (handle);
 //			TVITEM tvItem = new TVITEM ();
 //			tvItem.hItem = lpht.hItem;
-//			tvItem.mask = OS.TVIF_PARAM | OS.TVIF_STATE;	
+//			tvItem.mask = OS.TVIF_PARAM | OS.TVIF_STATE;
 //			tvItem.stateMask = OS.TVIS_STATEIMAGEMASK;
 //			OS.SendMessage (handle, OS.TVM_GETITEM, 0, tvItem);
 //			int state = tvItem.state >> 12;
@@ -2591,12 +2587,12 @@ public void showSelection () {
 //			}
 //			tvItem.state = state << 12;
 //			OS.SendMessage (handle, OS.TVM_SETITEM, 0, tvItem);
-//			if (!OS.IsWinCE) {	
+//			if (!OS.IsWinCE) {
 //				int id = tvItem.hItem;
 //				if (OS.COMCTL32_MAJOR >= 6) {
 //					id = OS.SendMessage (handle, OS.TVM_MAPHTREEITEMTOACCID, tvItem.hItem, 0);
 //				}
-//				OS.NotifyWinEvent (OS.EVENT_OBJECT_FOCUS, handle, OS.OBJID_CLIENT, id);	
+//				OS.NotifyWinEvent (OS.EVENT_OBJECT_FOCUS, handle, OS.OBJID_CLIENT, id);
 //			}
 //			Event event = new Event ();
 //			event.item = items [tvItem.lParam];
@@ -2616,7 +2612,7 @@ public void showSelection () {
 //		OS.SendMessage (handle, OS.TVM_GETITEM, 0, tvItem);
 //		hittestSelected = (tvItem.state & OS.TVIS_SELECTED) != 0;
 //	}
-//	
+//
 //	/* Get the selected state of the last selected item */
 //	int hOldItem = OS.SendMessage (handle, OS.TVM_GETNEXTITEM, OS.TVGN_CARET, 0);
 //	if ((style & SWT.MULTI) != 0) {
@@ -2664,10 +2660,10 @@ public void showSelection () {
 //			OS.SendMessage (handle, OS.TVM_SETITEM, 0, tvItem);
 //		}
 //	}
-//	
+//
 //	/* Reselect the last item that was unselected */
 //	if ((style & SWT.MULTI) != 0) {
-//		
+//
 //		/* Check for CONTROL and reselect the last item */
 //		if (hittestSelected || (wParam & OS.MK_CONTROL) != 0) {
 //			if (hOldItem == hNewItem && hOldItem == lpht.hItem) {
@@ -2709,7 +2705,7 @@ public void showSelection () {
 //					int flags = OS.RDW_UPDATENOW | OS.RDW_INVALIDATE;
 //					OS.RedrawWindow (handle, rect1, 0, flags);
 //					OS.RedrawWindow (handle, rect2, 0, flags);
-//				} 
+//				}
 //			}
 //		}
 //
@@ -2718,7 +2714,7 @@ public void showSelection () {
 //			if (!hittestSelected || !dragStarted) {
 //				tvItem.state = 0;
 //				int oldProc = OS.GetWindowLong (handle, OS.GWL_WNDPROC);
-//				OS.SetWindowLong (handle, OS.GWL_WNDPROC, TreeProc);	
+//				OS.SetWindowLong (handle, OS.GWL_WNDPROC, TreeProc);
 //				for (int i=0; i<items.length; i++) {
 //					TreeItem item = items [i];
 //					if (item != null && item.handle != hNewItem) {
@@ -2738,7 +2734,7 @@ public void showSelection () {
 //						RECT rect2 = rect2 = new RECT ();
 //						rect2.left = hNewItem;
 //						OS.SendMessage (handle, OS.TVM_GETITEMRECT, 1, rect2);
-//						int flags = rect1.top < rect2.top ? OS.TVGN_NEXTVISIBLE : OS.TVGN_PREVIOUSVISIBLE;			
+//						int flags = rect1.top < rect2.top ? OS.TVGN_NEXTVISIBLE : OS.TVGN_PREVIOUSVISIBLE;
 //						tvItem.state = OS.TVIS_SELECTED;
 //						int hItem = tvItem.hItem = hAnchor;
 //						OS.SendMessage (handle, OS.TVM_SETITEM, 0, tvItem);
@@ -2753,7 +2749,7 @@ public void showSelection () {
 //		}
 //	}
 //	if ((wParam & OS.MK_SHIFT) == 0) hAnchor = hNewItem;
-//			
+//
 //	/* Issue notification */
 //	if (!gestureCompleted) {
 //		tvItem.hItem = hNewItem;
@@ -2764,7 +2760,7 @@ public void showSelection () {
 //		postEvent (SWT.Selection, event);
 //	}
 //	gestureCompleted = false;
-//	
+//
 //	/*
 //	* Feature in Windows.  Inside WM_LBUTTONDOWN and WM_RBUTTONDOWN,
 //	* the widget starts a modal loop to determine if the user wants
@@ -2870,7 +2866,7 @@ public void showSelection () {
 //						TreeColumn column = columns [phdn.iItem];
 //						if (column != null) {
 //							column.sendEvent (SWT.Resize);
-//							if (isDisposed ()) return LRESULT.ZERO;	
+//							if (isDisposed ()) return LRESULT.ZERO;
 //							int count = OS.SendMessage (hwndHeader, OS.HDM_GETITEMCOUNT, 0, 0);
 //							TreeColumn [] newColumns = new TreeColumn [count];
 //							System.arraycopy (columns, 0, newColumns, 0, count);
@@ -2895,7 +2891,7 @@ public void showSelection () {
 //				}
 //				break;
 //			}
-//			case OS.HDN_ITEMDBLCLICKW:      
+//			case OS.HDN_ITEMDBLCLICKW:
 //			case OS.HDN_ITEMDBLCLICKA: {
 //				NMHEADER phdn = new NMHEADER ();
 //				OS.MoveMemory (phdn, lParam, NMHEADER.sizeof);
@@ -2925,7 +2921,7 @@ public void showSelection () {
 //	*/
 ////	if (OS.GetCapture () != handle) OS.SetCapture (handle);
 //	setFocus ();
-//	
+//
 //	/*
 //	* Feature in Windows.  When the user selects a tree item
 //	* with the right mouse button, the item remains selected
@@ -3038,7 +3034,7 @@ public void showSelection () {
 //			* using TVM_INSERTITEM, a TVN_GETDISPINFO is sent before
 //			* TVM_INSERTITEM returns and before the item is added to
 //			* the items array.  The fix is to check for null.
-//			* 
+//			*
 //			* NOTE: This only happens on XP with the version 6.00 of
 //			* COMCTL32.DLL,
 //			*/
@@ -3066,7 +3062,7 @@ public void showSelection () {
 //		case OS.NM_CUSTOMDRAW: {
 //			if (!customDraw) break;
 //			NMTVCUSTOMDRAW nmcd = new NMTVCUSTOMDRAW ();
-//			OS.MoveMemory (nmcd, lParam, NMTVCUSTOMDRAW.sizeof);		
+//			OS.MoveMemory (nmcd, lParam, NMTVCUSTOMDRAW.sizeof);
 //			switch (nmcd.dwDrawStage) {
 //				case OS.CDDS_PREPAINT: {
 //					return new LRESULT (OS.CDRF_NOTIFYITEMDRAW | OS.CDRF_NOTIFYPOSTPAINT);
@@ -3108,7 +3104,7 @@ public void showSelection () {
 //					* a NM_CUSTOMDRAW is sent before TVM_INSERTITEM returns
 //					* and before the item is added to the items array.  The
 //					* fix is to check for null.
-//					* 
+//					*
 //					* NOTE: This only happens on XP with the version 6.00 of
 //					* COMCTL32.DLL,
 //					*/
@@ -3168,7 +3164,7 @@ public void showSelection () {
 //					* not a problem providing that graphics do not occur outside
 //					* the rectangle.  The fix is to test for the rectangle and
 //					* draw nothing.
-//					* 
+//					*
 //					* NOTE:  This seems to happen when both I_IMAGECALLBACK
 //					* and LPSTR_TEXTCALLBACK are used at the same time with
 //					* TVM_SETITEM.
@@ -3201,7 +3197,7 @@ public void showSelection () {
 //								* will not draw the entire row selected until the user
 //								* moves the mouse.  The fix is to test for the selection
 //								* colors and guess that the item is selected.
-//								* 
+//								*
 //								* NOTE: This code doesn't work when the foreground and
 //								* background of the tree are set to the selection colors
 //								* but this does not happen in a regular application.
@@ -3423,7 +3419,7 @@ public void showSelection () {
 //				* is sent from within TVM_DELETEITEM for the tree item
 //				* being destroyed.  By the time the message is sent,
 //				* the item has already been removed from the list of
-//				* items.  The fix is to check for null. 
+//				* items.  The fix is to check for null.
 //				*/
 //				if (items == null) break;
 //				TreeItem item = items [tvItem.lParam];
@@ -3471,7 +3467,7 @@ public void showSelection () {
 //			break;
 //		}
 //		case OS.NM_RECOGNIZEGESTURE: {
-//			/* 
+//			/*
 //			* Feature in Pocket PC.  The tree and table controls detect the tap
 //			* and hold gesture by default. They send a GN_CONTEXTMENU message to show
 //			* the popup menu.  This default behaviour is unwanted on Pocket PC 2002
@@ -3503,11 +3499,13 @@ public void showSelection () {
 //	return super.wmNotifyChild (wParam, lParam);
 //}
 
+@Override
 Point minimumSize (int wHint, int hHint, boolean changed) {
   java.awt.Dimension size = handle.getPreferredSize();
   return new Point(size.width, size.height);
 }
 
+@Override
 public void processEvent(AWTEvent e) {
   int id = e.getID();
   switch(id) {
@@ -3554,6 +3552,7 @@ public void processEvent(AWTEvent e) {
   }
 }
 
+@Override
 public void processEvent(EventObject e) {
   if(e instanceof TreeExpansionEvent) {
     TreePath path = ((TreeExpansionEvent)e).getPath();
@@ -3645,7 +3644,7 @@ public void processEvent(EventObject e) {
           cellPaintEvent.ignoreDrawSelection = true;
           cellPaintEvent.ignoreDrawFocused = true;
         }
-//        event.gc.isSwingPainting = false; 
+//        event.gc.isSwingPainting = false;
         break;
       }
       case CellPaintEvent.PAINT_TYPE: {
@@ -3694,4 +3693,193 @@ public void processEvent(EventObject e) {
   }
 }
 
+/**
+ * Returns the header background color.
+ *
+ * @return the receiver's header background color.
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ * @since 3.106
+ */
+public Color getHeaderBackground () {
+	checkWidget ();
+	return headerBackground != null ? headerBackground : display.getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+}
+
+/**
+ * Returns the header foreground color.
+ *
+ * @return the receiver's header foreground color.
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ * @since 3.106
+ */
+public Color getHeaderForeground () {
+	checkWidget ();
+	return headerForeground != null ? headerForeground : display.getSystemColor(SWT.COLOR_LIST_FOREGROUND);
+}
+
+/**
+ * Sets the header background color to the color specified
+ * by the argument, or to the default system color if the argument is null.
+ * <p>
+ * Note: This operation is a <em>HINT</em> and is not supported on all platforms. If
+ * the native header has a 3D look and feel (e.g. Windows 7), this method
+ * will cause the header to look FLAT irrespective of the state of the tree style.
+ * </p>
+ * @param color the new color (or null)
+ *
+ * @exception IllegalArgumentException <ul>
+ *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
+ * </ul>
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ * @since 3.106
+ */
+public void setHeaderBackground(Color color) {
+	checkWidget();
+	if (color != null) {
+		if (color.isDisposed()) error(SWT.ERROR_INVALID_ARGUMENT);
+		if (color.equals(headerBackground)) return;
+	}
+	headerBackground = color;
+
+	updateHeaderCSS();
+}
+
+/**
+ * Sets the header foreground color to the color specified
+ * by the argument, or to the default system color if the argument is null.
+ * <p>
+ * Note: This operation is a <em>HINT</em> and is not supported on all platforms. If
+ * the native header has a 3D look and feel (e.g. Windows 7), this method
+ * will cause the header to look FLAT irrespective of the state of the tree style.
+ * </p>
+ * @param color the new color (or null)
+ *
+ * @exception IllegalArgumentException <ul>
+ *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
+ * </ul>
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ * @since 3.106
+ */
+public void setHeaderForeground(Color color) {
+	checkWidget();
+	if (color != null) {
+		if (color.isDisposed()) error(SWT.ERROR_INVALID_ARGUMENT);
+		if (color.equals(headerForeground)) return;
+	}
+	headerForeground = color;
+
+	updateHeaderCSS();
+}
+
+void updateHeaderCSS() {
+	// TODO (visjee) Not implemented yet
+//	StringBuilder css = new StringBuilder("button {");
+//	if (headerBackground != null) {
+//		/*
+//		 * Bug 571466: On some platforms & themes, the 'background-image'
+//		 * css tag also needs to be set in order to change the
+//		 * background color. Using 'background' tag as it overrides both
+//		 * 'background-image' and 'background-color'.
+//		 */
+//		css.append("background: " + display.gtk_rgba_to_css_string(headerBackground.handle) + "; ");
+//	}
+//	if (headerForeground != null) {
+//		css.append("color: " + display.gtk_rgba_to_css_string(headerForeground.handle) + "; ");
+//	}
+//	css.append("}\n");
+//
+//	if (columnCount == 0) {
+//		long buttonHandle = GTK.gtk_tree_view_column_get_button(GTK.gtk_tree_view_get_column(handle, 0));
+//		if (headerCSSProvider == 0) {
+//			headerCSSProvider = GTK.gtk_css_provider_new();
+//			GTK.gtk_style_context_add_provider(GTK.gtk_widget_get_style_context(buttonHandle), headerCSSProvider, GTK.GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+//		}
+//
+//		if (GTK.GTK4) {
+//			GTK4.gtk_css_provider_load_from_data(headerCSSProvider, Converter.javaStringToCString(css.toString()), -1);
+//		} else {
+//			GTK3.gtk_css_provider_load_from_data(headerCSSProvider, Converter.javaStringToCString(css.toString()), -1, null);
+//		}
+//	} else {
+//		for (TreeColumn column : columns) {
+//			if (column != null) {
+//				column.setHeaderCSS(css.toString());
+//			}
+//		}
+//	}
+}
+
+/**
+ * Selects an item in the receiver.  If the item was already
+ * selected, it remains selected.
+ *
+ * @param item the item to be selected
+ *
+ * @exception IllegalArgumentException <ul>
+ *    <li>ERROR_NULL_ARGUMENT - if the item is null</li>
+ *    <li>ERROR_INVALID_ARGUMENT - if the item has been disposed</li>
+ * </ul>
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @since 3.4
+ */
+public void select (TreeItem item) {
+	// TODO (visjee) Not implemented yet
+	checkWidget ();
+	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
+	if (item.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
+//	boolean fixColumn = showFirstColumn ();
+//	long selection = GTK.gtk_tree_view_get_selection (handle);
+//	OS.g_signal_handlers_block_matched (selection, OS.G_SIGNAL_MATCH_DATA, 0, 0, 0, 0, CHANGED);
+//	GTK.gtk_tree_selection_select_iter (selection, item.handle);
+//	OS.g_signal_handlers_unblock_matched (selection, OS.G_SIGNAL_MATCH_DATA, 0, 0, 0, 0, CHANGED);
+//	if (fixColumn) hideFirstColumn ();
+}
+
+/**
+ * Deselects an item in the receiver.  If the item was already
+ * deselected, it remains deselected.
+ *
+ * @param item the item to be deselected
+ *
+ * @exception IllegalArgumentException <ul>
+ *    <li>ERROR_NULL_ARGUMENT - if the item is null</li>
+ *    <li>ERROR_INVALID_ARGUMENT - if the item has been disposed</li>
+ * </ul>
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @since 3.4
+ */
+public void deselect (TreeItem item) {
+	// TODO (visjee) Not implemented yet
+	checkWidget ();
+	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
+	if (item.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
+//	boolean fixColumn = showFirstColumn ();
+//	long selection = GTK.gtk_tree_view_get_selection (handle);
+//	OS.g_signal_handlers_block_matched (selection, OS.G_SIGNAL_MATCH_DATA, 0, 0, 0, 0, CHANGED);
+//	GTK.gtk_tree_selection_unselect_iter (selection, item.handle);
+//	OS.g_signal_handlers_unblock_matched (selection, OS.G_SIGNAL_MATCH_DATA, 0, 0, 0, 0, CHANGED);
+//	if (fixColumn) hideFirstColumn ();
+}
 }
