@@ -108,6 +108,9 @@ import org.eclipse.swt.internal.swing.Compatibility;
 
 public class Display extends Device {
 
+	int sendEventCount;
+
+
 	Consumer<RuntimeException> runtimeExceptionHandler = DefaultExceptionHandler.RUNTIME_EXCEPTION_HANDLER;
 	Consumer<Error> errorHandler = DefaultExceptionHandler.RUNTIME_ERROR_HANDLER;
 
@@ -2623,6 +2626,79 @@ public final void setErrorHandler (Consumer<Error> errorHandler) {
  */
 public final Consumer<Error> getErrorHandler () {
 	return errorHandler;
+}
+
+void sendPreEvent (int eventType) {
+	if (eventType != SWT.PreEvent && eventType != SWT.PostEvent
+			&& eventType != SWT.PreExternalEventDispatch
+			&& eventType != SWT.PostExternalEventDispatch) {
+		sendJDKInternalEvent (SWT.PreEvent, eventType);
+	}
+}
+
+void sendPostEvent (int eventType) {
+	if (eventType != SWT.PreEvent && eventType != SWT.PostEvent
+			&& eventType != SWT.PreExternalEventDispatch
+			&& eventType != SWT.PostExternalEventDispatch) {
+		sendJDKInternalEvent (SWT.PostEvent, eventType);
+	}
+}
+
+private void sendJDKInternalEvent(int eventType) {
+	sendJDKInternalEvent(eventType, 0);
+}
+/** does sent event with JDK time**/
+private void sendJDKInternalEvent(int eventType, int detail) {
+	if (eventTable == null || !eventTable.hooks (eventType)) {
+		return;
+	}
+	Event event = new Event ();
+	event.detail = detail;
+	event.display = this;
+	event.type = eventType;
+	// time is set for debugging purpose only:
+	event.time = (int) (System.nanoTime() / 1000_000L);
+	if (!filterEvent (event)) {
+		sendEvent (eventTable, event);
+	}
+}
+
+void sendEvent (EventTable table, Event event) {
+	try {
+		sendEventCount++;
+		if (!filterEvent (event)) {
+			if (table != null) {
+				int type = event.type;
+				sendPreEvent (type);
+				try {
+					table.sendEvent (event);
+				} finally {
+					sendPostEvent (type);
+				}
+			}
+		}
+	} finally {
+		sendEventCount--;
+	}
+}
+
+
+/**
+ * Sends a SWT.PreExternalEventDispatch event.
+ *
+ * @noreference This method is not intended to be referenced by clients.
+ */
+public void sendPreExternalEventDispatchEvent () {
+	sendJDKInternalEvent (SWT.PreExternalEventDispatch);
+}
+
+/**
+ * Sends a SWT.PostExternalEventDispatch event.
+ *
+ * @noreference This method is not intended to be referenced by clients.
+ */
+public void sendPostExternalEventDispatchEvent () {
+	sendJDKInternalEvent (SWT.PostExternalEventDispatch);
 }
 
 }
