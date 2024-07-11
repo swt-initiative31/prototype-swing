@@ -110,11 +110,11 @@ public Color (Device device, RGB rgb) {
 }
 
 public Color(int red, int green, int blue) {
-	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet 
 }
 
 public Color(RGB closeFill) {
-	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet
 }
 
 private void init (Device device, int red, int green, int blue) {

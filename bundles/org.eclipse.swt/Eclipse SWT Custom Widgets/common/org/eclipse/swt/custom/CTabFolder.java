@@ -829,7 +829,7 @@ void destroyItem (CTabItem item) {
 }
 
 private void requestLayout() {
-	throw new UnsupportedOperationException("Not implemented yet");
+// TODO (visjee) Not implemented yet 
 }
 
 /**

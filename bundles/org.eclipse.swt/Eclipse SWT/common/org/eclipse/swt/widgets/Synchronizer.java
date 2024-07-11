@@ -159,7 +159,7 @@ boolean runAsyncMessages (boolean all) {
  * @see #asyncExec
  */
 protected void syncExec (Runnable runnable) {
-	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet
 //	RunnableLock lock = null;
 //	synchronized (Device.class) {
 //		if (display == null || display.isDisposed ()) SWT.error (SWT.ERROR_DEVICE_DISPOSED);

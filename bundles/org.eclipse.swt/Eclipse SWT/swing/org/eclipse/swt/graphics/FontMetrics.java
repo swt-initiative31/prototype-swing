@@ -99,17 +99,6 @@ public int getAscent() {
 }
 
 /**
- * Returns the average character width, measured in pixels,
- * of the font described by the receiver.
- *
- * @return the average character width of the font
- */
-public int getAverageCharWidth() {
-  // Use a letter that looks average
-  return handle == null? averageCharWidth: handle.charWidth('c');
-}
-
-/**
  * Returns the descent of the font described by the receiver. A
  * font's <em>descent</em> is the distance from the baseline to the
  * bottom of actual characters, not including any of the leading area,
@@ -191,8 +180,26 @@ static FontMetrics internal_new(int ascent, int descent, int averageCharWidth, i
   return fontMetrics;
 }
 
-public int getAverageCharacterWidth() {
-	return 42;
+/**
+ * Returns the average character width, measured in points,
+ * of the font described by the receiver.
+ *
+ * @return the average character width of the font
+ * @since 3.107
+ */
+public double getAverageCharacterWidth() {
+	return getAverageCharWidth();
+}
+
+/**
+ * Returns the average character width, measured in pixels,
+ * of the font described by the receiver.
+ *
+ * @return the average character width of the font
+ */
+public int getAverageCharWidth() {
+  // Use a letter that looks average
+  return handle == null? averageCharWidth: handle.charWidth('c');
 }
 
 }
