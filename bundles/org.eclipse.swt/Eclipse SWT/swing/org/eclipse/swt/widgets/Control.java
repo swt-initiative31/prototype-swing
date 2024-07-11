@@ -1051,16 +1051,18 @@ public Monitor getMonitor () {
   GraphicsConfiguration gc = handle.getGraphicsConfiguration();
   Monitor monitor = new Monitor();
   monitor.handle = gc;
-  java.awt.Rectangle bounds = gc.getBounds();
-  monitor.x = bounds.x;
-  monitor.y = bounds.y;
-  monitor.width = bounds.width;
-  monitor.height = bounds.height;
-  java.awt.Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(gc);
-  monitor.clientX = bounds.x + insets.left;
-  monitor.clientY = bounds.y + insets.top;
-  monitor.clientWidth = bounds.width - insets.left - insets.right;
-  monitor.clientHeight = bounds.height - insets.top - insets.bottom;
+  if (gc != null) {
+	  java.awt.Rectangle bounds = gc.getBounds();
+	  monitor.x = bounds.x;
+	  monitor.y = bounds.y;
+	  monitor.width = bounds.width;
+	  monitor.height = bounds.height;
+	  java.awt.Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(gc);
+	  monitor.clientX = bounds.x + insets.left;
+	  monitor.clientY = bounds.y + insets.top;
+	  monitor.clientWidth = bounds.width - insets.left - insets.right;
+	  monitor.clientHeight = bounds.height - insets.top - insets.bottom;
+  }
 	return monitor;
 }
 

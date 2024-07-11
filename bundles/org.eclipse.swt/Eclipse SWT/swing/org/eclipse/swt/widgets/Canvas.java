@@ -11,17 +11,15 @@
 package org.eclipse.swt.widgets;
 
 
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Shape;
+import java.awt.*;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.internal.swing.CControl;
-import org.eclipse.swt.internal.swing.Utils;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class provide a surface for drawing
@@ -45,7 +43,7 @@ import org.eclipse.swt.internal.swing.Utils;
 
 public class Canvas extends Composite {
 	Caret caret;
-	
+
 /**
  * Prevents uninitialized instances from being created outside the package.
  */
@@ -58,7 +56,7 @@ Canvas () {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -119,6 +117,7 @@ public Caret getCaret () {
 	return caret;
 }
 
+@Override
 void releaseChildren (boolean destroy) {
   if (caret != null) {
     caret.release (false);
@@ -127,9 +126,9 @@ void releaseChildren (boolean destroy) {
   super.releaseChildren (destroy);
 }
 
-/** 
+/**
  * Fills the interior of the rectangle specified by the arguments,
- * with the receiver's background. 
+ * with the receiver's background.
  *
  * @param gc the gc where the rectangle is to be filled
  * @param x the x coordinate of the rectangle to be filled
@@ -145,7 +144,7 @@ void releaseChildren (boolean destroy) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.2
  */
 public void drawBackground (GC gc, int x, int y, int width, int height) {
@@ -168,7 +167,7 @@ public void drawBackground (GC gc, int x, int y, int width, int height) {
 }
 
 /**
- * Scrolls a rectangular area of the receiver by first copying 
+ * Scrolls a rectangular area of the receiver by first copying
  * the source area to the destination and then causing the area
  * of the source which is not covered by the destination to
  * be repainted. Children that intersect the rectangle are
@@ -199,7 +198,9 @@ public void scroll (int destX, int destY, int x, int y, int width, int height, b
   java.awt.Graphics g = clientArea.getGraphics();
   int dx = destX - x;
   int dy = destY - y;
-  g.copyArea(x, y, width, height, dx, dy);
+  if (g != null) {
+	  g.copyArea(x, y, width, height, dx, dy);
+  }
   java.awt.Dimension size = clientArea.getSize();
   if(dx < 0) {
     clientArea.repaint(size.width + dx, 0, -dx, size.height);
@@ -230,14 +231,14 @@ public void scroll (int destX, int destY, int x, int y, int width, int height, b
 //	* intersects the scrolling rectangle, Windows moves the child
 //	* and copies the bits that intersect the scrolling rectangle but
 //	* does not redraw the child.
-//	* 
+//	*
 //	* Feature in Windows.  When any child in the widget tree does not
 //	* intersect the scrolling rectangle but the parent does intersect,
 //	* Windows does not move the child.  This is the documented (but
 //	* strange) Windows behavior.
-//	* 
+//	*
 //	* The fix is to not use SW_SCROLLCHILDREN and move the children
-//	* explicitly after scrolling.  
+//	* explicitly after scrolling.
 //	*/
 ////	if (all) flags |= OS.SW_SCROLLCHILDREN;
 //	OS.ScrollWindowEx (handle, deltaX, deltaY, sourceRect, null, 0, null, flags);
@@ -246,7 +247,7 @@ public void scroll (int destX, int destY, int x, int y, int width, int height, b
 		for (int i=0; i<children.length; i++) {
 			Control child = children [i];
 			Rectangle rect = child.getBounds ();
-			if (Math.min (x + width, rect.x + rect.width) >= Math.max (x, rect.x) && 
+			if (Math.min (x + width, rect.x + rect.width) >= Math.max (x, rect.x) &&
 				Math.min (y + height, rect.y + rect.height) >= Math.max (y, rect.y)) {
 					child.setLocation (rect.x + deltaX, rect.y + deltaY);
 			}
@@ -289,6 +290,7 @@ public void setCaret (Caret caret) {
 	}
 }
 
+@Override
 public void setFont (Font font) {
 	checkWidget ();
 	if (caret != null) caret.setFont (font);
