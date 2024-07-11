@@ -1,50 +1,41 @@
 /*
  * Christopher Deckers (chrriis@nextencia.net)
  * http://www.nextencia.net
- * 
+ *
  * See the file "readme.txt" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 package org.eclipse.swt.internal.swing;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.Rectangle;
+import java.awt.*;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JScrollBar;
-import javax.swing.JTabbedPane;
-import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.*;
+import javax.swing.event.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.*;
+import org.eclipse.swt.widgets.*;
 
 class CTabFolderImplementation extends JTabbedPane implements CTabFolder {
 
   protected TabFolder handle;
 
-  public Container getSwingComponent() {
+  @Override
+public Container getSwingComponent() {
     return this;
   }
 
-  public Control getSWTHandle() {
+  @Override
+public Control getSWTHandle() {
     return handle;
   }
 
   protected UserAttributeHandler userAttributeHandler;
-  
-  public UserAttributeHandler getUserAttributeHandler() {
+
+  @Override
+public UserAttributeHandler getUserAttributeHandler() {
     return userAttributeHandler;
   }
-  
+
   public CTabFolderImplementation(TabFolder tabFolder, int style) {
     this.handle = tabFolder;
     userAttributeHandler = new UserAttributeHandler(this);
@@ -63,48 +54,53 @@ class CTabFolderImplementation extends JTabbedPane implements CTabFolder {
     Utils.installKeyListener(this, handle);
     Utils.installFocusListener(this, handle);
     Utils.installComponentListener(this, handle);
-    addChangeListener(new ChangeListener() {
-      public void stateChanged(ChangeEvent e) {
-        handle.processEvent(e);
-      }
-    });
+    addChangeListener(e -> handle.processEvent(e));
   }
 
-  public Container getClientArea() {
+  @Override
+public Container getClientArea() {
     return this;
   }
 
-  public JScrollBar getHorizontalScrollBar() {
+  @Override
+public JScrollBar getHorizontalScrollBar() {
     return null;
   }
 
-  public JScrollBar getVerticalScrollBar() {
+  @Override
+public JScrollBar getVerticalScrollBar() {
     return null;
   }
 
-  public Color getBackground() {
+  @Override
+public Color getBackground() {
     return userAttributeHandler != null && userAttributeHandler.background != null? userAttributeHandler.background: super.getBackground();
   }
-  public Color getForeground() {
+  @Override
+public Color getForeground() {
     return userAttributeHandler != null && userAttributeHandler.foreground != null? userAttributeHandler.foreground: super.getForeground();
   }
-  public Font getFont() {
+  @Override
+public Font getFont() {
     return userAttributeHandler != null && userAttributeHandler.font != null? userAttributeHandler.font: super.getFont();
   }
-  public Cursor getCursor() {
+  @Override
+public Cursor getCursor() {
     if(Utils.globalCursor != null) {
       return Utils.globalCursor;
     }
     return userAttributeHandler != null && userAttributeHandler.cursor != null? userAttributeHandler.cursor: super.getCursor();
   }
-  
+
   protected ImageIcon backgroundImageIcon;
 
-  public void setBackgroundImage(Image backgroundImage) {
+  @Override
+public void setBackgroundImage(Image backgroundImage) {
     this.backgroundImageIcon = backgroundImage == null? null: new ImageIcon(backgroundImage);
   }
 
-  public void setBackgroundInheritance(int backgroundInheritanceType) {
+  @Override
+public void setBackgroundInheritance(int backgroundInheritanceType) {
     switch(backgroundInheritanceType) {
     case PREFERRED_BACKGROUND_INHERITANCE:
     case NO_BACKGROUND_INHERITANCE: {
@@ -125,13 +121,16 @@ class CTabFolderImplementation extends JTabbedPane implements CTabFolder {
     }
     }
   }
-  
-  public Dimension getPreferredSize() {
+
+  @Override
+public Dimension getPreferredSize() {
     Dimension size = super.getPreferredSize();
     int count = getTabCount();
     if(count > 0) {
       Rectangle bounds = getUI().getTabBounds(this, count - 1);
-      size.width = Math.max(size.width, bounds.x + bounds.width + 10);
+      if (bounds != null) {
+    	  size.width = Math.max(size.width, bounds.x + bounds.width + 10);
+      }
     }
     return size;
   }

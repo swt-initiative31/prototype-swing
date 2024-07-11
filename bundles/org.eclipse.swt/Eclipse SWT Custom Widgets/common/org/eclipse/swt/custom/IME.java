@@ -30,15 +30,18 @@ public class IME {
 	}
 
 	public String getText() {
-		throw new UnsupportedOperationException("Not implemented yet");
+		System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+		return "";
 	}
 
 	public int[] getRanges() {
-		throw new UnsupportedOperationException("Not implemented yet");
+		System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+		return new int[0];
 	}
 
 	public TextStyle[] getStyles() {
-		throw new UnsupportedOperationException("Not implemented yet");
+		System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+		return new TextStyle[0];
 	}
 
 }
