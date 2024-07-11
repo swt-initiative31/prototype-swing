@@ -16,8 +16,6 @@ import java.awt.event.*;
 import java.util.*;
 
 import org.eclipse.swt.*;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.internal.swing.*;
 
 /**
@@ -201,27 +199,29 @@ Control [] computeTabList () {
 }
 
 @Override
-public Point computeSize (int wHint, int hHint, boolean changed) {
+public org.eclipse.swt.graphics.Point computeSize (int wHint, int hHint, boolean changed) {
 	checkWidget ();
-	Point size;
+	org.eclipse.swt.graphics.Point size;
 	if (layout != null) {
 		if (wHint == SWT.DEFAULT || hHint == SWT.DEFAULT) {
 			changed |= (state & LAYOUT_CHANGED) != 0;
 			state &= ~LAYOUT_CHANGED;
 			size = layout.computeSize (this, wHint, hHint, changed);
 		} else {
-			size = new Point (wHint, hHint);
+			size = new org.eclipse.swt.graphics.Point (wHint, hHint);
 		}
 	} else {
-	  size = minimumSize (wHint, hHint, changed);
+	  size = new org.eclipse.swt.graphics.Point(0,0);
 	}
 	if (size.x == 0) size.x = DEFAULT_WIDTH;
 	if (size.y == 0) size.y = DEFAULT_HEIGHT;
 	if (wHint != SWT.DEFAULT) size.x = wHint;
 	if (hHint != SWT.DEFAULT) size.y = hHint;
-	Rectangle trim = computeTrim (0, 0, size.x, size.y);
-	return new Point (trim.width, trim.height);
+	org.eclipse.swt.graphics.Rectangle trim = computeTrim (0, 0, size.x, size.y);
+	return new org.eclipse.swt.graphics.Point (trim.width, trim.height);
 }
+
+
 
 @Override
 void createHandleInit () {
@@ -611,15 +611,15 @@ void markLayout (boolean changed, boolean all) {
 	}
 }
 
-Point minimumSize (int wHint, int hHint, boolean changed) {
+org.eclipse.swt.graphics.Point minimumSize (int wHint, int hHint, boolean changed) {
 	Control [] children = _getChildren ();
 	int width = 0, height = 0;
 	for (int i=0; i<children.length; i++) {
-		Rectangle rect = children [i].getBounds ();
+		org.eclipse.swt.graphics.Rectangle rect = children [i].getBounds ();
 		width = Math.max (width, rect.x + rect.width);
 		height = Math.max (height, rect.y + rect.height);
 	}
-	return new Point (width, height);
+	return new org.eclipse.swt.graphics.Point (width, height);
 }
 
 @Override
@@ -1419,10 +1419,10 @@ public void processEvent(AWTEvent e) {
 }
 
 public int getOrientation() {
-	throw new UnsupportedOperationException("Not implemented yet");
+	return SWT.LEFT_TO_RIGHT;
 }
 
 public void setOrientation(int a) {
-	throw new UnsupportedOperationException("Not implemented yet");
+//	throw new UnsupportedOperationException("Not implemented yet");
 }
 }

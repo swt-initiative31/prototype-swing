@@ -10,13 +10,15 @@
  *******************************************************************************/
 package org.eclipse.swt.internal;
 
-import java.awt.Container;
+import java.awt.*;
+import java.util.*;
 
-import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.widgets.*;
 
 /*
  * This class is supplied so that the StyledText code that supports bidi text (supported
- * for win platforms) is not platform dependent.  Bidi text is not implemented on 
+ * for win platforms) is not platform dependent.  Bidi text is not implemented on
  * emulated platforms.
  */
 public class BidiUtil {
@@ -30,15 +32,23 @@ public class BidiUtil {
   public static final int LINKBEFORE = 2;
   public static final int LINKAFTER = 4;
 
-  // bidi rendering/ordering constants, not used on 
+  // bidi rendering/ordering constants, not used on
   // emulated platforms
   public static final int CLASS_HEBREW = 2;
   public static final int CLASS_ARABIC = 2;
   public static final int CLASS_LOCALNUMBER = 4;
-  public static final int CLASS_LATINNUMBER = 5;  
-  public static final int REORDER = 0;        
+  public static final int CLASS_LATINNUMBER = 5;
+  public static final int REORDER = 0;
   public static final int LIGATE = 0;
   public static final int GLYPHSHAPE = 0;
+
+
+	// variables used for providing a listener mechanism for keyboard language
+	// switching
+	static Map<LONG, Runnable> languageMap = new HashMap<> ();
+	static Map<LONG, LONG> oldProcMap = new HashMap<> ();
+	static Callback callback = new Callback (BidiUtil.class, "windowProc", 4); //$NON-NLS-1$
+
 
 /*
  * Not implemented.
@@ -68,7 +78,7 @@ public static boolean isKeyboardBidi() {
  * Not implemented.
  */
 public static int getFontBidiAttributes(GC gc) {
-  return 0; 
+  return 0;
 }
 /*
  *  Not implemented.
@@ -105,4 +115,25 @@ public static void setKeyboardLanguage(int language) {
 public static boolean setOrientation(Container handle, int orientation) {
   return false;
 }
+
+
+public static void addLanguageListener (long hwnd, Runnable runnable) {
+	languageMap.put(new LONG(hwnd), runnable);
+	subclass(hwnd);
+}
+public static void addLanguageListener (Control control, Runnable runnable) {
+	addLanguageListener(control.handle, runnable);
+}
+
+/**
+ * Override the window proc.
+ *
+ * @param hwnd control to override the window proc of
+ */
+static void subclass(long hwnd) {
+
+	// this is a problem...
+
+}
+
 }
