@@ -40,7 +40,10 @@ public final class Color extends Resource {
 	 * platforms and should never be accessed from application code.
 	 * </p>
 	 */
+	// TODO: in SWT the handle is the int value not the awt color. These should be switched.
 	public java.awt.Color handle;
+	public int intHandle = -1;
+
 
 /**
  * Prevents uninitialized instances from being created outside the package.
@@ -123,6 +126,8 @@ private void init (Device device, int red, int green, int blue) {
     SWT.error (SWT.ERROR_INVALID_ARGUMENT);
   this.device = device;
   this.handle = new java.awt.Color (red, green, blue);
+  intHandle	= (red & 0xFF) | ((green & 0xFF) << 8) | ((blue & 0xFF) << 16);
+
 }
 
 /**
