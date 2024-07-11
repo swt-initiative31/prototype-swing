@@ -828,9 +828,9 @@ void destroyItem (CTabItem item) {
 	notifyItemCountChange();
 }
 
-private void requestLayout() {
-System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]); 
-}
+//private void requestLayout() {
+//System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+//}
 
 /**
  * Returns <code>true</code> if the receiver's border is visible.

@@ -2220,4 +2220,10 @@ void reskinWidget() {
 		display.addSkinnableWidget(this);
 	}
 }
+
+
+public boolean isAutoDirection () {
+	return (state & HAS_AUTO_DIRECTION) != 0;
+}
+
 }
