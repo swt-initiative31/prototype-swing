@@ -322,7 +322,7 @@ public void removeDragListener(DragSourceListener listener) {
  * @param transferAgents a list of Transfer objects which define the types of data that can be
  * dragged from this source
  */
-public void setTransfer(Transfer[] transferAgents){
+public void setTransfer(Transfer... transferAgents){
 	this.transferAgents = transferAgents;
 }
 
