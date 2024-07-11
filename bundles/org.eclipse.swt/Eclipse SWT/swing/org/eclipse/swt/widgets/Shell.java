@@ -11,45 +11,37 @@
 package org.eclipse.swt.widgets;
 
 
-import java.awt.AWTEvent;
-import java.awt.Container;
-import java.awt.KeyboardFocusManager;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
-import java.awt.im.InputContext;
-import java.awt.im.InputSubset;
-import java.lang.Character.UnicodeBlock;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.im.*;
+import java.lang.Character.*;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.ShellListener;
+import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Region;
-import org.eclipse.swt.internal.swing.CShell;
-import org.eclipse.swt.internal.swing.Compatibility;
-import org.eclipse.swt.internal.swing.UIThreadUtils;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class represent the "windows"
  * which the desktop or "window manager" is managing.
  * Instances that do not have a parent (that is, they
- * are built using the constructor, which takes a 
+ * are built using the constructor, which takes a
  * <code>Display</code> as the argument) are described
  * as <em>top level</em> shells. Instances that do have
  * a parent are described as <em>secondary</em> or
  * <em>dialog</em> shells.
  * <p>
- * Instances are always displayed in one of the maximized, 
+ * Instances are always displayed in one of the maximized,
  * minimized or normal states:
  * <ul>
  * <li>
  * When an instance is marked as <em>maximized</em>, the
  * window manager will typically resize it to fill the
  * entire visible area of the display, and the instance
- * is usually put in a state where it can not be resized 
+ * is usually put in a state where it can not be resized
  * (even if it has style <code>RESIZE</code>) until it is
  * no longer maximized.
  * </li><li>
@@ -107,19 +99,19 @@ import org.eclipse.swt.internal.swing.UIThreadUtils;
  * <dt><code>SHELL_TRIM</code></dt>
  * <dd>
  * the result of combining the constants which are required
- * to produce a typical application top level shell: (that 
+ * to produce a typical application top level shell: (that
  * is, <code>CLOSE | TITLE | MIN | MAX | RESIZE</code>)
  * </dd>
  * <dt><code>DIALOG_TRIM</code></dt>
  * <dd>
  * the result of combining the constants which are required
- * to produce a typical application dialog shell: (that 
+ * to produce a typical application dialog shell: (that
  * is, <code>TITLE | CLOSE | BORDER</code>)
  * </dd>
  * </dl>
  * </p>
  * <p>
- * Note: Only one of the styles APPLICATION_MODAL, MODELESS, 
+ * Note: Only one of the styles APPLICATION_MODAL, MODELESS,
  * PRIMARY_MODAL and SYSTEM_MODAL may be specified.
  * </p><p>
  * IMPORTANT: This class is not intended to be subclassed.
@@ -145,6 +137,9 @@ public class Shell extends Decorations {
 //		DialogProc = lpWndClass.lpfnWndProc;
 //	}
 
+	boolean opened, moved, resized, fullScreen, center, deferFlushing, scrolling, isPopup;
+
+
 /**
  * Constructs a new instance of this class. This is equivalent
  * to calling <code>Shell((Display) null)</code>.
@@ -165,7 +160,7 @@ public Shell () {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -178,7 +173,7 @@ public Shell () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
  *    <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
  * </ul>
- * 
+ *
  * @see SWT#BORDER
  * @see SWT#CLOSE
  * @see SWT#MIN
@@ -203,7 +198,7 @@ public Shell (int style) {
  * <p>
  * Note: Currently, null can be passed in for the display argument.
  * This has the effect of creating the shell on the currently active
- * display if there is one. If there is no current display, the 
+ * display if there is one. If there is no current display, the
  * shell is created on a "default" display. <b>Passing in null as
  * the display argument is not considered to be good coding style,
  * and may not be supported in a future release of SWT.</b>
@@ -227,7 +222,7 @@ public Shell (Display display) {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -235,7 +230,7 @@ public Shell (Display display) {
  * </p><p>
  * Note: Currently, null can be passed in for the display argument.
  * This has the effect of creating the shell on the currently active
- * display if there is one. If there is no current display, the 
+ * display if there is one. If there is no current display, the
  * shell is created on a "default" display. <b>Passing in null as
  * the display argument is not considered to be good coding style,
  * and may not be supported in a future release of SWT.</b>
@@ -248,7 +243,7 @@ public Shell (Display display) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
  *    <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
  * </ul>
- * 
+ *
  * @see SWT#BORDER
  * @see SWT#CLOSE
  * @see SWT#MIN
@@ -276,7 +271,7 @@ Shell (Display display, Shell parent, int style, Container handle) {
 		error (SWT.ERROR_THREAD_INVALID_ACCESS);
 	}
   if (parent != null && parent.isDisposed ()) {
-    error (SWT.ERROR_INVALID_ARGUMENT); 
+    error (SWT.ERROR_INVALID_ARGUMENT);
   }
 	this.style = checkStyle (style);
 	this.parent = parent;
@@ -291,7 +286,7 @@ Shell (Display display, Shell parent, int style, Container handle) {
  * <p>
  * Note: Currently, null can be passed in for the parent.
  * This has the effect of creating the shell on the currently active
- * display if there is one. If there is no current display, the 
+ * display if there is one. If there is no current display, the
  * shell is created on a "default" display. <b>Passing in null as
  * the parent is not considered to be good coding style,
  * and may not be supported in a future release of SWT.</b>
@@ -300,7 +295,7 @@ Shell (Display display, Shell parent, int style, Container handle) {
  * @param parent a shell which will be the parent of the new instance
  *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_INVALID_ARGUMENT - if the parent is disposed</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the parent is disposed</li>
  * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
@@ -317,7 +312,7 @@ public Shell (Shell parent) {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -325,7 +320,7 @@ public Shell (Shell parent) {
  * </p><p>
  * Note: Currently, null can be passed in for the parent.
  * This has the effect of creating the shell on the currently active
- * display if there is one. If there is no current display, the 
+ * display if there is one. If there is no current display, the
  * shell is created on a "default" display. <b>Passing in null as
  * the parent is not considered to be good coding style,
  * and may not be supported in a future release of SWT.</b>
@@ -335,13 +330,13 @@ public Shell (Shell parent) {
  * @param style the style of control to construct
  *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_INVALID_ARGUMENT - if the parent is disposed</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the parent is disposed</li>
  * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
  *    <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
  * </ul>
- * 
+ *
  * @see SWT#BORDER
  * @see SWT#CLOSE
  * @see SWT#MIN
@@ -362,7 +357,89 @@ public Shell (Shell parent, int style) {
 	this (parent != null ? parent.display : null, parent, style, null);
 }
 
-/**	 
+Shell (Display display, Shell parent, int style, long handle, boolean embedded) {
+	super ();
+	checkSubclass ();
+	if (display == null) display = Display.getCurrent ();
+	if (display == null) display = Display.getDefault ();
+	if (!display.isValidThread ()) {
+		error (SWT.ERROR_THREAD_INVALID_ACCESS);
+	}
+	if (parent != null && parent.isDisposed ()) {
+		error (SWT.ERROR_INVALID_ARGUMENT);
+	}
+	if (!Display.getSheetEnabled ()) {
+		this.center = parent != null && (style & SWT.SHEET) != 0;
+	}
+	this.style = checkStyle (parent, style);
+	this.parent = parent;
+	this.display = display;
+//	if (handle != 0) {
+//		if (embedded) {
+//			view = new NSView(handle);
+//		} else {
+//			window = new NSWindow(handle);
+//			state |= FOREIGN_HANDLE;
+//		}
+//	}
+	reskinWidget();
+	createWidget ();
+}
+
+static int checkStyle (Shell parent, int style) {
+	style = Decorations.checkStyle (style);
+	style &= ~SWT.TRANSPARENT;
+	int mask = SWT.SYSTEM_MODAL | SWT.APPLICATION_MODAL | SWT.PRIMARY_MODAL;
+	if ((style & SWT.SHEET) != 0) {
+		if (Display.getSheetEnabled ()) {
+			style &= ~(SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.MAX);
+			if (parent == null) {
+				style &= ~SWT.SHEET;
+				style |= SWT.SHELL_TRIM;
+			}
+		} else {
+			style &= ~SWT.SHEET;
+			style |= parent == null ? SWT.SHELL_TRIM : SWT.DIALOG_TRIM;
+		}
+		if ((style & mask) == 0) {
+			style |= parent == null ? SWT.APPLICATION_MODAL : SWT.PRIMARY_MODAL;
+		}
+	}
+	int bits = style & ~mask;
+	if ((style & SWT.SYSTEM_MODAL) != 0) return bits | SWT.SYSTEM_MODAL;
+	if ((style & SWT.APPLICATION_MODAL) != 0) return bits | SWT.APPLICATION_MODAL;
+	if ((style & SWT.PRIMARY_MODAL) != 0) return bits | SWT.PRIMARY_MODAL;
+	return bits;
+}
+
+
+
+/**
+ * Invokes platform specific functionality to allocate a new shell
+ * that is not embedded.
+ * <p>
+ * <b>IMPORTANT:</b> This method is <em>not</em> part of the public
+ * API for <code>Shell</code>. It is marked public only so that it
+ * can be shared within the packages provided by SWT. It is not
+ * available on all platforms, and should never be called from
+ * application code.
+ * </p>
+ *
+ * @param display the display for the shell
+ * @param handle the handle for the shell
+ * @return a new shell object containing the specified display and handle
+ *
+ * @noreference This method is not intended to be referenced by clients.
+ *
+ * @since 3.3
+ */
+public static Shell internal_new (Display display, long handle) {
+	return new Shell (display, null, SWT.NO_TRIM, handle, false);
+}
+
+
+
+/**
  * Invokes platform specific functionality to allocate a new shell.
  * <p>
  * <b>IMPORTANT:</b> This method is <em>not</em> part of the public
@@ -429,7 +506,7 @@ public void addShellListener (ShellListener listener) {
 //		if (handle == 0) return 0;
 //		switch (msg) {
 //			case OS.WM_KILLFOCUS:
-//			case OS.WM_SETFOCUS: 
+//			case OS.WM_SETFOCUS:
 //				return OS.DefWindowProc (hwnd, msg, wParam, lParam);
 //		}
 //		return OS.CallWindowProc (DialogProc, hwnd, msg, wParam, lParam);
@@ -461,11 +538,12 @@ public void close () {
 	closeWidget ();
 }
 
+@Override
 protected Container createHandle () {
   CShell parentShell = parent != null? (CShell)parent.handle: null;
   return (Container)CShell.Factory.newInstance(this, parentShell, style);
 //	boolean embedded = handle != 0;
-//	
+//
 //	/*
 //	* On Windows 98 and NT, setting a window to be the
 //	* top most window using HWND_TOPMOST can result in a
@@ -479,14 +557,14 @@ protected Container createHandle () {
 //	*/
 ////	if ((style & SWT.ON_TOP) != 0) display.lockActiveWindow = true;
 //	super.createHandle ();
-//	
+//
 //	/*
 //	* The following code is intentionally commented.
 //	*/
 ////	if ((style & SWT.ON_TOP) != 0)  display.lockActiveWindow = false;
-//	
+//
 //	if (!embedded) {
-//		int bits = OS.GetWindowLong (handle, OS.GWL_STYLE);	
+//		int bits = OS.GetWindowLong (handle, OS.GWL_STYLE);
 //		bits &= ~(OS.WS_OVERLAPPED | OS.WS_CAPTION);
 //		if (!OS.IsWinCE) bits |= OS.WS_POPUP;
 //		if ((style & SWT.TITLE) != 0) bits |= OS.WS_CAPTION;
@@ -515,6 +593,7 @@ protected Container createHandle () {
 //	}
 }
 
+@Override
 public void dispose () {
 	/*
 	* This code is intentionally commented.  On some
@@ -589,10 +668,10 @@ void fixShell (Shell newShell, Control control) {
 }
 
 /**
- * If the receiver is visible, moves it to the top of the 
- * drawing order for the display on which it was created 
- * (so that all other shells on that display, which are not 
- * the receiver's children will be drawn behind it) and forces 
+ * If the receiver is visible, moves it to the top of the
+ * drawing order for the display on which it was created
+ * (so that all other shells on that display, which are not
+ * the receiver's children will be drawn behind it) and forces
  * the window manager to make the shell active.
  *
  * @exception SWTException <ul>
@@ -641,7 +720,7 @@ public void forceActive () {
  * will be the result of bitwise OR'ing together one or
  * more of the following constants defined in class
  * <code>SWT</code>:
- * <code>NONE</code>, <code>ROMAN</code>, <code>DBCS</code>, 
+ * <code>NONE</code>, <code>ROMAN</code>, <code>DBCS</code>,
  * <code>PHONETIC</code>, <code>NATIVE</code>, <code>ALPHA</code>.
  *
  * @return the IME mode
@@ -696,7 +775,7 @@ public int getImeInputMode () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.1
  */
 public Point getMinimumSize () {
@@ -723,12 +802,12 @@ public Point getMinimumSize () {
 //	return new Point (width,  height);
 }
 
-/** 
+/**
  * Returns the region that defines the shape of the shell,
  * or null if the shell has the default shape.
  *
  * @return the region that defines the shape of the shell (or null)
- *	
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
@@ -742,6 +821,7 @@ public Region getRegion () {
 	return region;
 }
 
+@Override
 public Shell getShell () {
 	checkWidget ();
 	return this;
@@ -760,7 +840,7 @@ public Shell getShell () {
 //}
 
 /**
- * Returns an array containing all shells which are 
+ * Returns an array containing all shells which are
  * descendents of the receiver.
  * <p>
  * @return the dialog shells
@@ -795,19 +875,23 @@ public Shell [] getShells () {
 	return result;
 }
 
+@Override
 Composite findDeferredControl () {
   return layoutCount > 0 ? this : null;
 }
 
+@Override
 protected boolean getTraversalKeyDefault(java.awt.event.KeyEvent ke) {
   return false;
 }
 
+@Override
 public boolean isEnabled () {
 	checkWidget ();
 	return getEnabled ();
 }
 
+@Override
 public boolean isFocusControl () {
   checkWidget ();
   if(super.isFocusControl()) return true;
@@ -827,7 +911,7 @@ public boolean isFocusControl () {
 //			0,
 //			new TCHAR (0, "MDICLIENT", true),
 //			null,
-//			widgetStyle, 
+//			widgetStyle,
 //			0, 0, 0, 0,
 //			handle,
 //			0,
@@ -887,7 +971,7 @@ public void open () {
 //	* bar does not get updated.  The fix is to call PeekMessage()
 //	* with the flag PM_NOREMOVE and PM_QS_SENDMESSAGE to respond
 //	* to a cross thread WM_GETICON.
-//	* 
+//	*
 //	* NOTE: This allows other cross thread messages to be delivered,
 //	* most notably WM_ACTIVATE.
 //	*/
@@ -902,6 +986,7 @@ public void open () {
 //	hwndMDIClient = 0;
 //}
 
+@Override
 void releaseChildren (boolean destroy) {
 	Shell [] shells = getShells ();
 	for (int i=0; i<shells.length; i++) {
@@ -913,20 +998,18 @@ void releaseChildren (boolean destroy) {
   super.releaseChildren (destroy);
 }
 
+@Override
 void releaseParent () {
   /* Do nothing */
 }
 
+@Override
 void releaseWidget () {
 	super.releaseWidget ();
 	activeMenu = null;
   final Window window = (Window)handle;
   window.setVisible(false);
-  SwingUtilities.invokeLater(new Runnable() {
-    public void run() {
-      window.dispose();
-    }
-  });
+  SwingUtilities.invokeLater(() -> window.dispose());
 //	display.clearModal (this);
 //	if (lpstrTip != 0) {
 //		int hHeap = OS.GetProcessHeap ();
@@ -948,6 +1031,7 @@ void releaseWidget () {
 	region = null;
 }
 
+@Override
 void removeMenu (Menu menu) {
 	super.removeMenu (menu);
 	if (menu == activeMenu) activeMenu = null;
@@ -996,11 +1080,11 @@ public void removeShellListener (ShellListener listener) {
 //}
 
 /**
- * If the receiver is visible, moves it to the top of the 
- * drawing order for the display on which it was created 
- * (so that all other shells on that display, which are not 
- * the receiver's children will be drawn behind it) and asks 
- * the window manager to make the shell active 
+ * If the receiver is visible, moves it to the top of the
+ * drawing order for the display on which it was created
+ * (so that all other shells on that display, which are not
+ * the receiver's children will be drawn behind it) and asks
+ * the window manager to make the shell active
  *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -1032,7 +1116,7 @@ void setActiveControl (Control control) {
 	if (control != null && control.isDisposed ()) control = null;
 	if (lastActive != null && lastActive.isDisposed ()) lastActive = null;
 	if (lastActive == control) return;
-	
+
 	/*
 	* Compute the list of controls to be activated and
 	* deactivated by finding the first common parent
@@ -1046,7 +1130,7 @@ void setActiveControl (Control control) {
 		if (activate [index] != deactivate [index]) break;
 		index++;
 	}
-	
+
 	/*
 	* It is possible (but unlikely), that application
 	* code could have destroyed some of the widgets. If
@@ -1079,10 +1163,10 @@ void setActiveControl (Control control) {
 //}
 
 /**
- * Sets the input method editor mode to the argument which 
+ * Sets the input method editor mode to the argument which
  * should be the result of bitwise OR'ing together one or more
  * of the following constants defined in class <code>SWT</code>:
- * <code>NONE</code>, <code>ROMAN</code>, <code>DBCS</code>, 
+ * <code>NONE</code>, <code>ROMAN</code>, <code>DBCS</code>,
  * <code>PHONETIC</code>, <code>NATIVE</code>, <code>ALPHA</code>.
  *
  * @param mode the new IME mode
@@ -1171,7 +1255,7 @@ public void setImeInputMode (int mode) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.1
  */
 public void setMinimumSize (int width, int height) {
@@ -1192,7 +1276,7 @@ public void setMinimumSize (int width, int height) {
 //			OS.AdjustWindowRectEx (rect, bits1, false, bits2);
 //			heightLimit = rect.bottom - rect.top;
 //		}
-//	} 
+//	}
 //	minWidth = Math.max (widthLimit, width);
 //	minHeight = Math.max (heightLimit, height);
 //	Point size = getSize ();
@@ -1217,7 +1301,7 @@ public void setMinimumSize (int width, int height) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.1
  */
 public void setMinimumSize (Point size) {
@@ -1249,7 +1333,7 @@ void setParent () {
  *
  * @exception IllegalArgumentException <ul>
  *    <li>ERROR_INVALID_ARGUMENT - if the region has been disposed</li>
- * </ul>  
+ * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
@@ -1285,7 +1369,7 @@ public void setRegion (Region region) {
 //			0,
 //			OS.GetModuleHandle (null),
 //			null);
-//		if (toolTipHandle == 0) error (SWT.ERROR_NO_HANDLES);	
+//		if (toolTipHandle == 0) error (SWT.ERROR_NO_HANDLES);
 //		/*
 //		* Feature in Windows.  Despite the fact that the
 //		* tool tip text contains \r\n, the tooltip will
@@ -1350,6 +1434,7 @@ void setInitialFocusedControl(Control initialFocusedControl) {
   this.initialFocusedControl = initialFocusedControl;
 }
 
+@Override
 public void setVisible (boolean visible) {
 	checkWidget ();
 	if(handle.isVisible() == visible) {
@@ -1373,7 +1458,7 @@ public void setVisible (boolean visible) {
 //	} else {
 //		if (visible == OS.IsWindowVisible (handle)) return;
 //	}
-//	
+//
 //	/*
 //	* Feature in Windows.  When ShowWindow() is called used to hide
 //	* a window, Windows attempts to give focus to the parent. If the
@@ -1403,7 +1488,7 @@ public void setVisible (boolean visible) {
 //	} else {
 //		updateModal ();
 //	}
-//	
+//
 //	/*
 //	* Bug in Windows.  Calling ShowOwnedPopups() to hide the
 //	* child windows of a hidden window causes the application
@@ -1428,6 +1513,7 @@ public void setVisible (boolean visible) {
 //	return translateMDIAccelerator (msg) || translateMenuAccelerator (msg);
 //}
 
+@Override
 boolean traverseEscape () {
 	if (parent == null) return false;
 	if (!isVisible () || !isEnabled ()) return false;
@@ -1455,7 +1541,7 @@ boolean traverseEscape () {
 //int widgetExtStyle () {
 //	int bits = super.widgetExtStyle () & ~OS.WS_EX_MDICHILD;
 //	if ((style & SWT.TOOL) != 0) bits |= OS.WS_EX_TOOLWINDOW;
-//	
+//
 //	/*
 //	* Feature in Windows.  When a window that does not have a parent
 //	* is created, it is automatically added to the Windows Task Bar,
@@ -1472,7 +1558,7 @@ boolean traverseEscape () {
 //			}
 //		}
 //	}
-//	
+//
 //	/*
 //	* Bug in Windows 98 and NT.  Creating a window with the
 //	* WS_EX_TOPMOST extended style can result in a dialog shell
@@ -1521,13 +1607,13 @@ boolean traverseEscape () {
 //	* Feature in WinCE.  Calling CreateWindowEx () with WS_OVERLAPPED
 //	* and a parent window causes the new window to become a WS_CHILD of
 //	* the parent instead of a dialog child.  The fix is to use WS_POPUP
-//	* for a window with a parent.  
-//	* 
+//	* for a window with a parent.
+//	*
 //	* Feature in WinCE PPC.  A window without a parent with WS_POPUP
 //	* always shows on top of the Pocket PC 'Today Screen'. The fix
 //	* is to not set WS_POPUP for a window without a parent on WinCE
 //	* devices.
-//	* 
+//	*
 //	* NOTE: WS_POPUP causes CreateWindowEx () to ignore CW_USEDEFAULT
 //	* and causes the default window location and size to be zero.
 //	*/
@@ -1535,19 +1621,19 @@ boolean traverseEscape () {
 //		if (OS.IsSP) return bits | OS.WS_POPUP;
 //		return parent == null ? bits : bits | OS.WS_POPUP;
 //	}
-//	
+//
 //	/*
 //	* Use WS_OVERLAPPED for all windows, either dialog or top level
 //	* so that CreateWindowEx () will respect CW_USEDEFAULT and set
 //	* the default window location and size.
-//	* 
+//	*
 //	* NOTE:  When a WS_OVERLAPPED window is created, Windows gives
 //	* the new window WS_CAPTION style bits.  These two constants are
 //	* as follows:
-//	* 
+//	*
 //	* 	WS_OVERLAPPED = 0
 //	* 	WS_CAPTION = WS_BORDER | WS_DLGFRAME
-//	* 
+//	*
 //	*/
 //	return bits | OS.WS_OVERLAPPED | OS.WS_CAPTION;
 //}
@@ -1568,7 +1654,7 @@ boolean traverseEscape () {
 //		/* Restore SIP state when window is activated */
 //		if ((wParam & 0xFFFF) != 0) {
 //			OS.SHSipPreference (handle, psai.fSipUp == 0 ? OS.SIP_DOWN : OS.SIP_UP);
-//		} 
+//		}
 //	}
 //
 //	/*
@@ -1576,7 +1662,7 @@ boolean traverseEscape () {
 //	* IME composition window does not go away. This causes
 //	* repaint issues.  The fix is to close the IME ourselves
 //	* when the Shell is deactivated.
-//	* 
+//	*
 //	* Note.  When the Shell is reactivated, the text in the
 //	* composition window has been lost.
 //	*/
@@ -1585,7 +1671,7 @@ boolean traverseEscape () {
 //			OS.ImmSetOpenStatus (hIMC, false);
 //		}
 //	}
-//	
+//
 //	LRESULT result = super.WM_ACTIVATE (wParam, lParam);
 //	if (parent != null) return LRESULT.ZERO;
 //	return result;
@@ -1601,7 +1687,7 @@ boolean traverseEscape () {
 //		int loWord = wParam & 0xFFFF;
 //		if (loWord == OS.IDOK && (lParam == 0 || lParam == handle)) {
 //			OS.PostMessage (handle, OS.WM_CLOSE, 0, 0);
-//			return LRESULT.ZERO;			
+//			return LRESULT.ZERO;
 //		}
 //	}
 //	/*
@@ -1622,7 +1708,7 @@ boolean traverseEscape () {
 //					return super.WM_COMMAND (wParam, 0);
 //				} else {
 //					int hwndChild = OS.GetWindow (hwndCB, OS.GW_CHILD);
-//					if (lParam == hwndChild) return super.WM_COMMAND (wParam, 0);					
+//					if (lParam == hwndChild) return super.WM_COMMAND (wParam, 0);
 //				}
 //			}
 //		}
@@ -1672,7 +1758,7 @@ boolean traverseEscape () {
 //LRESULT WM_MOUSEACTIVATE (int wParam, int lParam) {
 //	LRESULT result = super.WM_MOUSEACTIVATE (wParam, lParam);
 //	if (result != null) return result;
-//	
+//
 //	/*
 //	* Check for WM_MOUSEACTIVATE when an MDI shell is active
 //	* and stop the normal shell activation but allow the mouse
@@ -1705,7 +1791,7 @@ boolean traverseEscape () {
 //		}
 //	}
 //	if (hittest == OS.HTMENU) return null;
-//	
+//
 //	/*
 //	* Get the current location of the cursor,
 //	* not the location of the cursor when the
@@ -1728,7 +1814,7 @@ boolean traverseEscape () {
 //	if (hwnd == 0) return null;
 //	Control control = display.findControl (hwnd);
 //	setActiveControl (control);
-//	
+//
 //	/*
 //	* This code is intentionally commented.  On some platforms,
 //	* shells that are created with SWT.NO_TRIM won't take focus
@@ -1880,7 +1966,7 @@ boolean traverseEscape () {
 //	if (result != null) return result;
 //	if (OS.IsPPC) {
 //		if (wParam == OS.SPI_SETSIPINFO) {
-//			/* 
+//			/*
 //			* The SIP is in a new state.  Cache its new value.
 //			* Resize the Shell if it has the style SWT.RESIZE.
 //			* Note that SHHandleWMSettingChange resizes the
@@ -1893,7 +1979,7 @@ boolean traverseEscape () {
 //				SIPINFO pSipInfo = new SIPINFO ();
 //				pSipInfo.cbSize = SIPINFO.sizeof;
 //				OS.SipGetInfo (pSipInfo);
-//				psai.fSipUp = pSipInfo.fdwFlags & OS.SIPF_ON;					
+//				psai.fSipUp = pSipInfo.fdwFlags & OS.SIPF_ON;
 //			}
 //		}
 //	}
@@ -1935,7 +2021,7 @@ boolean traverseEscape () {
 ////	* for SC_MINIMIZE and use ShowWindow() with SW_SHOWMINIMIZED to
 ////	* minimize the window rather than allowing the default window
 ////	* proc to do it when more that 64Meg of memory is being used.
-////	* 
+////	*
 ////	* NOTE:  The default window proc activates the next top-level
 ////	* window in the Z order while ShowWindow () with SW_SHOWMINIMIZED
 ////	* does not.  There is no fix for this at this time.
@@ -1980,6 +2066,7 @@ boolean traverseEscape () {
 //	return result;
 //}
 
+@Override
 public void processEvent(AWTEvent e) {
   int id = e.getID();
   switch(id) {

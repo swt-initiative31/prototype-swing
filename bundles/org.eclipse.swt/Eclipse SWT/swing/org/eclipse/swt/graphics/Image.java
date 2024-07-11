@@ -96,6 +96,20 @@ public final class Image extends Resource implements Drawable {
 	 */
 	public BufferedImage handle;
 
+	/**
+	 * ImageFileNameProvider to provide file names at various Zoom levels
+	 */
+	private ImageFileNameProvider imageFileNameProvider;
+
+	/**
+	 * The width of the image.
+	 */
+	int width = -1;
+
+	/**
+	 * The height of the image.
+	 */
+	int height = -1;
 //	/**
 //	 * specifies the transparent pixel
 //	 */
@@ -404,6 +418,56 @@ public Image (Device device, String filename) {
 	init(device, new ImageData(filename));
 	if (device.tracking) device.new_Object(this);
 }
+
+/**
+ * Constructs an instance of this class by loading its representation
+ * from the file retrieved from the ImageFileNameProvider. Throws an
+ * error if an error occurs while loading the image, or if the result
+ * is an image of an unsupported type.
+ * <p>
+ * This constructor is provided for convenience for loading image as
+ * per DPI level.
+ *
+ * @param device the device on which to create the image
+ * @param imageFileNameProvider the ImageFileNameProvider object that is
+ * to be used to get the file name
+ *
+ * @exception IllegalArgumentException <ul>
+ *    <li>ERROR_NULL_ARGUMENT - if device is null and there is no current device</li>
+ *    <li>ERROR_NULL_ARGUMENT - if the ImageFileNameProvider is null</li>
+ *    <li>ERROR_INVALID_ARGUMENT - if the fileName provided by ImageFileNameProvider is null at 100% zoom</li>
+ * </ul>
+ * @exception SWTException <ul>
+ *    <li>ERROR_IO - if an IO error occurs while reading from the file</li>
+ *    <li>ERROR_INVALID_IMAGE - if the image file contains invalid data </li>
+ *    <li>ERROR_UNSUPPORTED_DEPTH - if the image file describes an image with an unsupported depth</li>
+ *    <li>ERROR_UNSUPPORTED_FORMAT - if the image file contains an unrecognized format</li>
+ * </ul>
+ * @exception SWTError <ul>
+ *    <li>ERROR_NO_HANDLES if a handle could not be obtained for image creation</li>
+ * </ul>
+ * @since 3.104
+ */
+public Image(Device device, ImageFileNameProvider imageFileNameProvider) {
+	super(device);
+	if (imageFileNameProvider == null) SWT.error(SWT.ERROR_NULL_ARGUMENT);
+	this.imageFileNameProvider = imageFileNameProvider;
+	String filename = imageFileNameProvider.getImagePath(100);
+	if (filename == null) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+//	initNative(filename);
+	if (this.handle == null) init(new ImageData(filename));
+	init();
+//	TODO
+//	String filename2x = imageFileNameProvider.getImagePath(200);
+//	if (filename2x != null) {
+//		alphaInfo_200 = new AlphaInfo();
+//		id id = NSImageRep.imageRepWithContentsOfFile(NSString.stringWith(filename2x));
+//		NSImageRep rep = new NSImageRep(id);
+//		handle.addRepresentation(rep);
+//	}
+}
+
+
 
 ///**
 // * Create a DIB from a DDB without using GetDIBits. Note that
@@ -1076,6 +1140,27 @@ void init(Device device, int width, int height) {
     g.fillRect(0, 0, width, height);
   }
 }
+
+void init(ImageData image) {
+	if (image == null) SWT.error(SWT.ERROR_NULL_ARGUMENT);
+
+//    if (handle != null) handle.release();
+
+	handle = new BufferedImage(image.width, image.height, BufferedImage.TYPE_INT_ARGB);
+//	NSSize size = new NSSize();
+//	size.width = width;
+//	size.height = height;
+//	handle = handle.initWithSize(size);
+	this.width = image.width;
+	this.height = image.height;
+//	TODO
+//	if (alphaInfo_100 == null) alphaInfo_100 = new AlphaInfo();
+//	NSBitmapImageRep rep = createRepresentation(image, alphaInfo_100);
+//	handle.addRepresentation(rep);
+//	rep.release();
+//	handle.setCacheMode(OS.NSImageCacheNever);
+}
+
 
 static void init(Device device, Image image, ImageData data) {
 //  BufferedImage bufferedImage;
