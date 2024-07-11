@@ -22,7 +22,6 @@ Export-Package:
  org.eclipse.swt.widgets,
  org.eclipse.swt.internal; x-friends:="org.eclipse.ui",
  org.eclipse.swt.internal.image; x-internal:=true
-Eclipse-PlatformFilter: (& (osgi.ws=win32) (osgi.os=win32) (osgi.arch=x86_64))
 SWT-WS: swing
 SWT-OS: win32
 SWT-Arch: x86_64
