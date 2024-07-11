@@ -119,30 +119,29 @@ boolean runAsyncMessages () {
 }
 
 boolean runAsyncMessages (boolean all) {
-	throw new UnsupportedOperationException("Not implemented yet");
-//	boolean run = false;
-//	do {
-//		RunnableLock lock = removeFirst ();
-//		if (lock == null) return run;
-//		run = true;
-//		synchronized (lock) {
-//			syncThread = lock.thread;
-//			display.sendPreEvent(SWT.None);
-//			try {
-//				lock.run (display);
-//			} catch (Throwable t) {
-//				lock.throwable = t;
-//				SWT.error (SWT.ERROR_FAILED_EXEC, t);
-//			} finally {
-//				if (display != null && !display.isDisposed()) {
-//					display.sendPostEvent(SWT.None);
-//				}
-//				syncThread = null;
-//				lock.notifyAll ();
-//			}
-//		}
-//	} while (all);
-//	return run;
+	boolean run = false;
+	do {
+		RunnableLock lock = removeFirst ();
+		if (lock == null) return run;
+		run = true;
+		synchronized (lock) {
+			syncThread = lock.thread;
+			display.sendPreEvent(SWT.None);
+			try {
+				lock.run (display);
+			} catch (Throwable t) {
+				lock.throwable = t;
+				SWT.error (SWT.ERROR_FAILED_EXEC, t);
+			} finally {
+				if (display != null && !display.isDisposed()) {
+					display.sendPostEvent(SWT.None);
+				}
+				syncThread = null;
+				lock.notifyAll ();
+			}
+		}
+	} while (all);
+	return run;
 }
 
 /**
