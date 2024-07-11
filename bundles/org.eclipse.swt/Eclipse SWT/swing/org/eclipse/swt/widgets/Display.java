@@ -338,6 +338,12 @@ public class Display extends Device {
 		};
 	}
 
+	static boolean getSheetEnabled () {
+		return !"false".equals(System.getProperty("org.eclipse.swt.sheet"));
+	}
+
+
+
 /*
 * TEMPORARY CODE.
 */
