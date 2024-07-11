@@ -10,41 +10,22 @@
  *******************************************************************************/
 package org.eclipse.swt.widgets;
 
- 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
-import javax.swing.AbstractButton;
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JRadioButton;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JSeparator;
-import javax.swing.KeyStroke;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
+import java.awt.*;
+import java.awt.event.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.ArmListener;
-import org.eclipse.swt.events.HelpListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import javax.swing.*;
+import javax.swing.event.*;
+
+import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.internal.swing.UIThreadUtils;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class represent a selectable user interface object
- * that issues notification when pressed and released. 
+ * that issues notification when pressed and released.
  * <dl>
  * <dt><b>Styles:</b></dt>
  * <dd>CHECK, CASCADE, PUSH, RADIO, SEPARATOR</dd>
@@ -73,7 +54,7 @@ public class MenuItem extends Item {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -114,7 +95,7 @@ public MenuItem (Menu parent, int style) {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -152,7 +133,7 @@ public MenuItem (Menu parent, int style, int index) {
 MenuItem (Menu parent, Menu menu, int style, int index) {
 	super (parent, checkStyle (style));
 	this.parent = parent;
-	this.menu = menu;	
+	this.menu = menu;
 	if (menu != null) menu.cascade = this;
 	display.addMenuItem (this);
 }
@@ -241,6 +222,7 @@ public void addSelectionListener (SelectionListener listener) {
 	addListener (SWT.DefaultSelection,typedListener);
 }
 
+@Override
 protected void checkSubclass () {
 	if (!isValidSubclass ()) error (SWT.ERROR_INVALID_SUBCLASS);
 }
@@ -249,6 +231,7 @@ static int checkStyle (int style) {
 	return checkBits (style, SWT.PUSH, SWT.CHECK, SWT.RADIO, SWT.SEPARATOR, SWT.CASCADE, 0);
 }
 
+@Override
 void destroyWidget () {
   parent.destroyItem (this);
   releaseHandle ();
@@ -262,7 +245,7 @@ void destroyWidget () {
 //	int key = accelerator & SWT.KEY_MASK;
 //	int vKey = Display.untranslateKey (key);
 //	if (vKey != 0) {
-//		key = vKey;	
+//		key = vKey;
 //	} else {
 //		switch (key) {
 //			/*
@@ -331,7 +314,7 @@ public int getAccelerator () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.1
  */
 /*public*/ Rectangle getBounds () {
@@ -392,7 +375,7 @@ public int getAccelerator () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #isEnabled
  */
 public boolean getEnabled () {
@@ -403,7 +386,7 @@ public boolean getEnabled () {
 /**
  * Returns the receiver's cascade menu if it has one or null
  * if it does not. Only <code>CASCADE</code> menu items can have
- * a pull down menu. The sequence of key strokes, button presses 
+ * a pull down menu. The sequence of key strokes, button presses
  * and/or button releases that are used to request a pull down
  * menu is platform specific.
  *
@@ -414,11 +397,13 @@ public boolean getEnabled () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Menu getMenu () {
 	checkWidget ();
 	return menu;
 }
 
+@Override
 String getNameText () {
 	if ((style & SWT.SEPARATOR) != 0) return "|";
 	return super.getNameText ();
@@ -471,13 +456,14 @@ public boolean getSelection () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #getEnabled
  */
 public boolean isEnabled () {
 	return getEnabled () && parent.isEnabled ();
 }
 
+@Override
 void releaseChildren (boolean destroy) {
   if (menu != null) {
     menu.release (false);
@@ -486,6 +472,7 @@ void releaseChildren (boolean destroy) {
   super.releaseChildren (destroy);
 }
 
+@Override
 void releaseHandle () {
   super.releaseHandle ();
   parent = null;
@@ -496,12 +483,14 @@ void releaseMenu () {
 	menu = null;
 }
 
+@Override
 void releaseParent () {
   super.releaseParent ();
   if (menu != null) menu.dispose ();
   menu = null;
 }
 
+@Override
 void releaseWidget () {
 	super.releaseWidget ();
 //	if (accelerator != 0) {
@@ -579,7 +568,7 @@ public void removeSelectionListener (SelectionListener listener) {
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (eventTable == null) return;
 	eventTable.unhook (SWT.Selection, listener);
-	eventTable.unhook (SWT.DefaultSelection,listener);	
+	eventTable.unhook (SWT.DefaultSelection,listener);
 }
 
 void selectRadio () {
@@ -616,7 +605,7 @@ public void setAccelerator (int accelerator) {
   int key = accelerator & SWT.KEY_MASK;
   int vKey = Display.untranslateKey(key);
   if(vKey != 0) {
-    key = vKey; 
+    key = vKey;
   }
   if(handle instanceof JMenu) {
     ((JMenu)handle).setMnemonic(key);
@@ -624,13 +613,13 @@ public void setAccelerator (int accelerator) {
     int modifiers = 0;
     if((accelerator & SWT.ALT) != 0) {
       modifiers |= java.awt.event.KeyEvent.ALT_DOWN_MASK;
-    } 
+    }
     if((accelerator & SWT.SHIFT) != 0) {
       modifiers |= java.awt.event.KeyEvent.SHIFT_DOWN_MASK;
-    } 
+    }
     if((accelerator & SWT.CONTROL) != 0) {
       modifiers |= java.awt.event.KeyEvent.CTRL_DOWN_MASK;
-    } 
+    }
     ((JMenuItem)handle).setAccelerator(KeyStroke.getKeyStroke(key, modifiers));
   }
 //	parent.destroyAccelerators ();
@@ -670,6 +659,7 @@ public void setEnabled (boolean enabled) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setImage (Image image) {
 	checkWidget ();
 	if ((style & SWT.SEPARATOR) != 0) return;
@@ -724,7 +714,8 @@ public void setMenu (Menu menu) {
 	}
 	if(!(handle instanceof JMenu)) {
     JMenu popup = new JMenu() {
-      public void menuSelectionChanged(boolean isIncluded) {
+      @Override
+	public void menuSelectionChanged(boolean isIncluded) {
         super.menuSelectionChanged(isIncluded);
         if(!isIncluded) return;
         if(!hooks(SWT.Arm)) return;
@@ -746,9 +737,11 @@ public void setMenu (Menu menu) {
       }
     };
     popup.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-      public void popupMenuCanceled(PopupMenuEvent e) {
+      @Override
+	public void popupMenuCanceled(PopupMenuEvent e) {
       }
-      public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+      @Override
+	public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
         if(MenuItem.this.menu == null) return;
         if(!MenuItem.this.menu.hooks(SWT.Hide)) return;
         UIThreadUtils.startExclusiveSection(getDisplay());
@@ -766,7 +759,8 @@ public void setMenu (Menu menu) {
           UIThreadUtils.stopExclusiveSection();
         }
       }
-      public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+      @Override
+	public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
         if(MenuItem.this.menu == null) return;
         if(!MenuItem.this.menu.hooks(SWT.Show)) return;
         UIThreadUtils.startExclusiveSection(getDisplay());
@@ -820,7 +814,7 @@ public void setMenu (Menu menu) {
 	if (oldMenu != null) oldMenu.cascade = null;
 	this.menu = menu;
   if (menu != null) {
-    menu.cascade = this; 
+    menu.cascade = this;
     Component[] components = ((JMenu)menu.handle).getPopupMenu().getComponents();
     for(int i=0; i<components.length; i++) {
       popupMenu.add(components[i]);
@@ -887,7 +881,7 @@ public void setSelection (boolean selected) {
  * accelerator key sequence. The accelerator key sequence
  * is installed using #setAccelerator.
  * </p>
- * 
+ *
  * @param string the new text
  *
  * @exception IllegalArgumentException <ul>
@@ -897,9 +891,10 @@ public void setSelection (boolean selected) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #setAccelerator
  */
+@Override
 public void setText (String string) {
 	checkWidget ();
 	if (string == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -1013,7 +1008,7 @@ public void setText (String string) {
 //				MenuItem item = items [i];
 //				if (item.image != null) {
 //					Rectangle rect = item.image.getBounds ();
-//					width = Math.max (width, rect.width); 
+//					width = Math.max (width, rect.width);
 //				}
 //			}
 //		}
@@ -1039,7 +1034,8 @@ void createHandle() {
     handle = new JSeparator();
   } else if((style & SWT.CASCADE) != 0 || (style & SWT.PUSH) != 0) {
     JMenuItem menuItem = new JMenuItem() {
-      public void menuSelectionChanged(boolean isIncluded) {
+      @Override
+	public void menuSelectionChanged(boolean isIncluded) {
         super.menuSelectionChanged(isIncluded);
         if(!isIncluded) {
           if(parent == null || parent.cascade == null) return;
@@ -1088,8 +1084,7 @@ void createHandle() {
 //        UIThreadUtil.stopExclusiveSection();
 //      }
 //    });
-    menuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+    menuItem.addActionListener(e -> {
         if(!hooks(SWT.Selection)) return;
         UIThreadUtils.startExclusiveSection(getDisplay());
         if(isDisposed()) {
@@ -1105,13 +1100,11 @@ void createHandle() {
         } finally {
           UIThreadUtils.stopExclusiveSection();
         }
-      }
-    });
+      });
   } else if((style & SWT.CHECK) != 0) {
     JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem();
     handle = menuItem;
-    menuItem.addItemListener(new ItemListener() {
-      public void itemStateChanged(ItemEvent e) {
+    menuItem.addItemListener(e -> {
         if(adjustSelection || !hooks(SWT.Selection)) return;
         UIThreadUtils.startExclusiveSection(getDisplay());
         if(isDisposed()) {
@@ -1128,11 +1121,11 @@ void createHandle() {
         } finally {
           UIThreadUtils.stopExclusiveSection();
         }
-      }
-    });
+      });
   } else if((style & SWT.RADIO) != 0) {
     JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem() {
-      protected void fireActionPerformed(ActionEvent e) {
+      @Override
+	protected void fireActionPerformed(ActionEvent e) {
         if(!isSelected()) {
           setSelected(true);
         }
@@ -1157,8 +1150,7 @@ void createHandle() {
       }
     };
     handle = menuItem;
-    menuItem.addItemListener(new ItemListener() {
-      public void itemStateChanged(ItemEvent e) {
+    menuItem.addItemListener(e -> {
         if(e.getStateChange() == ItemEvent.SELECTED) {
           selectRadio();
         }
@@ -1178,9 +1170,13 @@ void createHandle() {
         } finally {
           UIThreadUtils.stopExclusiveSection();
         }
-      }
-    });
+      });
   }
+}
+
+public void setToolTipText(String toolTip) {
+	checkWidget();
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 
 }
