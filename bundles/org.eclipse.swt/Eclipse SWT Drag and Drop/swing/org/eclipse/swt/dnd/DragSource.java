@@ -524,12 +524,12 @@ public void dragGestureRecognized(DragGestureEvent e) {
 }
 
 public DragSourceEffect getDragSourceEffect() {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 return null;
 }
 
 public boolean canBeginDrag() {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 return false;
 };
 

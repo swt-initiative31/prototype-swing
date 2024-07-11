@@ -221,7 +221,7 @@ boolean updateTextDirection(int textDirection) {
 //		return true;
 //	}
 //	return textDirection == AUTO_TEXT_DIRECTION;
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 	return false;
 }
 

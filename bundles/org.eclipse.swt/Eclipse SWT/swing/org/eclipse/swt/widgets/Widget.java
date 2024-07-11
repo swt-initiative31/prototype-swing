@@ -168,10 +168,10 @@ public void addListener (int eventType, Listener listener) {
 }
 
 protected void addTypedListener (EventListener listener, int... eventTypes) {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 protected void removeTypedListener (int eventType, EventListener listener) {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 
 /**
@@ -2200,7 +2200,7 @@ public void reskin(int flags) {
 	throw new UnsupportedOperationException("Not implemented yet");
 }
 void reskinChildren (int flags) {
-	throw new UnsupportedOperationException("Not implemented yet");
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 void reskinWidget() {
 	throw new UnsupportedOperationException("Not implemented yet");

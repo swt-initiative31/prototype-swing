@@ -3786,7 +3786,7 @@ public void setHeaderForeground(Color color) {
 }
 
 void updateHeaderCSS() {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 //	StringBuilder css = new StringBuilder("button {");
 //	if (headerBackground != null) {
 //		/*
@@ -3841,7 +3841,7 @@ void updateHeaderCSS() {
  * @since 3.4
  */
 public void select (TreeItem item) {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (item.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
@@ -3871,7 +3871,7 @@ public void select (TreeItem item) {
  * @since 3.4
  */
 public void deselect (TreeItem item) {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (item.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);

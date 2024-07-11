@@ -281,4 +281,50 @@ public void processEvent(EventObject e) {
   }
 }
 
+/**
+ * Returns the link foreground color.
+ *
+ * @return the receiver's link foreground color.
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ * @since 3.105
+ */
+public Color getLinkForeground () {
+	checkWidget ();
+	return linkColor != null ? linkColor : display.getSystemColor(SWT.COLOR_LINK_FOREGROUND);
+}
+
+/**
+ * Sets the link foreground color to the color specified
+ * by the argument, or to the default system color for the link
+ * if the argument is null.
+ * <p>
+ * Note: This operation is a hint and may be overridden by the platform.
+ * </p>
+ * @param color the new color (or null)
+ *
+ * @exception IllegalArgumentException <ul>
+ *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
+ * </ul>
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ * @since 3.105
+ */
+public void setLinkForeground (Color color) {
+	checkWidget();
+	if (color != null) {
+		if (color.isDisposed ()) error(SWT.ERROR_INVALID_ARGUMENT);
+		if (color.equals(linkColor)) return;
+	} else if (linkColor == null) return;
+	linkColor = color;
+	if (getEnabled()) {
+//		styleLinkParts();System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+		redraw();
+	}
+}
 }
