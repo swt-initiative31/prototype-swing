@@ -519,11 +519,11 @@ public Image (Device device, String filename) {
 //}
 
 public Image(Display display, AutoScaleImageDataProvider autoScaleImageDataProvider) {
-	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet
 }
 
 public Image(Device device, ImageDataProvider imageDataProvider) {
-	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet
 }
 
 /**
@@ -1479,6 +1479,7 @@ public CGC internal_new_GC (GCData data) {
  * @param hDC the platform specific GC handle
  * @param data the platform specific GC data
  */
+@Override
 public void internal_dispose_GC (CGC handle, GCData data) {
 	handle.dispose();
 }
@@ -1627,7 +1628,8 @@ static BufferedImage duplicateImage(java.awt.Image handle) {
 }
 
 public ImageData getImageData(int deviceZoom) {
-	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet
+	return null;
 }
 
 //private static BufferedImage createBufferedImageIndexPalette(ImageData data, PaletteData p) {

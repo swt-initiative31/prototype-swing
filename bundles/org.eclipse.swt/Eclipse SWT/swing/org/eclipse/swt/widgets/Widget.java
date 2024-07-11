@@ -168,10 +168,10 @@ public void addListener (int eventType, Listener listener) {
 }
 
 protected void addTypedListener (EventListener listener, int... eventTypes) {
-	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet
 }
 protected void removeTypedListener (int eventType, EventListener listener) {
-	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet
 }
 
 /**

@@ -838,7 +838,8 @@ public void processEvent(EventObject e) {
 }
 
 public boolean traverse(int traversal, Event event) {
-	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet
+	return false;
 }
 
 }
