@@ -2625,4 +2625,14 @@ public final Consumer<Error> getErrorHandler () {
 	return errorHandler;
 }
 
+public void addSkinnableWidget(Widget widget) {
+	// TODO (visjee) Not implemented yet
+//		if (skinCount >= skinList.length) {
+//			Widget[] newSkinWidgets = new Widget [(skinList.length + 1) * 3 / 2];
+//			System.arraycopy (skinList, 0, newSkinWidgets, 0, skinList.length);
+//			skinList = newSkinWidgets;
+//		}
+//		skinList [skinCount++] = widget;
+}
+
 }

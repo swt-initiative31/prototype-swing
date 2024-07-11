@@ -11,26 +11,19 @@
 package org.eclipse.swt.widgets;
 
 
-import java.awt.AWTEvent;
-import java.awt.ComponentOrientation;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.JButton;
-import javax.swing.RootPaneContainer;
+import javax.swing.*;
 
-import org.eclipse.swt.internal.swing.CCombo;
-import org.eclipse.swt.internal.swing.UIThreadUtils;
-import org.eclipse.swt.internal.swing.Utils;
 import org.eclipse.swt.*;
-import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class are controls that allow the user
- * to choose an item from a list of items, or optionally 
+ * to choose an item from a list of items, or optionally
  * enter a new value by typing it into an editable text
  * field. Often, <code>Combo</code>s are used in the same place
  * where a single selection <code>List</code> widget could
@@ -43,7 +36,7 @@ import org.eclipse.swt.events.*;
  * which access one versus the other (compare for example,
  * <code>clearSelection()</code> and <code>deselectAll()</code>).
  * The API documentation is careful to indicate either "the
- * receiver's list" or the "the receiver's text field" to 
+ * receiver's list" or the "the receiver's text field" to
  * distinguish between the two cases.
  * </p><p>
  * Note that although this class is a subclass of <code>Composite</code>,
@@ -65,29 +58,29 @@ import org.eclipse.swt.events.*;
  */
 
 public class Combo extends Composite {
-	
+
 	/**
 	 * the operating system limit for the number of characters
 	 * that the text field in an instance of this class can hold
 	 */
 	public static final int LIMIT;
-	
+
 	/*
 	 * These values can be different on different platforms.
 	 * Therefore they are not initialized in the declaration
 	 * to stop the compiler from inlining.
 	 */
 	static {
-		LIMIT = 0x7FFFFFFF;	
+		LIMIT = 0x7FFFFFFF;
 	}
-	
+
 /**
  * Constructs a new instance of this class given its parent
  * and a style value describing its behavior and appearance.
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -245,7 +238,7 @@ public void addSelectionListener(SelectionListener listener) {
  *
  * @see VerifyListener
  * @see #removeVerifyListener
- * 
+ *
  * @since 3.1
  */
 public void addVerifyListener (VerifyListener listener) {
@@ -255,6 +248,7 @@ public void addVerifyListener (VerifyListener listener) {
 	addListener (SWT.Verify, typedListener);
 }
 
+@Override
 protected void checkSubclass () {
 	if (!isValidSubclass ()) error (SWT.ERROR_INVALID_SUBCLASS);
 }
@@ -279,7 +273,7 @@ static int checkStyle (int style) {
  * text field is editable, this has the effect of placing the
  * i-beam at the start of the text.
  * <p>
- * Note: To clear the selected items in the receiver's list, 
+ * Note: To clear the selected items in the receiver's list,
  * use <code>deselectAll()</code>.
  * </p>
  *
@@ -297,6 +291,7 @@ public void clearSelection () {
   isAdjustingSelection = false;
 }
 
+@Override
 public Point computeSize (int wHint, int hHint, boolean changed) {
   if((style & SWT.SIMPLE) != 0) {
     return super.computeSize(wHint, hHint, changed);
@@ -319,7 +314,7 @@ public Point computeSize (int wHint, int hHint, boolean changed) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 2.1
  */
 public void copy () {
@@ -327,11 +322,13 @@ public void copy () {
   ((CCombo)handle).copyEditor();
 }
 
+@Override
 void createHandleInit() {
   super.createHandleInit();
   state &= ~(CANVAS | THEME_BACKGROUND);
 }
 
+@Override
 protected Container createHandle () {
   return (Container)CCombo.Factory.newInstance(this, style);
 }
@@ -347,7 +344,7 @@ protected Container createHandle () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 2.1
  */
 public void cut () {
@@ -357,7 +354,7 @@ public void cut () {
 }
 
 /**
- * Deselects the item at the given zero-relative index in the receiver's 
+ * Deselects the item at the given zero-relative index in the receiver's
  * list.  If the item at the index was already deselected, it remains
  * deselected. Indices that are out of range are ignored.
  *
@@ -467,11 +464,11 @@ public int getItemHeight () {
 
 /**
  * Returns a (possibly empty) array of <code>String</code>s which are
- * the items in the receiver's list. 
+ * the items in the receiver's list.
  * <p>
  * Note: This is not the actual structure used by the receiver
  * to maintain its list of items, so modifying the array will
- * not affect the receiver. 
+ * not affect the receiver.
  * </p>
  *
  * @return the items in the receiver's list
@@ -489,6 +486,7 @@ public String [] getItems () {
 	return result;
 }
 
+@Override
 String getNameText () {
 	return getText ();
 }
@@ -497,14 +495,15 @@ String getNameText () {
  * Returns the orientation of the receiver.
  *
  * @return the orientation style
- * 
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 2.1.2
  */
+@Override
 public int getOrientation () {
 	checkWidget();
 	return style & (SWT.LEFT_TO_RIGHT | SWT.RIGHT_TO_LEFT);
@@ -591,9 +590,9 @@ public int getTextHeight () {
  * text field is capable of holding. If this has not been changed
  * by <code>setTextLimit()</code>, it will be the constant
  * <code>Combo.LIMIT</code>.
- * 
+ *
  * @return the text limit
- * 
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
@@ -620,7 +619,7 @@ public int getTextLimit () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.0
  */
 public int getVisibleItemCount () {
@@ -630,7 +629,7 @@ public int getVisibleItemCount () {
 
 /**
  * Searches the receiver's list starting at the first item
- * (index 0) until an item is found that is equal to the 
+ * (index 0) until an item is found that is equal to the
  * argument, and returns the index of that item. If no item
  * is found, returns -1.
  *
@@ -650,7 +649,7 @@ public int indexOf (String string) {
 }
 
 /**
- * Searches the receiver's list starting at the given, 
+ * Searches the receiver's list starting at the given,
  * zero-relative index until an item is found that is equal
  * to the argument, and returns the index of that item. If
  * no item is found or the starting index is out of range,
@@ -678,6 +677,7 @@ public int indexOf (String string, int start) {
 	return -1;
 }
 
+@Override
 Point minimumSize(int wHint, int hHint, boolean changed) {
   Dimension preferredSize = handle.getPreferredSize();
   if((style & SWT.SIMPLE) != 0) {
@@ -699,7 +699,7 @@ Point minimumSize(int wHint, int hHint, boolean changed) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 2.1
  */
 public void paste () {
@@ -734,7 +734,7 @@ public void remove (int index) {
 
 /**
  * Removes the items from the receiver's list which are
- * between the given zero-relative start and end 
+ * between the given zero-relative start and end
  * indices (inclusive).
  *
  * @param start the start of the range
@@ -765,7 +765,7 @@ public void remove (int start, int end) {
 
 /**
  * Searches the receiver's list starting at the first item
- * until an item is found that is equal to the argument, 
+ * until an item is found that is equal to the argument,
  * and removes that item from the list.
  *
  * @param string the item to remove
@@ -826,7 +826,7 @@ public void removeModifyListener (ModifyListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (eventTable == null) return;
-	eventTable.unhook (SWT.Modify, listener);	
+	eventTable.unhook (SWT.Modify, listener);
 }
 
 /**
@@ -851,7 +851,7 @@ public void removeSelectionListener (SelectionListener listener) {
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (eventTable == null) return;
 	eventTable.unhook (SWT.Selection, listener);
-	eventTable.unhook (SWT.DefaultSelection,listener);	
+	eventTable.unhook (SWT.DefaultSelection,listener);
 }
 
 /**
@@ -870,20 +870,20 @@ public void removeSelectionListener (SelectionListener listener) {
  *
  * @see VerifyListener
  * @see #addVerifyListener
- * 
+ *
  * @since 3.1
  */
 public void removeVerifyListener (VerifyListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (eventTable == null) return;
-	eventTable.unhook (SWT.Verify, listener);	
+	eventTable.unhook (SWT.Verify, listener);
 }
 
 boolean isAdjustingSelection;
 
 /**
- * Selects the item at the given zero-relative index in the receiver's 
+ * Selects the item at the given zero-relative index in the receiver's
  * list.  If the item at the index was already selected, it remains
  * selected. Indices that are out of range are ignored.
  *
@@ -954,7 +954,7 @@ public void setItem (int index, String string) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public void setItems (String [] items) {
+public void setItems (String... items) {
 	checkWidget ();
 	if (items == null) error (SWT.ERROR_NULL_ARGUMENT);
 	for (int i=0; i<items.length; i++) {
@@ -977,14 +977,15 @@ public void setItems (String [] items) {
  * <p>
  *
  * @param orientation new orientation style
- * 
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 2.1.2
  */
+@Override
 public void setOrientation (int orientation) {
 	checkWidget();
 	int flags = SWT.RIGHT_TO_LEFT | SWT.LEFT_TO_RIGHT;
@@ -1004,7 +1005,7 @@ public void setOrientation (int orientation) {
  * Sets the selection in the receiver's text field to the
  * range specified by the argument whose x coordinate is the
  * start of the selection and whose y coordinate is the end
- * of the selection. 
+ * of the selection.
  *
  * @param selection a point representing the new selection start and end
  *
@@ -1031,7 +1032,7 @@ public void setSelection (Point selection) {
  * Note: The text field in a <code>Combo</code> is typically
  * only capable of displaying a single line of text. Thus,
  * setting the text to a string containing line breaks or
- * other special characters will probably cause it to 
+ * other special characters will probably cause it to
  * display incorrectly.
  * </p>
  *
@@ -1075,7 +1076,7 @@ public void setText (String string) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #LIMIT
  */
 public void setTextLimit (int limit) {
@@ -1098,7 +1099,7 @@ public void setTextLimit (int limit) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.0
  */
 public void setVisibleItemCount (int count) {
@@ -1107,6 +1108,7 @@ public void setVisibleItemCount (int count) {
   ((CCombo)handle).setMaximumRowCount(count);
 }
 
+@Override
 boolean traverseEscape () {
 	if ((style & SWT.DROP_DOWN) != 0) {
 	  return ((CCombo)handle).isPopupVisible();
@@ -1118,6 +1120,7 @@ boolean traverseEscape () {
 	return super.traverseEscape ();
 }
 
+@Override
 public void processEvent(AWTEvent e) {
   int id = e.getID();
   switch(id) {

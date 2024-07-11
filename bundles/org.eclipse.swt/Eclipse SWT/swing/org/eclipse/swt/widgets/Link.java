@@ -10,24 +10,21 @@
  *******************************************************************************/
 package org.eclipse.swt.widgets;
 
-import java.awt.Container;
-import java.awt.Dimension;
-import java.util.EventObject;
+import java.awt.*;
+import java.util.*;
 
-import javax.swing.SwingUtilities;
-import javax.swing.event.HyperlinkEvent;
+import javax.swing.*;
+import javax.swing.event.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.internal.swing.CLink;
-import org.eclipse.swt.internal.swing.UIThreadUtils;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class represent a selectable
- * user interface object that displays a text with 
+ * user interface object that displays a text with
  * links.
  * <p>
  * <dl>
@@ -39,12 +36,13 @@ import org.eclipse.swt.internal.swing.UIThreadUtils;
  * <p>
  * IMPORTANT: This class is <em>not</em> intended to be subclassed.
  * </p>
- * 
+ *
  * @since 3.1
  */
 public class Link extends Control {
-  
+
   String text;
+private Color linkColor;
 
 /**
  * Constructs a new instance of this class given its parent
@@ -52,7 +50,7 @@ public class Link extends Control {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -109,18 +107,16 @@ public void addSelectionListener (SelectionListener listener) {
   addListener (SWT.DefaultSelection, typedListener);
 }
 
+@Override
 void createHandleInit() {
   super.createHandleInit();
   state |= THEME_BACKGROUND;
 }
 
+@Override
 public Point computeSize (int wHint, int hHint, boolean changed) {
   checkWidget ();
-  SwingUtilities.invokeLater(new Runnable() {
-    public void run() {
-      isAdjustingSize = true;
-    }
-  });
+  SwingUtilities.invokeLater(() -> isAdjustingSize = true);
   Dimension size = handle.getSize();
   if(wHint == SWT.DEFAULT) {
     handle.setSize(((CLink)handle).getPreferredWidth(), 0);
@@ -129,18 +125,16 @@ public Point computeSize (int wHint, int hHint, boolean changed) {
   }
   Point point = super.computeSize (wHint, hHint, changed);
   handle.setSize(size);
-  SwingUtilities.invokeLater(new Runnable() {
-    public void run() {
-      isAdjustingSize = false;
-    }
-  });
+  SwingUtilities.invokeLater(() -> isAdjustingSize = false);
   return point;
 }
 
+@Override
 Container createHandle () {
   return (Container)CLink.Factory.newInstance(this, style);
 }
 
+@Override
 String getNameText () {
   return getText ();
 }
@@ -161,6 +155,7 @@ public String getText () {
   return text == null? "": text;
 }
 
+@Override
 boolean mnemonicHit (char key) {
   Composite control = this.parent;
   while (control != null) {
@@ -179,6 +174,7 @@ boolean mnemonicHit (char key) {
   return false;
 }
 
+@Override
 boolean mnemonicMatch (char key) {
   char mnemonic = findMnemonic (getText ());
   if (mnemonic == '\0') return false;
@@ -207,7 +203,7 @@ public void removeSelectionListener (SelectionListener listener) {
   if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
   if (eventTable == null) return;
   eventTable.unhook (SWT.Selection, listener);
-  eventTable.unhook (SWT.DefaultSelection, listener); 
+  eventTable.unhook (SWT.DefaultSelection, listener);
 }
 
 /**
@@ -222,7 +218,7 @@ public void removeSelectionListener (SelectionListener listener) {
  * HREF tag can be used to distinguish between them.  The string may
  * include the mnemonic character and line delimiters.
  * </p>
- * 
+ *
  * @param string the new text
  *
  * @exception IllegalArgumentException <ul>
@@ -250,6 +246,7 @@ public void setText (String string) {
   ((CLink)handle).setLinkText(string);
 }
 
+@Override
 public void processEvent(EventObject e) {
   if(e instanceof HyperlinkEvent) {
     if(!hooks(SWT.Selection)) { super.processEvent(e); return; }
@@ -281,4 +278,50 @@ public void processEvent(EventObject e) {
   }
 }
 
+/**
+ * Returns the link foreground color.
+ *
+ * @return the receiver's link foreground color.
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ * @since 3.105
+ */
+public Color getLinkForeground () {
+	checkWidget ();
+	return linkColor != null ? linkColor : display.getSystemColor(SWT.COLOR_LINK_FOREGROUND);
+}
+
+/**
+ * Sets the link foreground color to the color specified
+ * by the argument, or to the default system color for the link
+ * if the argument is null.
+ * <p>
+ * Note: This operation is a hint and may be overridden by the platform.
+ * </p>
+ * @param color the new color (or null)
+ *
+ * @exception IllegalArgumentException <ul>
+ *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
+ * </ul>
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ * @since 3.105
+ */
+public void setLinkForeground (Color color) {
+	checkWidget();
+	if (color != null) {
+		if (color.isDisposed ()) error(SWT.ERROR_INVALID_ARGUMENT);
+		if (color.equals(linkColor)) return;
+	} else if (linkColor == null) return;
+	linkColor = color;
+	if (getEnabled()) {
+//		styleLinkParts();// TODO (visjee) Not implemented yet
+		redraw();
+	}
+}
 }

@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.TabItem;
 public class ControlExample {
 	private static ResourceBundle resourceBundle =
 		ResourceBundle.getBundle("examples_control"); //$NON-NLS-1$
-	private ShellTab shellTab;
+//	private ShellTab shellTab;
 	private TabFolder tabFolder;
 	private Tab [] tabs;
 	Image[] images;
@@ -107,7 +107,7 @@ public class ControlExample {
 			new ColorTab(this),
 			new ComboTab (this),
 			new CoolBarTab (this),
-			new DateTimeTab (this),
+//			new DateTimeTab (this),
 			new DialogTab (this),
 			new ExpandBarTab (this),
 			new GroupTab (this),
@@ -118,7 +118,7 @@ public class ControlExample {
 			new ProgressBarTab (this),
 			new SashTab (this),
 			new ScaleTab (this),
-			shellTab = new ShellTab(this),
+//			shellTab = new ShellTab(this),
 			new SliderTab (this),
 			new SpinnerTab (this),
 			new TabFolderTab (this),
@@ -144,8 +144,8 @@ public class ControlExample {
 		 * in the shells list to avoid disposing a shell
 		 * twice.
 		 */
-		if (shellTab != null) shellTab.closeAllShells ();
-		shellTab = null;
+//		if (shellTab != null) shellTab.closeAllShells ();
+//		shellTab = null;
 		tabFolder = null;
 		freeResources();
 	}
