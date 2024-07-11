@@ -147,6 +147,10 @@ public class Display extends Device implements Executor{
 	String [] keys;
 	Object [] values;
 
+	/* TaskBar */
+	TaskBar taskBar;
+
+
 	/* Key Mappings */
 	static final int [] [] KeyTable = {
 
@@ -1411,6 +1415,26 @@ public Tray getSystemTray () {
   }
 	return tray = new Tray (this, SWT.NONE);
 }
+
+/**
+ * Returns the single instance of the system taskBar or null
+ * when there is no system taskBar available for the platform.
+ *
+ * @return the system taskBar or <code>null</code>
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_DEVICE_DISPOSED - if the receiver has been disposed</li>
+ * </ul>
+ *
+ * @since 3.6
+ */
+public TaskBar getSystemTaskBar () {
+	checkDevice ();
+	if (taskBar != null) return taskBar;
+	taskBar = new TaskBar (this, SWT.NONE);
+	return taskBar;
+}
+
 
 /**
  * Returns the user-interface thread for the receiver.
