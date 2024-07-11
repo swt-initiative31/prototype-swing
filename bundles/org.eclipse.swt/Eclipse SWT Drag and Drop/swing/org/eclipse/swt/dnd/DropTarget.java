@@ -449,6 +449,7 @@ public void setTransfer(Transfer[] transferAgents){
 }
 
 public DropTargetEffect getDropTargetEffect() {
-	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet
+	return null;
 }
 }

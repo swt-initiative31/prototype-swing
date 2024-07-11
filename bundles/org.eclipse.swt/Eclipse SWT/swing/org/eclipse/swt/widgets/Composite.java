@@ -1418,11 +1418,12 @@ public void processEvent(AWTEvent e) {
   }
 }
 
+@Override
 public int getOrientation() {
 	return SWT.LEFT_TO_RIGHT;
 }
 
 public void setOrientation(int a) {
-//	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet
 }
 }

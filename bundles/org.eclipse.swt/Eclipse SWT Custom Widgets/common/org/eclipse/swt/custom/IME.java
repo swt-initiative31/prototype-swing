@@ -10,19 +10,23 @@ public class IME {
 	}
 
 	public int getCommitCount() {
-		throw new UnsupportedOperationException("Not implemented yet");
+		// TODO (visjee) Not implemented yet
+		return -1;
 	}
 
 	public int getCompositionOffset() {
+		// TODO (visjee) Not implemented yet
 		return 42;
 	}
 
 	public boolean getWideCaret() {
-		throw new UnsupportedOperationException("Not implemented yet");
+		// TODO (visjee) Not implemented yet
+		return false;
 	}
 
 	public int getCaretOffset() {
-		throw new UnsupportedOperationException("Not implemented yet");
+		// TODO (visjee) Not implemented yet
+		return -1;
 	}
 
 	public String getText() {

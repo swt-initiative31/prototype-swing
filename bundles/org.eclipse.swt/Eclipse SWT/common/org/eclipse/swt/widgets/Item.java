@@ -221,7 +221,8 @@ boolean updateTextDirection(int textDirection) {
 //		return true;
 //	}
 //	return textDirection == AUTO_TEXT_DIRECTION;
-	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet
+	return false;
 }
 
 }

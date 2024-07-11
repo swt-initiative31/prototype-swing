@@ -524,11 +524,13 @@ public void dragGestureRecognized(DragGestureEvent e) {
 }
 
 public DragSourceEffect getDragSourceEffect() {
-	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet
+return null;
 }
 
 public boolean canBeginDrag() {
-	throw new UnsupportedOperationException("Not implemented yet");
+	// TODO (visjee) Not implemented yet
+return false;
 };
 
 
