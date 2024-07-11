@@ -12,6 +12,7 @@ package org.eclipse.swt.graphics;
 
 
 import org.eclipse.swt.*;
+import org.eclipse.swt.widgets.*;
 
 /**
  * Instances of this class manage the operating system resources that
@@ -43,6 +44,7 @@ public final class Color extends Resource {
 	// TODO: in SWT the handle is the int value not the awt color. These should be switched.
 	public java.awt.Color handle;
 	public int intHandle = -1;
+	int alpha = 255;
 
 
 /**
@@ -82,6 +84,22 @@ public Color (Device device, int red, int green, int blue) {
   if (device.tracking) device.new_Object (this);
 }
 
+public Color (Device device, int red, int green, int blue, int alpha) {
+	super(device);
+	init(red, green, blue, alpha);
+	init();
+}
+
+void init(int red, int green, int blue, int alpha) {
+	if (red > 255 || red < 0 || green > 255 || green < 0 || blue > 255 || blue < 0 || alpha > 255 || alpha < 0) {
+		SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+	}
+	intHandle = (red & 0xFF) | ((green & 0xFF) << 8) | ((blue & 0xFF) << 16);
+	this.handle = new java.awt.Color (red, green, blue);
+	this.alpha = alpha;
+}
+
+
 /**
  * Constructs a new instance of this class given a device and an
  * <code>RGB</code> describing the desired red, green and blue values.
@@ -113,11 +131,21 @@ public Color (Device device, RGB rgb) {
 }
 
 public Color(int red, int green, int blue) {
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]); 
+	this(null, red, green, blue);
 }
 
-public Color(RGB closeFill) {
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+public Color(RGB rgb) {
+	this(null, rgb.red, rgb.green, rgb.blue);
+}
+
+public Color(Display display, RGBA rgba) {
+	// TODO (visjee) Not implemented yet : use alpha too
+	this(display, rgba.rgb.red, rgba.rgb.green, rgba.rgb.blue);
+}
+
+public RGBA getRGBA () {
+	if (isDisposed()) SWT.error(SWT.ERROR_GRAPHIC_DISPOSED);
+	return new RGBA(intHandle & 0xFF, (intHandle & 0xFF00) >> 8, (intHandle & 0xFF0000) >> 16, alpha);
 }
 
 private void init (Device device, int red, int green, int blue) {
@@ -285,6 +313,21 @@ public static Color swing_new(Device device, java.awt.Color handle) {
 public int getAlpha() {
 System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 	return 0;
+}
+
+/**
+ * Returns an <code>RGBA</code> representing the receiver.
+ *
+ * @return the RGBA for the color
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_GRAPHIC_DISPOSED - if the receiver has been disposed</li>
+ * </ul>
+ * @since 3.104
+ */
+public RGBA getRGBA () {
+	if (isDisposed()) SWT.error(SWT.ERROR_GRAPHIC_DISPOSED);
+	return new RGBA(getRed(), getGreen(), getBlue(), getAlpha());
 }
 
 }
