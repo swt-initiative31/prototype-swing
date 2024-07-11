@@ -2733,4 +2733,14 @@ public void execute(Runnable runnable) {
 }
 
 
+public static boolean isSystemDarkTheme() {
+	// TODO (visjee) Not implemented yet
+	String lookAndFeel = UIManager.getLookAndFeel().getName();
+
+	// Check if the look and feel name contains "dark" or "nimbus" (Nimbus is a dark
+	// theme)
+	return lookAndFeel.toLowerCase().contains("dark")//
+			|| lookAndFeel.toLowerCase().contains("nimbus");
+}
+
 }

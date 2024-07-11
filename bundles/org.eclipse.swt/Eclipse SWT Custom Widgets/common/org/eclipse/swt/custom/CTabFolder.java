@@ -4280,4 +4280,5 @@ private void updateMaxImage() {
 		maxItem.setImage(maxImage);
 	}
 }
+
 }
