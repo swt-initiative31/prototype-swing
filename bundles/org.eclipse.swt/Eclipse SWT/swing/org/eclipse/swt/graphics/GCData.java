@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.swt.graphics;
 
- 
-import java.awt.Component;
+
+import java.awt.*;
+
+import org.eclipse.swt.*;
 
 /**
  * Instances of this class are descriptions of GCs in terms
@@ -26,12 +28,17 @@ import java.awt.Component;
 
 public final class GCData {
 	public Device device;
-	public int style;
+	public int style, state = -1;
 	public Image image;
 	public java.awt.Color foreground = java.awt.Color.BLACK;
 	public java.awt.Color background = java.awt.Color.BLACK;
 	public int hPen;
-	public int lineWidth;
+	public float lineWidth;
+	public int lineStyle = SWT.LINE_SOLID;
+	public int lineCap = SWT.CAP_FLAT;
+	public int lineJoin = SWT.JOIN_MITER;
+	public float lineDashesOffset;
+	public float lineMiterLimit = 10;
 	public float[] dashes;
 	public int hBrush;
 	public java.awt.Font hFont;
