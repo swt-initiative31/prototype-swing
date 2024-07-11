@@ -12,6 +12,7 @@ package org.eclipse.swt.graphics;
 
 
 import org.eclipse.swt.*;
+import org.eclipse.swt.widgets.*;
 
 /**
  * Instances of this class manage the operating system resources that
@@ -113,11 +114,16 @@ public Color (Device device, RGB rgb) {
 }
 
 public Color(int red, int green, int blue) {
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]); 
+	this(null, red, green, blue);
 }
 
-public Color(RGB closeFill) {
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+public Color(RGB rgb) {
+	this(null, rgb.red, rgb.green, rgb.blue);
+}
+
+public Color(Display display, RGBA rgba) {
+	// TODO (visjee) Not implemented yet : use alpha too
+	this(display, rgba.rgb.red, rgba.rgb.green, rgba.rgb.blue);
 }
 
 private void init (Device device, int red, int green, int blue) {
@@ -287,5 +293,18 @@ public int getAlpha() {
 	return 0;
 }
 
-
+/**
+ * Returns an <code>RGBA</code> representing the receiver.
+ *
+ * @return the RGBA for the color
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_GRAPHIC_DISPOSED - if the receiver has been disposed</li>
+ * </ul>
+ * @since 3.104
+ */
+public RGBA getRGBA () {
+	if (isDisposed()) SWT.error(SWT.ERROR_GRAPHIC_DISPOSED);
+	return new RGBA(getRed(), getGreen(), getBlue(), getAlpha());
+}
 }

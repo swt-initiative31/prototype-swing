@@ -2117,4 +2117,38 @@ public void processEvent(AWTEvent e) {
   }
 }
 
+/**
+ * Sets the receiver's alpha value which must be
+ * between 0 (transparent) and 255 (opaque).
+ * <p>
+ * This operation requires the operating system's advanced
+ * widgets subsystem which may not be available on some
+ * platforms.
+ * </p>
+ * @param alpha the alpha value
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @since 3.4
+ */
+public void setAlpha (int alpha) {
+	checkWidget ();
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+
+//	boolean composited;
+//	if (GTK.GTK4) {
+//		long display = GDK.gdk_display_get_default();
+//		composited = GDK.gdk_display_is_composited(display);
+//	} else {
+//		long screen = GTK3.gtk_widget_get_screen(shellHandle);
+//		composited = GDK.gdk_screen_is_composited(screen);
+//	}
+//	if (composited) {
+//		GTK.gtk_widget_set_opacity (shellHandle, (double) alpha / 255);
+//	}
+}
+
 }
