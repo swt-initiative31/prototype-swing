@@ -110,11 +110,11 @@ public Color (Device device, RGB rgb) {
 }
 
 public Color(int red, int green, int blue) {
-	// TODO (visjee) Not implemented yet 
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]); 
 }
 
 public Color(RGB closeFill) {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 
 private void init (Device device, int red, int green, int blue) {
@@ -278,7 +278,8 @@ public static Color swing_new(Device device, java.awt.Color handle) {
 }
 
 public int getAlpha() {
-	throw new UnsupportedOperationException("Not implemented yet");
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+	return 0;
 }
 
 }

@@ -10,22 +10,22 @@ public class IME {
 	}
 
 	public int getCommitCount() {
-		// TODO (visjee) Not implemented yet
+		System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 		return -1;
 	}
 
 	public int getCompositionOffset() {
-		// TODO (visjee) Not implemented yet
+		System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 		return 42;
 	}
 
 	public boolean getWideCaret() {
-		// TODO (visjee) Not implemented yet
+		System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 		return false;
 	}
 
 	public int getCaretOffset() {
-		// TODO (visjee) Not implemented yet
+		System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 		return -1;
 	}
 

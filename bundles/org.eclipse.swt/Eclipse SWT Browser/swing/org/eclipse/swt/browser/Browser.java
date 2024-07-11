@@ -838,7 +838,7 @@ public void processEvent(EventObject e) {
 }
 
 public boolean traverse(int traversal, Event event) {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 	return false;
 }
 
