@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.*;
 
 import javax.swing.*;
@@ -106,7 +107,7 @@ import org.eclipse.swt.internal.swing.Compatibility;
  * @see Device#dispose
  */
 
-public class Display extends Device {
+public class Display extends Device implements Executor{
 
 	int sendEventCount;
 
@@ -2715,6 +2716,20 @@ public void sendPreExternalEventDispatchEvent () {
  */
 public void sendPostExternalEventDispatchEvent () {
 	sendJDKInternalEvent (SWT.PostExternalEventDispatch);
+}
+
+
+@Override
+public void execute(Runnable runnable) {
+	Objects.requireNonNull(runnable);
+	if (isDisposed()) {
+		throw new RejectedExecutionException(new SWTException (SWT.ERROR_WIDGET_DISPOSED, null));
+	}
+	if (thread == Thread.currentThread()) {
+		syncExec(runnable);
+	} else {
+		asyncExec(runnable);
+	}
 }
 
 }
