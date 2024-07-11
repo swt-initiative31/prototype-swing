@@ -287,4 +287,5 @@ public int getAlpha() {
 	return 0;
 }
 
+
 }
