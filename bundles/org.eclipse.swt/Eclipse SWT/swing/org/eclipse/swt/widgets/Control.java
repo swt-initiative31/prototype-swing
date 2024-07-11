@@ -4871,5 +4871,6 @@ public void setTextDirection(int textDirection) {
 		state &= ~HAS_AUTO_DIRECTION;
 	}
 }
+
 }
 
