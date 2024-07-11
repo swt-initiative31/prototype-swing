@@ -196,13 +196,12 @@ public void setImage (Image image) {
  * </ul>
  */
 public void setText (String string) {
-//	checkWidget ();
-//	if (string == null) error (SWT.ERROR_NULL_ARGUMENT);
-//	text = string;
-//	if ((state & SWT.HAS_AUTO_DIRECTION) != 0) {
-//		updateTextDirection (AUTO_TEXT_DIRECTION);
-//	}
-	throw new UnsupportedOperationException("Not implemented yet");
+	checkWidget ();
+	if (string == null) error (SWT.ERROR_NULL_ARGUMENT);
+	text = string;
+	if ((state & HAS_AUTO_DIRECTION) != 0) {
+		updateTextDirection (AUTO_TEXT_DIRECTION);
+	}
 }
 
 boolean updateTextDirection(int textDirection) {

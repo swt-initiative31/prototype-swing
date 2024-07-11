@@ -83,6 +83,16 @@ public abstract class Widget {
 	static final int DEFAULT_WIDTH	= 64;
 	static final int DEFAULT_HEIGHT	= 64;
 
+	/* Notify of the opportunity to skin this widget */
+	static final int SKIN_NEEDED = 1<<21;
+
+	/* Bidi "auto" text direction */
+	static final int HAS_AUTO_DIRECTION = 0;
+
+
+	/* Bidi flag and for auto text direction */
+	static final int AUTO_TEXT_DIRECTION = SWT.LEFT_TO_RIGHT | SWT.RIGHT_TO_LEFT;
+
 //	/* Check and initialize the Common Controls DLL */
 //	static final int MAJOR = 5, MINOR = 80;
 //	static {
@@ -2197,12 +2207,17 @@ public String toString () {
 //	return new LRESULT (result);
 //
 public void reskin(int flags) {
-	throw new UnsupportedOperationException("Not implemented yet");
+	checkWidget ();
+	reskinWidget ();
+	if ((flags & SWT.ALL) != 0) reskinChildren (flags);
 }
 void reskinChildren (int flags) {
-	throw new UnsupportedOperationException("Not implemented yet");
+// TODO (visjee) Not implemented yet
 }
 void reskinWidget() {
-	throw new UnsupportedOperationException("Not implemented yet");
+	if ((state & SKIN_NEEDED) != SKIN_NEEDED) {
+		this.state |= SKIN_NEEDED;
+		display.addSkinnableWidget(this);
+	}
 }
 }

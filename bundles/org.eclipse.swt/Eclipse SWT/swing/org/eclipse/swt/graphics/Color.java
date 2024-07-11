@@ -278,7 +278,8 @@ public static Color swing_new(Device device, java.awt.Color handle) {
 }
 
 public int getAlpha() {
-	throw new UnsupportedOperationException("Not implemented yet");
+// TODO (visjee) Not implemented yet
+	return 0;
 }
 
 }
