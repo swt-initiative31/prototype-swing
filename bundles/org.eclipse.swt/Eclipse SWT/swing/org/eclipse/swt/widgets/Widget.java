@@ -178,10 +178,10 @@ public void addListener (int eventType, Listener listener) {
 }
 
 protected void addTypedListener (EventListener listener, int... eventTypes) {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 protected void removeTypedListener (int eventType, EventListener listener) {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 
 /**
@@ -2212,7 +2212,7 @@ public void reskin(int flags) {
 	if ((flags & SWT.ALL) != 0) reskinChildren (flags);
 }
 void reskinChildren (int flags) {
-// TODO (visjee) Not implemented yet
+System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 void reskinWidget() {
 	if ((state & SKIN_NEEDED) != SKIN_NEEDED) {

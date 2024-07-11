@@ -829,7 +829,7 @@ void destroyItem (CTabItem item) {
 }
 
 private void requestLayout() {
-// TODO (visjee) Not implemented yet 
+System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]); 
 }
 
 /**

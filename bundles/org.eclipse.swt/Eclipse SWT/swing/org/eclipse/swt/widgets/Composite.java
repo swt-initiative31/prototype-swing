@@ -1424,6 +1424,6 @@ public int getOrientation() {
 }
 
 public void setOrientation(int a) {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 }

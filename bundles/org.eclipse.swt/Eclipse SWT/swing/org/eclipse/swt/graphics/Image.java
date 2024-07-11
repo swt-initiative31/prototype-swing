@@ -519,11 +519,11 @@ public Image (Device device, String filename) {
 //}
 
 public Image(Display display, AutoScaleImageDataProvider autoScaleImageDataProvider) {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 
 public Image(Device device, ImageDataProvider imageDataProvider) {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 
 /**
@@ -1628,7 +1628,7 @@ static BufferedImage duplicateImage(java.awt.Image handle) {
 }
 
 public ImageData getImageData(int deviceZoom) {
-	// TODO (visjee) Not implemented yet
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 	return null;
 }
 

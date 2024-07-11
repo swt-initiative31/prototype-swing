@@ -3539,7 +3539,7 @@ public void setHeaderBackground(Color color) {
 	}
 	headerBackground = color;
 
-//	updateHeaderCSS();// TODO (visjee) Not implemented yet
+//	updateHeaderCSS();System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 
 /**
@@ -3569,6 +3569,6 @@ public void setHeaderForeground(Color color) {
 	}
 	headerForeground = color;
 
-//	updateHeaderCSS();// TODO (visjee) Not implemented yet
+//	updateHeaderCSS();System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 }

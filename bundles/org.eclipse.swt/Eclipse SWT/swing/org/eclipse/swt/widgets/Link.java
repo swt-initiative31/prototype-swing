@@ -320,7 +320,7 @@ public void setLinkForeground (Color color) {
 	} else if (linkColor == null) return;
 	linkColor = color;
 	if (getEnabled()) {
-//		styleLinkParts();// TODO (visjee) Not implemented yet
+//		styleLinkParts();System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 		redraw();
 	}
 }

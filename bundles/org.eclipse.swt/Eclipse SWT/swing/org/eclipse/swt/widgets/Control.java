@@ -4844,7 +4844,7 @@ public int getOrientation () {
 public void setTextDirection(int textDirection) {
 	checkWidget ();
 	textDirection &= (SWT.RIGHT_TO_LEFT | SWT.LEFT_TO_RIGHT);
-//	updateTextDirection (textDirection);// TODO (visjee) Not implemented yet
+//	updateTextDirection (textDirection);System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 	if (textDirection == AUTO_TEXT_DIRECTION) {
 		state |= HAS_AUTO_DIRECTION;
 	} else {
