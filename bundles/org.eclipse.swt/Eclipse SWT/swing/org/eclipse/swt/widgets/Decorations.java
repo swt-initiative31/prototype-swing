@@ -11,15 +11,13 @@
 package org.eclipse.swt.widgets;
 
 
-import java.util.ArrayList;
+import java.util.*;
 
-import javax.swing.JMenuBar;
+import javax.swing.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.internal.swing.CButton;
-import org.eclipse.swt.internal.swing.CShell;
+import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class provide the appearance and
@@ -33,14 +31,14 @@ import org.eclipse.swt.internal.swing.CShell;
  * Instead, the class <code>Shell</code> should be used.
  * </p>
  * <p>
- * Instances are always displayed in one of the maximized, 
+ * Instances are always displayed in one of the maximized,
  * minimized or normal states:
  * <ul>
  * <li>
  * When an instance is marked as <em>maximized</em>, the
  * window manager will typically resize it to fill the
  * entire visible area of the display, and the instance
- * is usually put in a state where it can not be resized 
+ * is usually put in a state where it can not be resized
  * (even if it has style <code>RESIZE</code>) until it is
  * no longer maximized.
  * </li><li>
@@ -78,13 +76,13 @@ import org.eclipse.swt.internal.swing.CShell;
  * <dt><code>SHELL_TRIM</code></dt>
  * <dd>
  * the result of combining the constants which are required
- * to produce a typical application top level shell: (that 
+ * to produce a typical application top level shell: (that
  * is, <code>CLOSE | TITLE | MIN | MAX | RESIZE</code>)
  * </dd>
  * <dt><code>DIALOG_TRIM</code></dt>
  * <dd>
  * the result of combining the constants which are required
- * to produce a typical application dialog shell: (that 
+ * to produce a typical application dialog shell: (that
  * is, <code>TITLE | CLOSE | BORDER</code>)
  * </dd>
  * </dl>
@@ -124,7 +122,7 @@ Decorations () {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -186,7 +184,7 @@ void bringToTop () {
 //	* the problems are fixed.
 //	*/
 ////	if ((style & SWT.ON_TOP) != 0) {
-////		int flags = OS.SWP_NOSIZE | OS.SWP_NOMOVE | OS.SWP_NOACTIVATE; 
+////		int flags = OS.SWP_NOSIZE | OS.SWP_NOMOVE | OS.SWP_NOACTIVATE;
 ////		OS.SetWindowPos (handle, OS.HWND_TOP, 0, 0, 0, 0, flags);
 ////	} else {
 //		OS.BringWindowToTop (handle);
@@ -211,20 +209,20 @@ static int checkStyle (int style) {
 	if ((style & (SWT.MENU | SWT.MIN | SWT.MAX | SWT.CLOSE)) != 0) {
 		style |= SWT.TITLE;
 	}
-	
+
 	/*
 	* If either WS_MINIMIZEBOX or WS_MAXIMIZEBOX are set,
 	* we must also set WS_SYSMENU or the buttons will not
 	* appear.
 	*/
 	if ((style & (SWT.MIN | SWT.MAX)) != 0) style |= SWT.CLOSE;
-	
+
 	/*
 	* Both WS_SYSMENU and WS_CAPTION must be set in order
 	* to for the system menu to appear.
 	*/
 	if ((style & SWT.CLOSE) != 0) style |= SWT.TITLE;
-	
+
 	/*
 	* Bug in Windows.  The WS_CAPTION style must be
 	* set when the window is resizable or it does not
@@ -239,7 +237,7 @@ static int checkStyle (int style) {
 	* back.
 	*/
 //	if ((style & SWT.RESIZE) != 0) style |= SWT.TITLE;
-	
+
 	return style;
 }
 
@@ -251,6 +249,7 @@ void checkBorder () {
 //	if (!opened) resized = false;
 //}
 
+@Override
 protected void checkSubclass () {
 	if (!isValidSubclass ()) error (SWT.ERROR_INVALID_SUBCLASS);
 }
@@ -266,10 +265,12 @@ void closeWidget () {
 	if (event.doit && !isDisposed ()) dispose ();
 }
 
+@Override
 Control computeTabGroup () {
 	return this;
 }
 
+@Override
 Control computeTabRoot () {
 	return this;
 }
@@ -314,7 +315,7 @@ Control computeTabRoot () {
 //		maxAccel = OS.IsPPC ? items.length + 1 : items.length;
 //	}
 //	ACCEL accel = new ACCEL ();
-//	byte [] buffer1 = new byte [ACCEL.sizeof];	
+//	byte [] buffer1 = new byte [ACCEL.sizeof];
 //	byte [] buffer2 = new byte [maxAccel * ACCEL.sizeof];
 //	if (menuBar != null && items != null) {
 //		for (int i=0; i<items.length; i++) {
@@ -336,7 +337,7 @@ Control computeTabRoot () {
 //		}
 //	}
 //	if (OS.IsPPC) {
-//		/* 
+//		/*
 //		* Note on WinCE PPC.  Close the shell when user taps CTRL-Q.
 //		* IDOK represents the "Done Button" which also closes the shell.
 //		*/
@@ -345,7 +346,7 @@ Control computeTabRoot () {
 //		accel.cmd = (short) OS.IDOK;
 //		OS.MoveMemory (buffer1, accel, ACCEL.sizeof);
 //		System.arraycopy (buffer1, 0, buffer2, nAccel * ACCEL.sizeof, ACCEL.sizeof);
-//		nAccel++;			
+//		nAccel++;
 //	}
 //	if (nAccel != 0) hAccel = OS.CreateAcceleratorTable (buffer2, nAccel);
 //}
@@ -369,6 +370,7 @@ Control computeTabRoot () {
 //	hAccel = -1;
 //}
 
+@Override
 public void dispose () {
 	if (isDisposed()) return;
 	if (!isValidThread ()) error (SWT.ERROR_THREAD_INVALID_ACCESS);
@@ -430,7 +432,7 @@ void fixDecorations (Decorations newDecorations, Control control, Menu [] menus)
 
 //public Rectangle getClientArea () {
 //	checkWidget ();
-//	/* 
+//	/*
 //	* Note: The CommandBar is part of the client area,
 //	* not the trim.  Applications don't expect this so
 //	* subtract the height of the CommandBar.
@@ -457,7 +459,7 @@ void fixDecorations (Decorations newDecorations, Control control, Menu [] menus)
 //			* not compute the client area when the window is minimized.
 //			* The fix is to compute it using AdjustWindowRectEx() and
 //			* GetSystemMetrics().
-//			* 
+//			*
 //			* NOTE: This code fails to compute the correct client area
 //			* for a minimized window where the menu bar would wrap were
 //			* the window restored.  There is no fix for this problem at
@@ -497,7 +499,7 @@ public Button getDefaultButton () {
 }
 
 /**
- * Returns the receiver's image if it had previously been 
+ * Returns the receiver's image if it had previously been
  * set using <code>setImage()</code>. The image is typically
  * displayed by the window manager when the instance is
  * marked as iconified, and may also be displayed somewhere
@@ -509,7 +511,7 @@ public Button getDefaultButton () {
  * access to a window manager provided, "default" image
  * even if one exists.
  * </p>
- * 
+ *
  * @return the image
  *
  * @exception SWTException <ul>
@@ -523,7 +525,7 @@ public Image getImage () {
 }
 
 /**
- * Returns the receiver's images if they had previously been 
+ * Returns the receiver's images if they had previously been
  * set using <code>setImages()</code>. Images are typically
  * displayed by the window manager when the instance is
  * marked as iconified, and may also be displayed somewhere
@@ -532,21 +534,21 @@ public Image getImage () {
  * chooses the icon with the "best" attributes.  It is expected
  * that the array will contain the same icon rendered at different
  * sizes, with different depth and transparency attributes.
- * 
+ *
  * <p>
  * Note: This method will return an empty array if called before
  * <code>setImages()</code> is called. It does not provide
  * access to a window manager provided, "default" image
  * even if one exists.
  * </p>
- * 
+ *
  * @return the images
  *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.0
  */
 public Image [] getImages () {
@@ -572,7 +574,7 @@ public Image [] getImages () {
 
 /**
  * Returns <code>true</code> if the receiver is currently
- * maximized, and false otherwise. 
+ * maximized, and false otherwise.
  * <p>
  *
  * @return the maximized state
@@ -607,7 +609,7 @@ public Menu getMenuBar () {
 
 /**
  * Returns <code>true</code> if the receiver is currently
- * minimized, and false otherwise. 
+ * minimized, and false otherwise.
  * <p>
  *
  * @return the minimized state
@@ -624,6 +626,7 @@ public boolean getMinimized () {
   return (((CShell)handle).getExtendedState() & CShell.ICONIFIED) != 0;
 }
 
+@Override
 String getNameText () {
 	return getText ();
 }
@@ -646,7 +649,7 @@ String getNameText () {
 /**
  * Returns the receiver's text, which is the string that the
  * window manager will typically display as the receiver's
- * <em>title</em>. If the text has not previously been set, 
+ * <em>title</em>. If the text has not previously been set,
  * returns an empty string.
  *
  * @return the text
@@ -662,6 +665,7 @@ public String getText () {
   return title == null? "": title;
 }
 
+@Override
 public boolean isReparentable () {
 	checkWidget ();
 	/*
@@ -673,6 +677,7 @@ public boolean isReparentable () {
 	return false;
 }
 
+@Override
 boolean isTabGroup () {
 	/*
 	* Can't test WS_TAB bits because they are the same as WS_MAXIMIZEBOX.
@@ -680,6 +685,7 @@ boolean isTabGroup () {
 	return true;
 }
 
+@Override
 boolean isTabItem () {
 	/*
 	* Can't test WS_TAB bits because they are the same as WS_MAXIMIZEBOX.
@@ -687,10 +693,12 @@ boolean isTabItem () {
 	return false;
 }
 
+@Override
 Decorations menuShell () {
 	return this;
 }
 
+@Override
 void releaseChildren (boolean destroy) {
   if (menuBar != null) {
     menuBar.release (false);
@@ -717,6 +725,7 @@ void releaseChildren (boolean destroy) {
 	}
 }
 
+@Override
 void releaseWidget () {
 	super.releaseWidget ();
 	if (smallImage != null) smallImage.dispose ();
@@ -798,7 +807,7 @@ void removeMenu (Menu menu) {
  * If the argument is not null, sets the receiver's default
  * button to the argument, and if the argument is null, sets
  * the receiver's default button to the first button which
- * was set as the receiver's default button (called the 
+ * was set as the receiver's default button (called the
  * <em>saved default button</em>). If no default button had
  * previously been set, or the saved default button was
  * disposed, the receiver's default button will be set to
@@ -811,7 +820,7 @@ void removeMenu (Menu menu) {
  * @param button the new default button
  *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_INVALID_ARGUMENT - if the button has been disposed</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the button has been disposed</li>
  *    <li>ERROR_INVALID_PARENT - if the control is not in the same widget tree</li>
  * </ul>
  * @exception SWTException <ul>
@@ -855,11 +864,11 @@ void setDefaultButton (Button button, boolean save) {
  * manager when the instance is marked as iconified, and
  * may also be displayed somewhere in the trim when the
  * instance is in normal or maximized states.
- * 
+ *
  * @param image the new image (or null)
  *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_INVALID_ARGUMENT - if the image has been disposed</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the image has been disposed</li>
  * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -883,7 +892,7 @@ public void setImage (Image image) {
  * the "best" attributes. It is expected that the array will
  * contain the same icon rendered at different sizes, with
  * different depth and transparency attributes.
- * 
+ *
  * @param images the new image array
  *
  * @exception IllegalArgumentException <ul>
@@ -894,7 +903,7 @@ public void setImage (Image image) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.0
  */
 public void setImages (Image [] images) {
@@ -904,7 +913,7 @@ public void setImages (Image [] images) {
 		if (images [i] == null || images [i].isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
 	}
 	this.images = images;
-  
+
   if(images.length > 0) {
     java.util.List imageList = new ArrayList(images.length);
     for(int i=0; i<images.length; i++) {
@@ -956,7 +965,7 @@ public void setMaximized (boolean maximized) {
  * @param menu the new menu bar
  *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_INVALID_ARGUMENT - if the menu has been disposed</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the menu has been disposed</li>
  *    <li>ERROR_INVALID_PARENT - if the menu is not in the same widget tree</li>
  * </ul>
  * @exception SWTException <ul>
@@ -964,17 +973,24 @@ public void setMaximized (boolean maximized) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public void setMenuBar (Menu menu) {
-	checkWidget ();
-	if (menuBar == menu) return;
+public void setMenuBar(Menu menu) {
+	checkWidget();
+	if (menuBar == menu)
+		return;
 	if (menu != null) {
-		if (menu.isDisposed()) error(SWT.ERROR_INVALID_ARGUMENT);
-		if ((menu.style & SWT.BAR) == 0) error (SWT.ERROR_MENU_NOT_BAR);
-		if (menu.parent != this) error (SWT.ERROR_INVALID_PARENT);
+		if (menu.isDisposed())
+			error(SWT.ERROR_INVALID_ARGUMENT);
+		if ((menu.style & SWT.BAR) == 0)
+			error(SWT.ERROR_MENU_NOT_BAR);
+		if (menu.parent != this)
+			error(SWT.ERROR_INVALID_PARENT);
 	}
-	if (menu != null) display.removeBar (menu);
+	if (menu != null) {
+		display.removeBar(menu);
+	}
 	menuBar = menu;
-  ((CShell)handle).setJMenuBar((JMenuBar)menuBar.handle);
+	if (menu != null)
+		((CShell) handle).setJMenuBar((JMenuBar) menuBar.handle);
 //	destroyAccelerators ();
 }
 
@@ -1030,7 +1046,7 @@ public void setMinimized (boolean minimized) {
 //	bits &= ~OS.WS_CHILD;
 //	OS.SetWindowLong (handle, OS.GWL_STYLE, bits | OS.WS_POPUP);
 //	OS.SetWindowLong (handle, OS.GWL_ID, 0);
-//	int flags = OS.SWP_NOSIZE | OS.SWP_NOMOVE | OS.SWP_NOACTIVATE; 
+//	int flags = OS.SWP_NOSIZE | OS.SWP_NOMOVE | OS.SWP_NOACTIVATE;
 //	SetWindowPos (handle, OS.HWND_BOTTOM, 0, 0, 0, 0, flags);
 //	display.lockActiveWindow = false;
 //}
@@ -1108,7 +1124,7 @@ public void setMinimized (boolean minimized) {
 //		OS.DeleteMenu (hMenu, OS.SC_RESTORE, OS.MF_BYCOMMAND);
 //	}
 //	int newCount = OS.GetMenuItemCount (hMenu);
-//	if ((style & SWT.CLOSE) == 0 || newCount != oldCount) {	
+//	if ((style & SWT.CLOSE) == 0 || newCount != oldCount) {
 //		OS.DeleteMenu (hMenu, OS.SC_TASKLIST, OS.MF_BYCOMMAND);
 //		MENUITEMINFO info = new MENUITEMINFO ();
 //		info.cbSize = MENUITEMINFO.sizeof;
@@ -1132,7 +1148,7 @@ public void setMinimized (boolean minimized) {
 /**
  * Sets the receiver's text, which is the string that the
  * window manager will typically display as the receiver's
- * <em>title</em>, to the argument, which must not be null. 
+ * <em>title</em>, to the argument, which must not be null.
  *
  * @param string the new text
  *
@@ -1150,6 +1166,7 @@ public void setText (String string) {
   ((CShell)handle).setTitle(string);
 }
 
+@Override
 public void setVisible (boolean visible) {
 	checkWidget ();
 //	if (drawCount != 0) {
@@ -1304,10 +1321,12 @@ boolean traverseDecorations (boolean next) {
 	return false;
 }
 
+@Override
 boolean traverseItem (boolean next) {
 	return false;
 }
 
+@Override
 boolean traverseReturn () {
 	if (defaultButton == null || defaultButton.isDisposed ()) return false;
 	if (!defaultButton.isVisible () || !defaultButton.isEnabled ()) return false;
@@ -1337,22 +1356,22 @@ boolean traverseReturn () {
 //}
 //
 //int widgetStyle () {
-//	/* 
+//	/*
 //	* Clear WS_VISIBLE and WS_TABSTOP.  NOTE: In Windows, WS_TABSTOP
 //	* has the same value as WS_MAXIMIZEBOX so these bits cannot be
 //	* used to control tabbing.
 //	*/
 //	int bits = super.widgetStyle () & ~(OS.WS_TABSTOP | OS.WS_VISIBLE);
-//	
+//
 //	/* Set the title bits and no-trim bits */
 //	bits &= ~OS.WS_BORDER;
 //	if ((style & SWT.NO_TRIM) != 0) return bits;
 //	if ((style & SWT.TITLE) != 0) bits |= OS.WS_CAPTION;
-//	
+//
 //	/* Set the min and max button bits */
 //	if ((style & SWT.MIN) != 0) bits |= OS.WS_MINIMIZEBOX;
 //	if ((style & SWT.MAX) != 0) bits |= OS.WS_MAXIMIZEBOX;
-//	
+//
 //	/* Set the resize, dialog border or border bits */
 //	if ((style & SWT.RESIZE) != 0) {
 //		/*
@@ -1360,7 +1379,7 @@ boolean traverseReturn () {
 //		* the Shell according to the state of the IME.
 //		* It does not set the WS_THICKFRAME style.
 //		*/
-//		if (!OS.IsPPC) bits |= OS.WS_THICKFRAME;	
+//		if (!OS.IsPPC) bits |= OS.WS_THICKFRAME;
 //	} else {
 //		if ((style & SWT.BORDER) == 0) bits |= OS.WS_BORDER;
 //	}
@@ -1369,7 +1388,7 @@ boolean traverseReturn () {
 //	if (!OS.IsPPC && !OS.IsSP) {
 //		if ((style & SWT.CLOSE) != 0) bits |= OS.WS_SYSMENU;
 //	}
-//	
+//
 //	return bits;
 //}
 //
@@ -1428,7 +1447,7 @@ boolean traverseReturn () {
 //				if (isDisposed ()) return LRESULT.ZERO;
 //			}
 //		}
-//		if (restoreFocus ()) return LRESULT.ZERO;	
+//		if (restoreFocus ()) return LRESULT.ZERO;
 //	} else {
 //		/*
 //		* It is possible (but unlikely), that application
@@ -1466,8 +1485,8 @@ boolean traverseReturn () {
 //		/*
 //		* Feature on WinCE SP.  The Back key is either used to close
 //		* the foreground Dialog or used as a regular Back key in an EDIT
-//		* control. The article 'Back Key' in MSDN for Smartphone 
-//		* describes how an application should handle it.  The 
+//		* control. The article 'Back Key' in MSDN for Smartphone
+//		* describes how an application should handle it.  The
 //		* workaround is to override the Back key when creating
 //		* the menubar and handle it based on the style of the Shell.
 //		* If the Shell has the SWT.CLOSE style, close the Shell.
