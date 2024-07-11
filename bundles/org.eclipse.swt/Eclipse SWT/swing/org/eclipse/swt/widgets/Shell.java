@@ -2151,4 +2151,7 @@ public void setAlpha (int alpha) {
 //	}
 }
 
+public void setModified(boolean enabled) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+}
 }

@@ -4978,5 +4978,32 @@ public void removeDragDetectListener(DragDetectListener listener) {
 public void addDragDetectListener (DragDetectListener listener) {
 	addTypedListener(listener, SWT.DragDetect);
 }
+
+/**
+ * Sets the orientation of the receiver, which must be one
+ * of the constants <code>SWT.LEFT_TO_RIGHT</code> or <code>SWT.RIGHT_TO_LEFT</code>.
+ *
+ * @param orientation new orientation style
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @since 3.7
+ */
+public void setOrientation (int orientation) {
+	checkWidget ();
+	int flags = SWT.RIGHT_TO_LEFT | SWT.LEFT_TO_RIGHT;
+	if ((orientation & flags) == 0 || (orientation & flags) == flags) return;
+	style &= ~SWT.MIRRORED;
+	style &= ~flags;
+	style |= orientation & flags;
+	style &= ~SWT.FLIP_TEXT_DIRECTION;
+	// TODO (visjee) Not implemented yet
+//	updateOrientation ();
+//	checkMirrored ();
+}
+>>>>>>> 939b343 Add missing implementations
 }
 
