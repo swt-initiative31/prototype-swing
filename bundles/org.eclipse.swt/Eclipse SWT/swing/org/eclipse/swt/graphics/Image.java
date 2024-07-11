@@ -590,6 +590,10 @@ public Image(Device device, ImageDataProvider imageDataProvider) {
 	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 
+public Image(Device device, ImageFileNameProvider imageFileNameProvider) {
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+}
+
 /**
  * Disposes of the operating system resources associated with
  * the image. Applications must dispose of all images which
