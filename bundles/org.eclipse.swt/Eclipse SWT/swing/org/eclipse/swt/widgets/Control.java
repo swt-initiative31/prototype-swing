@@ -4851,5 +4851,10 @@ public void setTextDirection(int textDirection) {
 		state &= ~HAS_AUTO_DIRECTION;
 	}
 }
+
+public void requestLayout () {
+	getShell ().layout (new Control[] {this}, SWT.DEFER);
+}
+
 }
 

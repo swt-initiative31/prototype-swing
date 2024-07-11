@@ -597,6 +597,49 @@ public void layout (Control [] changed) {
 	}
 }
 
+public void layout (Control [] changed, int flags) {
+	checkWidget ();
+	if (changed != null) {
+		for (Control control : changed) {
+			if (control == null) error (SWT.ERROR_INVALID_ARGUMENT);
+			if (control.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
+			boolean ancestor = false;
+			Composite composite = control.parent;
+			while (composite != null) {
+				ancestor = composite == this;
+				if (ancestor) break;
+				composite = composite.parent;
+			}
+			if (!ancestor) error (SWT.ERROR_INVALID_PARENT);
+		}
+		int updateCount = 0;
+		Composite [] update = new Composite [16];
+		for (Control element : changed) {
+			Control child = element;
+			Composite composite = child.parent;
+			// Update layout when the list of children has changed.
+			// See bug 497812.
+			child.markLayout(false, false);
+			while (child != this) {
+				if (composite.layout != null) {
+					composite.state |= LAYOUT_NEEDED;
+					if (!composite.layout.flushCache (child)) {
+						composite.state |= LAYOUT_CHANGED;
+					}
+				}
+				if (updateCount == update.length) {
+					Composite [] newUpdate = new Composite [update.length + 16];
+					System.arraycopy (update, 0, newUpdate, 0, update.length);
+					update = newUpdate;
+				}
+				child = update [updateCount++] = composite;
+				composite = child.parent;
+			}
+		}
+	}
+}
+
+
 @Override
 void markLayout (boolean changed, boolean all) {
 	if (layout != null) {
