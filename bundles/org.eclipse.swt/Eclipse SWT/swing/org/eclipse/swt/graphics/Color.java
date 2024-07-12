@@ -143,6 +143,22 @@ public Color(Display display, RGBA rgba) {
 	this(display, rgba.rgb.red, rgba.rgb.green, rgba.rgb.blue);
 }
 
+public Color(RGBA rgba) {
+	this(null, rgba.rgb.red, rgba.rgb.green, rgba.rgb.blue);
+}
+
+public Color(Display display, RGB rgb, int alpha) {
+	this(null, rgb.red, rgb.green, rgb.blue, alpha);
+}
+
+public Color(RGB rgb, int alpha) {
+	this(null, rgb.red, rgb.green, rgb.blue, alpha);
+}
+
+public Color(int red, int green, int blue, int alpha) {
+	this(null, red, green, blue, alpha);
+}
+
 public RGBA getRGBA () {
 	if (isDisposed()) SWT.error(SWT.ERROR_GRAPHIC_DISPOSED);
 	return new RGBA(intHandle & 0xFF, (intHandle & 0xFF00) >> 8, (intHandle & 0xFF0000) >> 16, alpha);
