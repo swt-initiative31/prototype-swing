@@ -11,23 +11,20 @@
 package org.eclipse.swt.widgets;
 
 
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
+import java.awt.event.*;
 
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 
-import org.eclipse.swt.internal.swing.CScrollable;
 import org.eclipse.swt.*;
-import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class are selectable user interface
- * objects that represent a range of positive, numeric values. 
+ * objects that represent a range of positive, numeric values.
  * <p>
- * At any given moment, a given scroll bar will have a 
+ * At any given moment, a given scroll bar will have a
  * single 'selection' that is considered to be its
  * value, which is constrained to be within the range of
  * values the scroll bar represents (that is, between its
@@ -67,7 +64,7 @@ import org.eclipse.swt.events.*;
  * have no operating system resources and are not children of the control.
  * For this reason, scroll bars are treated specially.  To create a control
  * that looks like a scroll bar but has operating system resources, use
- * <code>Slider</code>. 
+ * <code>Slider</code>.
  * </p>
  * <dl>
  * <dt><b>Styles:</b></dt>
@@ -87,7 +84,7 @@ import org.eclipse.swt.events.*;
  * @see Scrollable#getVerticalBar
  */
 
-public class ScrollBar extends Widget {	
+public class ScrollBar extends Widget {
 	Scrollable parent;
   JScrollBar handle;
 
@@ -97,7 +94,7 @@ public class ScrollBar extends Widget {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -182,30 +179,29 @@ void createWidget () {
 	* override the initial values provided by the
 	* list widget.
 	*/
-  handle.addAdjustmentListener(new AdjustmentListener() {
-    public void adjustmentValueChanged(AdjustmentEvent e) {
-      if(blockListener || isDisposed()) return;
-      Event event = new Event ();
-      event.detail = SWT.DRAG;
-      switch(e.getAdjustmentType()) {
-      case AdjustmentEvent.BLOCK_DECREMENT:
-        event.detail = SWT.PAGE_DOWN;
-        break;
-      case AdjustmentEvent.BLOCK_INCREMENT:
-        event.detail = SWT.PAGE_UP;
-        break;
-      case AdjustmentEvent.UNIT_DECREMENT:
-        event.detail = SWT.ARROW_DOWN;
-        break;
-      case AdjustmentEvent.UNIT_INCREMENT:
-        event.detail = SWT.ARROW_UP;
-        break;
-      }
-      sendEvent (SWT.Selection, event);
-    }
-  });
+  handle.addAdjustmentListener(e -> {
+  if(blockListener || isDisposed()) return;
+  Event event = new Event ();
+  event.detail = SWT.DRAG;
+  switch(e.getAdjustmentType()) {
+  case AdjustmentEvent.BLOCK_DECREMENT:
+    event.detail = SWT.PAGE_DOWN;
+    break;
+  case AdjustmentEvent.BLOCK_INCREMENT:
+    event.detail = SWT.PAGE_UP;
+    break;
+  case AdjustmentEvent.UNIT_DECREMENT:
+    event.detail = SWT.ARROW_DOWN;
+    break;
+  case AdjustmentEvent.UNIT_INCREMENT:
+    event.detail = SWT.ARROW_UP;
+    break;
+  }
+  sendEvent (SWT.Selection, event);
+});
 }
 
+@Override
 void destroyWidget () {
 	if (isDisposed()) return;
 	if (!isValidThread ()) error (SWT.ERROR_THREAD_INVALID_ACCESS);
@@ -257,7 +253,7 @@ void destroyWidget () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #isEnabled
  */
 public boolean getEnabled () {
@@ -453,7 +449,7 @@ public boolean getVisible () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #getEnabled
  */
 public boolean isEnabled () {
@@ -480,11 +476,13 @@ public boolean isVisible () {
 	return getVisible () && parent.isVisible ();
 }
 
+@Override
 void releaseHandle () {
   super.releaseHandle ();
   parent = null;
 }
 
+@Override
 void releaseParent () {
 	super.releaseParent ();
 	if (parent.horizontalBar == this) parent.horizontalBar = null;
@@ -513,7 +511,7 @@ public void removeSelectionListener (SelectionListener listener) {
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (eventTable == null) return;
 	eventTable.unhook (SWT.Selection, listener);
-	eventTable.unhook (SWT.DefaultSelection,listener);	
+	eventTable.unhook (SWT.DefaultSelection,listener);
 }
 
 //int scrollBarType () {
@@ -523,7 +521,7 @@ public void removeSelectionListener (SelectionListener listener) {
 //	* only ever be HORIZONTAL and VERTICAL scroll bars.
 //	* The commented code reminds us that this is the case
 //	* and that the default style is HORIZONTAL.
-//	*/	
+//	*/
 ////	if ((style & SWT.HORIZONTAL) != 0) return OS.SB_HORZ;
 //	return OS.SB_HORZ;
 //}
@@ -564,7 +562,7 @@ public void setEnabled (boolean enabled) {
 /**
  * Sets the amount that the receiver's value will be
  * modified by when the up/down (or right/left) arrows
- * are pressed to the argument, which must be at least 
+ * are pressed to the argument, which must be at least
  * one.
  *
  * @param value the new increment (must be greater than zero)
@@ -656,7 +654,7 @@ public void setPageIncrement (int value) {
 //	*/
 //	if ((state & (DISABLED | HIDDEN)) != 0) fRedraw = false;
 //	boolean result = OS.SetScrollInfo (hwnd, flags, info, fRedraw);
-//	
+//
 //	/*
 //	* Bug in Windows.  For some reason, when the widget
 //	* is a standard scroll bar, and SetScrollInfo() is
@@ -686,7 +684,7 @@ public void setPageIncrement (int value) {
 //			OS.ShowScrollBar (hwnd, both ? OS.SB_BOTH : flags, false);
 //		}
 //	}
-//		
+//
 //	/*
 //	* Feature in Windows.  Using SIF_DISABLENOSCROLL,
 //	* SetScrollInfo () can change enabled and disabled
@@ -767,7 +765,7 @@ public void setThumb (int value) {
  * value, thumb, increment and page increment all at once.
  * <p>
  * Note: This is similar to setting the values individually
- * using the appropriate methods, but may be implemented in a 
+ * using the appropriate methods, but may be implemented in a
  * more efficient fashion on some platforms.
  * </p>
  *
@@ -797,7 +795,7 @@ public void setValues (int selection, int minimum, int maximum, int thumb, int i
 
 /**
  * Marks the receiver as visible if the argument is <code>true</code>,
- * and marks it invisible otherwise. 
+ * and marks it invisible otherwise.
  * <p>
  * If one of the receiver's ancestors is not visible or some
  * other condition makes the receiver not visible, marking
@@ -848,11 +846,11 @@ public void setVisible (boolean visible) {
 //		if (info.nPage == info.nMax - info.nMin + 1) {
 //			/*
 //			* Bug in Windows.  When the only changed flag to
-//			* SetScrollInfo () is OS.SIF_DISABLENOSCROLL, 
+//			* SetScrollInfo () is OS.SIF_DISABLENOSCROLL,
 //			* Windows does not update the scroll bar state.
 //			* The fix is to increase and then decrease the
 //			* maximum, causing Windows to honour the flag.
-//			*/  
+//			*/
 //			int max = info.nMax;
 //			info.nMax++;
 //			OS.SetScrollInfo (hwnd, type, info, false);
@@ -867,7 +865,7 @@ public void setVisible (boolean visible) {
 //		}
 //		return;
 //	}
-//	
+//
 //	/*
 //	* Set the state bits before calling ShowScrollBar ()
 //	* because hiding and showing the scroll bar can cause
@@ -904,6 +902,12 @@ public void setVisible (boolean visible) {
 //		sendEvent (visible ? SWT.Show : SWT.Hide);
 //		// widget could be disposed at this point
 //	}
+}
+
+public Rectangle getThumbTrackBounds () {
+	checkWidget();
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+	return new Rectangle(0,0,0,0);
 }
 
 //LRESULT wmScrollChild (int wParam, int lParam) {

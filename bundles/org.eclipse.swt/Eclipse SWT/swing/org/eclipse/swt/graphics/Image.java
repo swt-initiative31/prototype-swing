@@ -1717,6 +1717,11 @@ public ImageData getImageData(int deviceZoom) {
 	return null;
 }
 
+public Object getImageDataAtCurrentZoom() {
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+	return null;
+}
+
 //private static BufferedImage createBufferedImageIndexPalette(ImageData data, PaletteData p) {
 //  RGB[] rgbs = p.getRGBs();
 //  byte[] red = new byte[rgbs.length];
