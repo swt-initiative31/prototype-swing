@@ -16,8 +16,6 @@ package org.eclipse.swt.widgets;
 
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.internal.*;
-
 /**
  * This class is the abstract superclass of all non-windowed
  * user interface objects that occur within specific controls.
@@ -207,21 +205,23 @@ public void setText (String string) {
 }
 
 boolean updateTextDirection(int textDirection) {
-	/*
-	 * textDirection argument passed here is either (1) AUTO_TEXT_DIRECTION, or
-	 * (2) 0 (i.e. match orientation) or FLIP_TEXT_DIRECTION (mismatch orientation).
-	 */
-	if (textDirection == AUTO_TEXT_DIRECTION) {
-		state |= HAS_AUTO_DIRECTION;
-		textDirection = (style ^ BidiUtil.resolveTextDirection (text)) == 0 ? 0 : SWT.FLIP_TEXT_DIRECTION;
-	} else {
-		state &= ~HAS_AUTO_DIRECTION;
-	}
-	if (((style & SWT.FLIP_TEXT_DIRECTION) ^ textDirection) != 0) {
-		style ^= SWT.FLIP_TEXT_DIRECTION;
-		return true;
-	}
-	return textDirection == AUTO_TEXT_DIRECTION;
+//	/*
+//	 * textDirection argument passed here is either (1) AUTO_TEXT_DIRECTION, or
+//	 * (2) 0 (i.e. match orientation) or FLIP_TEXT_DIRECTION (mismatch orientation).
+//	 */
+//	if (textDirection == AUTO_TEXT_DIRECTION) {
+//		state |= HAS_AUTO_DIRECTION;
+//		textDirection = (style ^ BidiUtil.resolveTextDirection (text)) == 0 ? 0 : SWT.FLIP_TEXT_DIRECTION;
+//	} else {
+//		state &= ~HAS_AUTO_DIRECTION;
+//	}
+//	if (((style & SWT.FLIP_TEXT_DIRECTION) ^ textDirection) != 0) {
+//		style ^= SWT.FLIP_TEXT_DIRECTION;
+//		return true;
+//	}
+//	return textDirection == AUTO_TEXT_DIRECTION;
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+	return false;
 }
 
 }

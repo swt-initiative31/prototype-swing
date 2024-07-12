@@ -17,7 +17,6 @@ package org.eclipse.swt.custom;
 
 
 import java.util.*;
-import java.util.List;
 
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.*;
@@ -485,7 +484,7 @@ int drawLines(int startLine, int endLine, int begX, int begY, int endY, GC gc, C
 
 	if (drawBackBeforeFore) {
 		// Cache drawing information
-		final List<LineDrawInfo> drawInfos = new ArrayList<>();
+		final java.util.List<LineDrawInfo> drawInfos = new ArrayList<>();
 		int y = begY;
 		for (int iLine = startLine; y < endY && iLine < endLine; iLine++) {
 			LineDrawInfo lineInfo = makeLineDrawInfo(iLine);
@@ -531,7 +530,7 @@ private void drawLineBackground(LineDrawInfo lineInfo, int paintY, GC gc, Color 
 	Color lineBackground = getLineBackground(lineInfo.index, null);
 	StyledTextEvent event = styledText.getLineBackgroundData(lineInfo.offset, lineInfo.text);
 	if (event != null && event.lineBackground != null) lineBackground = event.lineBackground;
-	int verticalIndent = lineInfo.layout.getVerticalIndent();
+	int verticalIndent = 0;
 
 	if (lineBackground != null) {
 		if (verticalIndent > 0) {
@@ -564,7 +563,7 @@ private void drawLineForeground(LineDrawInfo lineInfo, int paintX, int paintY, G
 				flags |= SWT.LAST_LINE_SELECTION;
 			}
 			// TODO calling draw multiple times here prints line multiple times, overriding some colors
-			lineInfo.layout.draw(gc, paintX, paintY, start, end - 1, selectionFg, selectionBg, flags);
+			lineInfo.layout.draw(gc, paintX, paintY, start, end - 1, selectionFg, selectionBg);
 		}
 	}
 
@@ -617,7 +616,7 @@ private void drawLineForeground(LineDrawInfo lineInfo, int paintX, int paintY, G
 private Point[] intersectingRelativeNonEmptySelections(int fromOffset, int toOffset) {
 	int[] selectionRanges = styledText.getSelectionRanges();
 	int lineLength = toOffset - fromOffset;
-	List<Point> res = new ArrayList<>();
+	java.util.List<Point> res = new ArrayList<>();
 	for (int i = 0; i < selectionRanges.length; i += 2) {
 		// ranges are assumed to be sorted by start offset, then (positive)length or higher end offset
 		Point relativeSelection = new Point(selectionRanges[i] - fromOffset, selectionRanges[i] + selectionRanges[i + 1] - fromOffset);
@@ -1121,7 +1120,7 @@ TextLayout getTextLayout(int lineIndex, int orientation, int width, int lineSpac
 		indent = styledText.indent;
 		wrapIndent = styledText.wrapIndent;
 		alignment = styledText.alignment;
-		if (styledText.isAutoDirection()) {
+		if (true) {
 			textDirection = SWT.AUTO_TEXT_DIRECTION;
 		} else if ((styledText.getStyle() & SWT.FLIP_TEXT_DIRECTION) != 0) {
 			textDirection = orientation == SWT.RIGHT_TO_LEFT ? SWT.LEFT_TO_RIGHT : SWT.RIGHT_TO_LEFT;
@@ -1207,7 +1206,7 @@ TextLayout getTextLayout(int lineIndex, int orientation, int width, int lineSpac
 	// The root cause is that TextLayout doesn't return the right value for the bounds when
 	// GlyphMetrics are applied on \t. A better fix could be implemented directly in (all 3)
 	// TextLayout classes.
-	List<StyleEntry> styleEntries = new ArrayList<>();
+	java.util.List<StyleEntry> styleEntries = new ArrayList<>();
 	int lastOffset = 0;
 	int length = line.length();
 	if (styles != null) {
@@ -1269,21 +1268,21 @@ TextLayout getTextLayout(int lineIndex, int orientation, int width, int lineSpac
 	layout.setFont(regularFont);
 	layout.setAscent(ascent);
 	layout.setDescent(descent);
-	layout.setFixedLineMetrics(fixedLineMetrics);
+//	layout.setFixedLineMetrics(fixedLineMetrics);
 	layout.setText(line);
 	layout.setOrientation(orientation);
 	layout.setSegments(segments);
-	layout.setSegmentsChars(segmentChars);
+//	layout.setSegmentsChars(segmentChars);
 	layout.setWidth(width);
 	layout.setSpacing(lineSpacing);
 	layout.setTabs(tabs);
-	layout.setDefaultTabWidth(tabLength);
+//	layout.setDefaultTabWidth(tabLength);
 	layout.setIndent(indent);
-	layout.setVerticalIndent(verticalIndent);
-	layout.setWrapIndent(wrapIndent);
+//	layout.setVerticalIndent(verticalIndent);
+//	layout.setWrapIndent(wrapIndent);
 	layout.setAlignment(alignment);
 	layout.setJustify(justify);
-	layout.setTextDirection(textDirection);
+//	layout.setTextDirection(textDirection);
 	// apply styles, must be done after layout.setText()
 	for (StyleEntry styleEntry : styleEntries) {
 		layout.setStyle(styleEntry.style, styleEntry.start, styleEntry.end);

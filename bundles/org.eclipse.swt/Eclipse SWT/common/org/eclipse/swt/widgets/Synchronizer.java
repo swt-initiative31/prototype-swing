@@ -160,20 +160,22 @@ boolean runAsyncMessages (boolean all) {
  * @see #asyncExec
  */
 protected void syncExec (Runnable runnable) {
+//	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 	RunnableLock lock = null;
 	synchronized (Device.class) {
-		if (display == null || display.isDisposed ()) SWT.error (SWT.ERROR_DEVICE_DISPOSED);
-		if (!display.isValidThread ()) {
+		if (display == null || display.isDisposed())
+			SWT.error(SWT.ERROR_DEVICE_DISPOSED);
+		if (!display.isValidThread()) {
 			if (runnable == null) {
-				display.wake ();
+				display.wake();
 				return;
 			}
-			lock = new RunnableLock (runnable);
+			lock = new RunnableLock(runnable);
 			/*
 			 * Only remember the syncThread for syncExec.
 			 */
 			lock.thread = Thread.currentThread();
-			addLast (lock);
+			addLast(lock);
 		}
 	}
 	if (lock == null) {
@@ -182,9 +184,9 @@ protected void syncExec (Runnable runnable) {
 			try {
 				runnable.run();
 			} catch (RuntimeException exception) {
-				display.getRuntimeExceptionHandler ().accept (exception);
+				display.getRuntimeExceptionHandler().accept(exception);
 			} catch (Error error) {
-				display.getErrorHandler ().accept (error);
+				display.getErrorHandler().accept(error);
 			} finally {
 				if (display != null && !display.isDisposed()) {
 					display.sendPostEvent(SWT.None);
@@ -195,9 +197,9 @@ protected void syncExec (Runnable runnable) {
 	}
 	synchronized (lock) {
 		boolean interrupted = false;
-		while (!lock.done ()) {
+		while (!lock.done()) {
 			try {
-				lock.wait ();
+				lock.wait();
 			} catch (InterruptedException e) {
 				interrupted = true;
 			}
@@ -206,7 +208,7 @@ protected void syncExec (Runnable runnable) {
 			Thread.currentThread().interrupt();
 		}
 		if (lock.throwable != null) {
-			SWT.error (SWT.ERROR_FAILED_EXEC, lock.throwable);
+			SWT.error(SWT.ERROR_FAILED_EXEC, lock.throwable);
 		}
 	}
 }
