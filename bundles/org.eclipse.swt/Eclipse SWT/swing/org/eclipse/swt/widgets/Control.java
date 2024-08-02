@@ -11,55 +11,27 @@
 package org.eclipse.swt.widgets;
 
 
-import java.awt.AWTEvent;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.Insets;
-import java.awt.KeyboardFocusManager;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.ComponentEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseWheelEvent;
-import java.util.EventObject;
+import java.util.*;
 
-import javax.swing.JComponent;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
-import javax.swing.RootPaneContainer;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.accessibility.Accessible;
-import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.*;
+import org.eclipse.swt.accessibility.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.MouseTrackListener;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.TraverseListener;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.graphics.Drawable;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.GCData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.internal.swing.CControl;
-import org.eclipse.swt.internal.swing.CGC;
-import org.eclipse.swt.internal.swing.Compatibility;
-import org.eclipse.swt.internal.swing.DisabledStatePanel;
-import org.eclipse.swt.internal.swing.NullGraphics2D;
-import org.eclipse.swt.internal.swing.UIThreadUtils;
-import org.eclipse.swt.internal.swing.Utils;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Control is the abstract superclass of all windowed user interface classes.
@@ -83,7 +55,7 @@ import org.eclipse.swt.internal.swing.Utils;
 
 public abstract class Control extends Widget implements Drawable {
 	/**
-	 * the handle to the OS resource 
+	 * the handle to the OS resource
 	 * (Warning: This field is platform dependent)
 	 * <p>
 	 * <b>IMPORTANT:</b> This field is <em>not</em> part of the SWT
@@ -115,7 +87,7 @@ Control () {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -461,8 +433,8 @@ public void addTraverseListener (TraverseListener listener) {
  * best be displayed at. The width hint and height hint arguments
  * allow the caller to ask a control questions such as "Given a particular
  * width, how high does the control need to be to show all of the contents?"
- * To indicate that the caller does not wish to constrain a particular 
- * dimension, the constant <code>SWT.DEFAULT</code> is passed for the hint. 
+ * To indicate that the caller does not wish to constrain a particular
+ * dimension, the constant <code>SWT.DEFAULT</code> is passed for the hint.
  * </p>
  *
  * @param wHint the width hint (can be <code>SWT.DEFAULT</code>)
@@ -492,14 +464,14 @@ public Point computeSize (int wHint, int hHint) {
  * best be displayed at. The width hint and height hint arguments
  * allow the caller to ask a control questions such as "Given a particular
  * width, how high does the control need to be to show all of the contents?"
- * To indicate that the caller does not wish to constrain a particular 
- * dimension, the constant <code>SWT.DEFAULT</code> is passed for the hint. 
+ * To indicate that the caller does not wish to constrain a particular
+ * dimension, the constant <code>SWT.DEFAULT</code> is passed for the hint.
  * </p><p>
  * If the changed flag is <code>true</code>, it indicates that the receiver's
  * <em>contents</em> have changed, therefore any caches that a layout manager
  * containing the control may have been keeping need to be flushed. When the
  * control is resized, the changed flag will be <code>false</code>, so layout
- * manager caches can be retained. 
+ * manager caches can be retained.
  * </p>
  *
  * @param wHint the width hint (can be <code>SWT.DEFAULT</code>)
@@ -575,7 +547,7 @@ Control [] computeTabList () {
  * Like create handle, but overriden class should call its supertype declaration
  */
 void createHandleInit () {
-  
+
 }
 
 Container createHandle () {
@@ -648,6 +620,7 @@ void deregister () {
 	display.removeControl (handle);
 }
 
+@Override
 void destroyWidget () {
 //	int hwnd = topHandle ();
   releaseHandle ();
@@ -677,9 +650,9 @@ void destroyWidget () {
 //		OS.FillRect (hDC, rect, hBrush);
 //	} else {
 //		RECT rect2 = new RECT ();
-//		OS.GetWindowRect (control.handle, rect2);		
+//		OS.GetWindowRect (control.handle, rect2);
 //		OS.MapWindowPoints (0, handle, rect2, 2);
-//		control.drawThemeBackground (hDC, rect2);	
+//		control.drawThemeBackground (hDC, rect2);
 //	}
 //}
 //
@@ -794,7 +767,7 @@ public boolean forceFocus () {
     handle.requestFocus();
 //  }
   return true;
-  
+
 //  return handle.hasFocus();
 //	/*
 //	* This code is intentionally commented.
@@ -806,7 +779,7 @@ public boolean forceFocus () {
 //	* control will no longer have the focus
 //	* and the call to setFocus() will return
 //	* false indicating failure.
-//	* 
+//	*
 //	* We are still working on a solution at
 //	* this time.
 //	*/
@@ -828,7 +801,7 @@ public boolean forceFocus () {
 //			* This code is intentionally commented.  All widgets that
 //			* are created by SWT have WS_CLIPSIBLINGS to ensure that
 //			* application code does not draw outside of the control.
-//			*/	
+//			*/
 ////			int count = parent.getChildrenCount ();
 ////			if (count > 1) {
 ////				int bits = OS.GetWindowLong (handle, OS.GWL_STYLE);
@@ -837,7 +810,7 @@ public boolean forceFocus () {
 //			SetWindowPos (wp.hwnd, 0, wp.x, wp.y, wp.cx, wp.cy, wp.flags);
 //			lpwp [i] = null;
 //			return;
-//		}	
+//		}
 //	}
 //}
 
@@ -852,10 +825,10 @@ public boolean forceFocus () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see Accessible#addAccessibleListener
  * @see Accessible#addAccessibleControlListener
- * 
+ *
  * @since 2.0
  */
 public Accessible getAccessible () {
@@ -893,7 +866,7 @@ public Color getBackground () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.2
  */
 public Image getBackgroundImage () {
@@ -936,7 +909,7 @@ public Rectangle getBounds () {
   java.awt.Rectangle rect = handle.getBounds();
   Point offset = parent == null? new Point(0, 0): parent.getInternalOffset();
   return new Rectangle (rect.x + offset.x, rect.y + offset.y, rect.width, rect.height);
-//  
+//
 //	RECT rect = new RECT ();
 //	OS.GetWindowRect (topHandle (), rect);
 //	int hwndParent = parent == null ? 0 : parent.handle;
@@ -992,7 +965,7 @@ public Rectangle getBounds () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #isEnabled
  */
 public boolean getEnabled () {
@@ -1011,7 +984,7 @@ public boolean getEnabled () {
  * </ul>
  */
 public Font getFont () {
-	checkWidget ();	
+	checkWidget ();
 	return Font.swing_new (display, ((CControl)handle).getUserAttributeHandler().getFont());
 }
 
@@ -1053,8 +1026,8 @@ public Object getLayoutData () {
 /**
  * Returns a point describing the receiver's location relative
  * to its parent (or its display if its parent is null), unless
- * the receiver is a shell. In this case, the point is 
- * relative to the display. 
+ * the receiver is a shell. In this case, the point is
+ * relative to the display.
  *
  * @return the receiver's location
  *
@@ -1085,6 +1058,7 @@ public Point getLocation () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Menu getMenu () {
 	checkWidget ();
 	return menu;
@@ -1092,9 +1066,9 @@ public Menu getMenu () {
 
 /**
  * Returns the receiver's monitor.
- * 
+ *
  * @return the receiver's monitor
- * 
+ *
  * @since 3.0
  */
 public Monitor getMonitor () {
@@ -1253,7 +1227,7 @@ public boolean getVisible () {
 //	return false;
 //}
 
-/**	 
+/**
  * Invokes platform specific functionality to allocate a new GC handle.
  * <p>
  * <b>IMPORTANT:</b> This method is <em>not</em> part of the public
@@ -1263,9 +1237,10 @@ public boolean getVisible () {
  * application code.
  * </p>
  *
- * @param data the platform specific GC data 
+ * @param data the platform specific GC data
  * @return the platform specific GC handle
  */
+@Override
 public CGC internal_new_GC (GCData data) {
 	checkWidget();
   if(data != null) {
@@ -1298,7 +1273,8 @@ public CGC internal_new_GC (GCData data) {
     protected Graphics2D internalSwingGraphics2D;
     protected Graphics2D graphics2D;
     protected boolean isAdjusting;
-    public Graphics2D getGraphics() {
+    @Override
+	public Graphics2D getGraphics() {
       if(isAdjusting) {
         return graphics2D;
       }
@@ -1337,7 +1313,8 @@ public CGC internal_new_GC (GCData data) {
       }
       return graphics2D;
     }
-    public Dimension getDeviceSize() {
+    @Override
+	public Dimension getDeviceSize() {
       return ((CControl)handle).getClientArea().getSize();
     }
   };
@@ -1376,7 +1353,7 @@ public CGC internal_new_GC (GCData data) {
 //	return hDC;
 }
 
-/**	 
+/**
  * Invokes platform specific functionality to dispose a GC handle.
  * <p>
  * <b>IMPORTANT:</b> This method is <em>not</em> part of the public
@@ -1387,8 +1364,9 @@ public CGC internal_new_GC (GCData data) {
  * </p>
  *
  * @param hDC the platform specific GC handle
- * @param data the platform specific GC data 
+ * @param data the platform specific GC data
  */
+@Override
 public void internal_dispose_GC (CGC hDC, GCData data) {
 	checkWidget ();
 //	Component hwnd = handle;
@@ -1449,7 +1427,7 @@ public void internal_dispose_GC (CGC hDC, GCData data) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #getEnabled
  */
 public boolean isEnabled () {
@@ -1606,13 +1584,13 @@ boolean mnemonicMatch (char key) {
  * @param control the sibling control (or null)
  *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_INVALID_ARGUMENT - if the control has been disposed</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the control has been disposed</li>
  * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see Control#moveBelow
  * @see Composite#getChildren
  */
@@ -1673,7 +1651,7 @@ public void moveAbove (Control control) {
 //			hwndAbove = OS.HWND_TOP;
 //		}
 //	}
-//	int flags = OS.SWP_NOSIZE | OS.SWP_NOMOVE | OS.SWP_NOACTIVATE; 
+//	int flags = OS.SWP_NOSIZE | OS.SWP_NOMOVE | OS.SWP_NOACTIVATE;
 //	SetWindowPos (topHandle, hwndAbove, 0, 0, 0, 0, flags);
 }
 
@@ -1687,13 +1665,13 @@ public void moveAbove (Control control) {
  * @param control the sibling control (or null)
  *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_INVALID_ARGUMENT - if the control has been disposed</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the control has been disposed</li>
  * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see Control#moveAbove
  * @see Composite#getChildren
  */
@@ -1743,7 +1721,7 @@ public void moveBelow (Control control) {
 //		hwndAbove = control.topHandle ();
 //	}
 //	if (hwndAbove == 0 || hwndAbove == topHandle) return;
-//	int flags = OS.SWP_NOSIZE | OS.SWP_NOMOVE | OS.SWP_NOACTIVATE; 
+//	int flags = OS.SWP_NOSIZE | OS.SWP_NOMOVE | OS.SWP_NOACTIVATE;
 //	SetWindowPos (topHandle, hwndAbove, 0, 0, 0, 0, flags);
 }
 
@@ -1751,6 +1729,7 @@ Accessible new_Accessible (Control control) {
 	return Accessible.internal_new_Accessible (this);
 }
 
+@Override
 GC new_GC (GCData data) {
 	return GC.swing_new (this, data);
 }
@@ -1781,11 +1760,11 @@ public void pack () {
  * <em>contents</em> have changed, therefore any caches that a layout manager
  * containing the control may have been keeping need to be flushed. When the
  * control is resized, the changed flag will be <code>false</code>, so layout
- * manager caches can be retained. 
+ * manager caches can be retained.
  * </p>
  *
  * @param changed whether or not the receiver's contents have changed
- * 
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
@@ -1830,7 +1809,7 @@ public void redraw () {
 
 /**
  * Causes the rectangular area of the receiver specified by
- * the arguments to be marked as needing to be redrawn. 
+ * the arguments to be marked as needing to be redrawn.
  * The next time a paint request is processed, that area of
  * the receiver will be painted, including the background.
  * If the <code>all</code> flag is <code>true</code>, any
@@ -1880,12 +1859,14 @@ void register () {
 	display.addControl (handle, this);
 }
 
+@Override
 void releaseHandle () {
 	super.releaseHandle ();
 	handle = null;
   parent = null;
 }
 
+@Override
 void releaseParent () {
   Container parent = handle.getParent();
   if(parent != null) {
@@ -1896,6 +1877,7 @@ void releaseParent () {
   this.parent.removeControl (this);
 }
 
+@Override
 void releaseWidget () {
   if(focusLostRunnable != null && getShell().getActiveControl() == this) {
     focusLostRunnable.run();
@@ -2156,7 +2138,7 @@ public void removeTraverseListener(TraverseListener listener) {
 //
 //boolean sendFocusEvent (int type) {
 //	Shell shell = getShell ();
-//	
+//
 //	/*
 //	* Feature in Windows.  During the processing of WM_KILLFOCUS,
 //	* when the focus window is queried using GetFocus(), it has
@@ -2180,7 +2162,7 @@ public void removeTraverseListener(TraverseListener listener) {
 //	* disposed at this point.  If this happens
 //	* don't send the activate and deactivate
 //	* events.
-//	*/	
+//	*/
 //	if (!shell.isDisposed ()) {
 //		switch (type) {
 //			case SWT.FocusIn:
@@ -2204,7 +2186,7 @@ public void removeTraverseListener(TraverseListener listener) {
  * @param color the new color (or null)
  *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
  * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -2231,14 +2213,14 @@ public void setBackground (Color color) {
  * @param image the new image (or null)
  *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li> 
- *    <li>ERROR_INVALID_ARGUMENT - if the argument is not a bitmap</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
+ *    <li>ERROR_INVALID_ARGUMENT - if the argument is not a bitmap</li>
  * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.2
  */
 public void setBackgroundImage (Image image) {
@@ -2261,9 +2243,9 @@ public void setBackgroundImage (Image image) {
 
 /**
  * Sets the receiver's size and location to the rectangular
- * area specified by the arguments. The <code>x</code> and 
+ * area specified by the arguments. The <code>x</code> and
  * <code>y</code> arguments are relative to the receiver's
- * parent (or its display if its parent is null), unless 
+ * parent (or its display if its parent is null), unless
  * the receiver is a shell. In this case, the <code>x</code>
  * and <code>y</code> arguments are relative to the display.
  * <p>
@@ -2358,7 +2340,7 @@ public void setBounds (int x, int y, int width, int height) {
 
 /**
  * Sets the receiver's size and location to the rectangular
- * area specified by the argument. The <code>x</code> and 
+ * area specified by the argument. The <code>x</code> and
  * <code>y</code> fields of the rectangle are relative to
  * the receiver's parent (or its display if its parent is null).
  * <p>
@@ -2445,7 +2427,7 @@ void sendMouseEvent(int eventType, Event event) {
  * @param cursor the new cursor (or null)
  *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
  * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -2534,7 +2516,7 @@ public void setEnabled (boolean enabled) {
 }
 
 /**
- * Causes the receiver to have the <em>keyboard focus</em>, 
+ * Causes the receiver to have the <em>keyboard focus</em>,
  * such that all keyboard events will be delivered to it.  Focus
  * reassignment will respect applicable platform constraints.
  *
@@ -2561,7 +2543,7 @@ public boolean setFocus () {
  * @param font the new font (or null)
  *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
  * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -2570,7 +2552,7 @@ public boolean setFocus () {
  */
 public void setFont (Font font) {
 	checkWidget ();
-	if (font != null) { 
+	if (font != null) {
 		if (font.isDisposed()) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		((CControl)handle).getUserAttributeHandler().setFont(font.handle);
 	} else {
@@ -2587,7 +2569,7 @@ public void setFont (Font font) {
  * @param color the new color (or null)
  *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
  * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -2613,9 +2595,9 @@ public void setForeground (Color color) {
 
 /**
  * Sets the layout data associated with the receiver to the argument.
- * 
+ *
  * @param layoutData the new layout data for the receiver.
- * 
+ *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
@@ -2629,9 +2611,9 @@ public void setLayoutData (Object layoutData) {
 /**
  * Sets the receiver's location to the point specified by
  * the arguments which are relative to the receiver's
- * parent (or its display if its parent is null), unless 
- * the receiver is a shell. In this case, the point is 
- * relative to the display. 
+ * parent (or its display if its parent is null), unless
+ * the receiver is a shell. In this case, the point is
+ * relative to the display.
  *
  * @param x the new x coordinate for the receiver
  * @param y the new y coordinate for the receiver
@@ -2671,9 +2653,9 @@ public void setLocation (int x, int y) {
 /**
  * Sets the receiver's location to the point specified by
  * the arguments which are relative to the receiver's
- * parent (or its display if its parent is null), unless 
- * the receiver is a shell. In this case, the point is 
- * relative to the display. 
+ * parent (or its display if its parent is null), unless
+ * the receiver is a shell. In this case, the point is
+ * relative to the display.
  *
  * @param location the new location for the receiver
  *
@@ -2706,7 +2688,7 @@ public void setLocation (Point location) {
  * @exception IllegalArgumentException <ul>
  *    <li>ERROR_MENU_NOT_POP_UP - the menu is not a pop up menu</li>
  *    <li>ERROR_INVALID_PARENT - if the menu is not in the same widget tree</li>
- *    <li>ERROR_INVALID_ARGUMENT - if the menu has been disposed</li> 
+ *    <li>ERROR_INVALID_ARGUMENT - if the menu has been disposed</li>
  * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -2754,7 +2736,7 @@ boolean setRadioSelection (boolean value) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #redraw(int, int, int, int, boolean)
  * @see #update
  */
@@ -2852,7 +2834,7 @@ public void setToolTipText (String string) {
 
 /**
  * Marks the receiver as visible if the argument is <code>true</code>,
- * and marks it invisible otherwise. 
+ * and marks it invisible otherwise.
  * <p>
  * If one of the receiver's ancestors is not visible or some
  * other condition makes the receiver not visible, marking
@@ -2880,7 +2862,7 @@ public void setVisible (boolean visible) {
 //		sendEvent (SWT.Show);
 //		if (isDisposed ()) return;
 //	}
-	
+
 //	/*
 //	* Feature in Windows.  If the receiver has focus, hiding
 //	* the receiver causes no window to have focus.  The fix is
@@ -2945,7 +2927,7 @@ void sort (int [] items) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 2.1
  */
 public Point toControl (int x, int y) {
@@ -2994,7 +2976,7 @@ public Point toControl (Point point) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 2.1
  */
 public Point toDisplay (int x, int y) {
@@ -3200,7 +3182,7 @@ boolean traverse (Event event) {
 	* code could have disposed the widget in the traverse
 	* event.  If this happens, return true to stop further
 	* event processing.
-	*/	
+	*/
 	sendEvent (SWT.Traverse, event);
 	if (isDisposed ()) return true;
 	if (!event.doit) return false;
@@ -3212,7 +3194,7 @@ boolean traverse (Event event) {
 		case SWT.TRAVERSE_TAB_PREVIOUS:	return traverseGroup (false);
 		case SWT.TRAVERSE_ARROW_NEXT:		return traverseItem (true);
 		case SWT.TRAVERSE_ARROW_PREVIOUS:	return traverseItem (false);
-		case SWT.TRAVERSE_MNEMONIC:		return traverseMnemonic (event.character);	
+		case SWT.TRAVERSE_MNEMONIC:		return traverseMnemonic (event.character);
 		case SWT.TRAVERSE_PAGE_NEXT:		return traversePage (true);
 		case SWT.TRAVERSE_PAGE_PREVIOUS:	return traversePage (false);
 	}
@@ -3222,8 +3204,8 @@ boolean traverse (Event event) {
 /**
  * Based on the argument, perform one of the expected platform
  * traversal action. The argument should be one of the constants:
- * <code>SWT.TRAVERSE_ESCAPE</code>, <code>SWT.TRAVERSE_RETURN</code>, 
- * <code>SWT.TRAVERSE_TAB_NEXT</code>, <code>SWT.TRAVERSE_TAB_PREVIOUS</code>, 
+ * <code>SWT.TRAVERSE_ESCAPE</code>, <code>SWT.TRAVERSE_RETURN</code>,
+ * <code>SWT.TRAVERSE_TAB_NEXT</code>, <code>SWT.TRAVERSE_TAB_PREVIOUS</code>,
  * <code>SWT.TRAVERSE_ARROW_NEXT</code> and <code>SWT.TRAVERSE_ARROW_PREVIOUS</code>.
  *
  * @param traversal the type of traversal
@@ -3350,7 +3332,7 @@ public void update () {
 //
 //boolean updateFont (Font oldFont, Font newFont) {
 //	boolean sameFont = getFont ().equals (oldFont);
-//	/* 
+//	/*
 //	* If the font that the control is using is the
 //	* same one that was being used from the Control
 //	* Panel, then use the new Control Panel font.
@@ -3391,7 +3373,7 @@ void updateLayout (boolean resize, boolean all) {
 //	*/
 //	if (OS.WIN32_VERSION < OS.VERSION (4, 10)) {
 //		return bits;
-//	} 
+//	}
 //	bits |= OS.WS_EX_NOINHERITLAYOUT;
 //	if ((style & SWT.RIGHT_TO_LEFT) != 0) bits |= OS.WS_EX_LAYOUTRTL;
 //	return bits;
@@ -3411,7 +3393,7 @@ void updateLayout (boolean resize, boolean all) {
 //		if ((style & SWT.BORDER) != 0) bits |= OS.WS_BORDER;
 //	}
 //	return bits;
-//	
+//
 //	/*
 //	* This code is intentionally commented.  When clipping
 //	* of both siblings and children is not enforced, it is
@@ -3434,7 +3416,7 @@ void updateLayout (boolean resize, boolean all) {
  *
  * @exception IllegalArgumentException <ul>
  *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
- *    <li>ERROR_NULL_ARGUMENT - if the parent is <code>null</code></li> 
+ *    <li>ERROR_NULL_ARGUMENT - if the parent is <code>null</code></li>
  * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -3459,7 +3441,7 @@ public boolean setParent (Composite parent) {
 //	int topHandle = topHandle ();
 //	if (OS.SetParent (topHandle, parent.handle) == 0) return false;
 //	this.parent = parent;
-//	int flags = OS.SWP_NOSIZE | OS.SWP_NOMOVE | OS.SWP_NOACTIVATE; 
+//	int flags = OS.SWP_NOSIZE | OS.SWP_NOMOVE | OS.SWP_NOACTIVATE;
 //	SetWindowPos (topHandle, OS.HWND_BOTTOM, 0, 0, 0, 0, flags);
 	return true;
 }
@@ -3501,7 +3483,7 @@ public boolean setParent (Composite parent) {
 //		case OS.WM_IME_COMPOSITION:		result = WM_IME_COMPOSITION (wParam, lParam); break;
 //		case OS.WM_INITMENUPOPUP:		result = WM_INITMENUPOPUP (wParam, lParam); break;
 //		case OS.WM_INPUTLANGCHANGE:		result = WM_INPUTLANGCHANGE (wParam, lParam); break;
-//		case OS.WM_HOTKEY:				result = WM_HOTKEY (wParam, lParam); break;		
+//		case OS.WM_HOTKEY:				result = WM_HOTKEY (wParam, lParam); break;
 //		case OS.WM_KEYDOWN:				result = WM_KEYDOWN (wParam, lParam); break;
 //		case OS.WM_KEYUP:				result = WM_KEYUP (wParam, lParam); break;
 //		case OS.WM_KILLFOCUS:			result = WM_KILLFOCUS (wParam, lParam); break;
@@ -3722,7 +3704,7 @@ public boolean setParent (Composite parent) {
 //}
 //
 //LRESULT WM_INITMENUPOPUP (int wParam, int lParam) {
-//	
+//
 //	/* Ignore WM_INITMENUPOPUP for an accelerator */
 //	if (display.accelKeyHit) return null;
 //
@@ -3735,7 +3717,7 @@ public boolean setParent (Composite parent) {
 //	Menu oldMenu = shell.activeMenu, newMenu = null;
 //	if ((lParam >> 16) == 0) {
 //		newMenu = menuShell ().findMenu (wParam);
-//	}	
+//	}
 //	Menu menu = newMenu;
 //	while (menu != null && menu != oldMenu) {
 //		menu = menu.getParentMenu ();
@@ -3760,7 +3742,7 @@ public boolean setParent (Composite parent) {
 //			if (ancestor != null) break;
 //		}
 //	}
-//	
+//
 //	/*
 //	* The shell and the new menu may be disposed because of
 //	* sending the hide event to the ancestor menus but setting
@@ -3768,7 +3750,7 @@ public boolean setParent (Composite parent) {
 //	*/
 //	if (newMenu != null && newMenu.isDisposed ()) newMenu = null;
 //	shell.activeMenu = newMenu;
-//	
+//
 //	/* Send the show event */
 //	if (newMenu != null && newMenu != oldMenu) {
 //		newMenu.sendEvent (SWT.Show);
@@ -3895,7 +3877,7 @@ public boolean setParent (Composite parent) {
 //			if (OS.GetMenuItemInfo (lParam, index, true, info)) {
 //				Menu newMenu = menuShell.findMenu (info.hSubMenu);
 //				if (newMenu != null) item = newMenu.cascade;
-//			}	
+//			}
 //		} else {
 //			Menu newMenu = menuShell.findMenu (lParam);
 //			if (newMenu != null) {
@@ -4130,7 +4112,7 @@ public boolean setParent (Composite parent) {
 //			* moves focus to the System menu but this can be achieved
 //			* using Alt+Space.  To allow the application to see F10,
 //			* avoid running the default window proc.
-//			* 
+//			*
 //			* NOTE:  When F10 is pressed, WM_SYSCOMMAND is sent to the
 //			* shell, not the focus control.  This is undocumented Windows
 //			* behavior.
@@ -4157,7 +4139,7 @@ public boolean setParent (Composite parent) {
 //				* matching the mnemonic character.  To allow the application
 //				* to see the keystrokes in this case, avoid running the default
 //				* window proc.
-//				* 
+//				*
 //				* NOTE: When the user types Alt+Space, the System menu is
 //				* activated.  In this case the application should not see
 //				* the keystroke.
@@ -4292,7 +4274,8 @@ void adjustMouseHoverState(java.awt.event.MouseEvent me) {
   mouseHoverEvent = me;
   if(mouseHoverThread == null) {
     mouseHoverThread = new Thread("Mouse Hover Thread") {
-      public void run() {
+      @Override
+	public void run() {
         while(mouseHoverThread == this) {
           try {
             sleep(Math.max(50, mouseHoverTimeStamp - System.currentTimeMillis()));
@@ -4302,33 +4285,31 @@ void adjustMouseHoverState(java.awt.event.MouseEvent me) {
           }
           if(mouseHoverTimeStamp - System.currentTimeMillis() < 0) {
             final Thread t = this;
-            SwingUtilities.invokeLater(new Runnable() {
-              public void run() {
+            SwingUtilities.invokeLater(() -> {
                 if(mouseHoverThread != t) {
                   return;
                 }
                 if(mouseHoverTimeStamp - System.currentTimeMillis() < 0) {
                   mouseHoverThread = null;
-                  java.awt.event.MouseEvent me = mouseHoverEvent;
+                  java.awt.event.MouseEvent me1 = mouseHoverEvent;
                   mouseHoverEvent = null;
                   // TODO: the point is incorrect when the wheel mouse is used: cf snippet125
-                  if(!isDisposed() && me.getComponent().contains(me.getPoint())) {
+                  if(!isDisposed() && me1.getComponent().contains(me1.getPoint())) {
                     UIThreadUtils.startExclusiveSection(getDisplay());
                     if(isDisposed()) {
                       UIThreadUtils.stopExclusiveSection();
                       return;
                     }
                     try {
-                      sendMouseEvent(SWT.MouseHover, createMouseEvent(me, false));
-                    } catch(Throwable t) {
-                      UIThreadUtils.storeException(t);
+                      sendMouseEvent(SWT.MouseHover, createMouseEvent(me1, false));
+                    } catch(Throwable t1) {
+                      UIThreadUtils.storeException(t1);
                     } finally {
                       UIThreadUtils.stopExclusiveSection();
                     }
                   }
                 }
-              }
-            });
+              });
           }
         }
       }
@@ -4339,7 +4320,7 @@ void adjustMouseHoverState(java.awt.event.MouseEvent me) {
 }
 
 /**
- * The entry point for callbacks 
+ * The entry point for callbacks
  * (Warning: This method is platform dependent)
  * <p>
  * <b>IMPORTANT:</b> This method is <em>not</em> part of the SWT
@@ -4361,7 +4342,7 @@ boolean isAdjustingSize;
 static boolean isDragging;
 
 /**
- * The entry point for callbacks 
+ * The entry point for callbacks
  * (Warning: This method is platform dependent)
  * <p>
  * <b>IMPORTANT:</b> This method is <em>not</em> part of the SWT
@@ -4601,7 +4582,8 @@ public void processEvent(AWTEvent e) {
     }
     case java.awt.event.FocusEvent.FOCUS_LOST: {
       Runnable runnable = new Runnable() {
-        public void run() {
+        @Override
+		public void run() {
           if(focusLostRunnable != this) {
             return;
           }
@@ -4915,16 +4897,18 @@ public int getOrientation () {
 public void setTextDirection(int textDirection) {
 	checkWidget ();
 	textDirection &= (SWT.RIGHT_TO_LEFT | SWT.LEFT_TO_RIGHT);
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
 //	updateTextDirection (textDirection);System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
-	if (textDirection == AUTO_TEXT_DIRECTION) {
-		state |= HAS_AUTO_DIRECTION;
-	} else {
-		state &= ~HAS_AUTO_DIRECTION;
-	}
+//	if (textDirection == AUTO_TEXT_DIRECTION) {
+//		state |= HAS_AUTO_DIRECTION;
+//	} else {
+//		state &= ~HAS_AUTO_DIRECTION;
+//	}
 }
 
 public void requestLayout () {
-	getShell ().layout (new Control[] {this}, SWT.DEFER);
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+//	getShell ().layout (new Control[] {this}, SWT.DEFER);
 }
 
 /**

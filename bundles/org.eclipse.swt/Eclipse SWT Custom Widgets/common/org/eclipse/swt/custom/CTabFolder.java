@@ -827,8 +827,9 @@ void destroyItem (CTabItem item) {
 	notifyItemCountChange();
 }
 
-private void requestLayout() {
-System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]); 
+@Override
+public void requestLayout() {
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 
 /**
