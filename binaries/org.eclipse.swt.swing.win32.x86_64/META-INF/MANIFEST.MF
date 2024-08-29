@@ -22,7 +22,4 @@ Export-Package:
  org.eclipse.swt.widgets,
  org.eclipse.swt.internal; x-friends:="org.eclipse.ui",
  org.eclipse.swt.internal.image; x-internal:=true
-SWT-WS: swing
-SWT-OS: win32
-SWT-Arch: x86_64
 Automatic-Module-Name: org.eclipse.swt.swing
