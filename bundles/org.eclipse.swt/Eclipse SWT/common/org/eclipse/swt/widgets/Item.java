@@ -202,7 +202,7 @@ public void setText (String string) {
 //	if ((state & SWT.HAS_AUTO_DIRECTION) != 0) {
 //		updateTextDirection (AUTO_TEXT_DIRECTION);
 //	}
-	throw new UnsupportedOperationException("Not implemented yet");
+	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 
 boolean updateTextDirection(int textDirection) {

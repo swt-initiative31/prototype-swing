@@ -531,6 +531,11 @@ return null;
 public boolean canBeginDrag() {
 	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 return false;
+}
+
+public void setDragSourceEffect(DragSourceEffect dragSourceEffect) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
 };
 
 

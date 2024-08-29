@@ -2767,4 +2767,11 @@ public static boolean isSystemDarkTheme() {
 			|| lookAndFeel.toLowerCase().contains("nimbus");
 }
 
+
+
+public Menu getMenuBar() {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+	return null;
+}
+
 }

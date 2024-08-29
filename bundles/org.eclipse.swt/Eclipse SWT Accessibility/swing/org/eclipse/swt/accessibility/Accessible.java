@@ -11,13 +11,13 @@
 package org.eclipse.swt.accessibility;
 
 
-import java.util.Vector;
+import java.util.*;
 
-import javax.accessibility.AccessibleContext;
-import javax.swing.SwingUtilities;
+import javax.accessibility.*;
+import javax.swing.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.*;
+import org.eclipse.swt.widgets.*;
 
 /**
  * Instances of this class provide a bridge between application
@@ -31,13 +31,13 @@ import org.eclipse.swt.widgets.Control;
  * As a rule of thumb, an application would only want to use the
  * accessible control listener to implement accessibility for a
  * custom control.
- * 
+ *
  * @see Control#getAccessible
  * @see AccessibleListener
  * @see AccessibleEvent
  * @see AccessibleControlListener
  * @see AccessibleControlEvent
- * 
+ *
  * @since 2.0
  */
 public class Accessible {
@@ -51,7 +51,7 @@ public class Accessible {
     this.control = control;
     accessibleContext = control.handle.getAccessibleContext();
   }
-  
+
   /**
    * Invokes platform specific functionality to allocate a new accessible object.
    * <p>
@@ -95,7 +95,7 @@ public class Accessible {
     if (listener == null) SWT.error(SWT.ERROR_NULL_ARGUMENT);
     accessibleListeners.addElement(listener);
   }
-  
+
   /**
    * Removes the listener from the collection of listeners who will
    * be notified when an accessible client asks for certain strings,
@@ -120,7 +120,7 @@ public class Accessible {
     if (listener == null) SWT.error(SWT.ERROR_NULL_ARGUMENT);
     accessibleListeners.removeElement(listener);
   }
-  
+
   /**
    * Adds the listener to the collection of listeners who will
    * be notified when an accessible client asks for custom control
@@ -172,7 +172,7 @@ public class Accessible {
     if (listener == null) SWT.error(SWT.ERROR_NULL_ARGUMENT);
     accessibleControlListeners.removeElement(listener);
   }
-  
+
   /**
    * Adds the listener to the collection of listeners who will
    * be notified when an accessible client asks for custom text control
@@ -193,13 +193,13 @@ public class Accessible {
    *
    * @see AccessibleTextListener
    * @see #removeAccessibleTextListener
-   * 
+   *
    * @since 3.0
    */
   public void addAccessibleTextListener (AccessibleTextListener listener) {
     checkWidget ();
     if (listener == null) SWT.error (SWT.ERROR_NULL_ARGUMENT);
-    textListeners.addElement (listener);    
+    textListeners.addElement (listener);
   }
 
   /**
@@ -220,7 +220,7 @@ public class Accessible {
    *
    * @see AccessibleTextListener
    * @see #addAccessibleTextListener
-   * 
+   *
    * @since 3.0
    */
   public void removeAccessibleTextListener (AccessibleTextListener listener) {
@@ -230,7 +230,7 @@ public class Accessible {
   }
 
   /**
-   * Returns the control for this Accessible object. 
+   * Returns the control for this Accessible object.
    *
    * @return the receiver's control
    * @since 3.0
@@ -247,18 +247,18 @@ public class Accessible {
    *    <li>ERROR_WIDGET_DISPOSED - if the receiver's control has been disposed</li>
    *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver's control</li>
    * </ul>
-   * 
+   *
    * @since 3.0
    */
   public void selectionChanged () {
   }
-  
+
   /**
    * Sends a message to accessible clients that the text
    * caret has moved within a custom control.
    *
    * @param index the new caret index within the control
-   * 
+   *
    * @exception SWTException <ul>
    *    <li>ERROR_WIDGET_DISPOSED - if the receiver's control has been disposed</li>
    *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver's control</li>
@@ -268,7 +268,7 @@ public class Accessible {
    */
   public void textCaretMoved (int index) {
   }
-  
+
   /**
    * Sends a message to accessible clients that the text
    * within a custom control has changed.
@@ -282,15 +282,15 @@ public class Accessible {
    *    <li>ERROR_WIDGET_DISPOSED - if the receiver's control has been disposed</li>
    *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver's control</li>
    * </ul>
-   * 
+   *
    * @see ACC#TEXT_INSERT
    * @see ACC#TEXT_DELETE
-   * 
+   *
    * @since 3.0
    */
   public void textChanged (int type, int startIndex, int length) {
   }
-  
+
   /**
    * Sends a message to accessible clients that the text
    * selection has changed within a custom control.
@@ -304,13 +304,13 @@ public class Accessible {
    */
   public void textSelectionChanged () {
   }
-  
+
   /**
    * Sends a message to accessible clients indicating that the focus
    * has changed within a custom control.
    *
    * @param childID an identifier specifying a child of the control
-   * 
+   *
    * @exception SWTException <ul>
    *    <li>ERROR_WIDGET_DISPOSED - if the receiver's control has been disposed</li>
    *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver's control</li>
@@ -331,7 +331,7 @@ public class Accessible {
    */
   public void internal_dispose_Accessible() {
   }
-  
+
   /* checkWidget was copied from Widget, and rewritten to work in this package */
   void checkWidget () {
     if (!isValidThread ()) SWT.error (SWT.ERROR_THREAD_INVALID_ACCESS);
@@ -342,5 +342,14 @@ public class Accessible {
   boolean isValidThread () {
     return control.getDisplay ().getThread () == Thread.currentThread () || SwingUtilities.isEventDispatchThread();
   }
+
+public void addRelation(int relationLabelFor, Accessible accStreetText) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+}
+
+public void addAccessibleAttributeListener(AccessibleAttributeAdapter accessibleAttributeAdapter) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+}
 
 }
