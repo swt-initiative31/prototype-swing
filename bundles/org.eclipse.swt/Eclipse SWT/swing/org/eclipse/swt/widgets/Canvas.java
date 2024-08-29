@@ -16,6 +16,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Rectangle;
@@ -295,6 +296,14 @@ public void setFont (Font font) {
 	checkWidget ();
 	if (caret != null) caret.setFont (font);
 	super.setFont (font);
+}
+
+public void setTouchEnabled(boolean b) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+}
+
+public void addTouchListener(TouchListener tl) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
 }
 
 //LRESULT WM_INPUTLANGCHANGE (int wParam, int lParam) {

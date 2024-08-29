@@ -17,6 +17,7 @@
  *******************************************************************************/
 package org.eclipse.swt.custom;
 
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.*;
 
@@ -60,7 +61,7 @@ public class StyledText extends Canvas {
 		throw new UnsupportedOperationException("Not implemented yet");
 	}
 
-	public String getLeftMargin() {
+	public int getLeftMargin() {
 		throw new UnsupportedOperationException("Not implemented yet");
 	}
 
@@ -198,6 +199,111 @@ public class StyledText extends Canvas {
 	public void redrawLinesBullet(int[] redrawLines) {
 		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
 
+	}
+
+	public void append(String string) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public void setText(String string) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public int getOffsetAtPoint(Point point) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+		return 0;
+	}
+
+	public void addSelectionListener(SelectionListener widgetSelectedAdapter) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public void addCaretListener(CaretListener listener) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public void setSelectionRanges(int[] newRanges) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public int getLineAtOffset(int caretOffset) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+		return 0;
+	}
+
+	public int[] getLineTabStops(int line) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+		return null;
+	}
+
+	public void setLineTabStops(int i, int j, int[] ks) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public void setTabStops(int[] is) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public void setWordWrap(boolean b) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public void setStyleRange(StyleRange linkStyle) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public StyleRange getStyleRangeAtOffset(int offset) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+		return null;
+	}
+
+	public int getCaretOffset() {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+		return 0;
+	}
+
+	public void setLineBullet(int i, int j, Bullet bullet1) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public void setSelectionRange(int insertPos, int length) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public void insert(String string) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public void setSelection(Point selection) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public Point getSelection() {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+		return null;
+	}
+
+	public void replaceTextRange(int i, int length, String string) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+	}
+
+	public Object getText(int x, int i) {
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+		return null;
 	}
 
 }
