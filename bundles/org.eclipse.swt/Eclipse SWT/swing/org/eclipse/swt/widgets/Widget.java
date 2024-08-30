@@ -572,6 +572,31 @@ public Display getDisplay () {
 	return display;
 }
 
+/**
+ * Returns an array of {@link Listener listeners} who will be notified when an event
+ * of the given type occurs. The event type is one of the event constants
+ * defined in class {@link SWT}.
+ *
+ * @param eventType the type of event to listen for
+ * @return an array of listeners that will be notified when the event occurs
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @see #addListener(int, Listener)
+ * @see #removeListener(int, Listener)
+ * @see #notifyListeners
+ *
+ * @since 3.4
+ */
+public Listener[] getListeners (int eventType) {
+	checkWidget();
+	if (eventTable == null) return new Listener[0];
+	return eventTable.getListeners(eventType);
+}
+
 Menu getMenu () {
 	return null;
 }
@@ -2197,12 +2222,12 @@ public String toString () {
 //	return new LRESULT (result);
 //
 public void reskin(int flags) {
-	throw new UnsupportedOperationException("Not implemented yet");
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
 }
 void reskinChildren (int flags) {
 	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 void reskinWidget() {
-	throw new UnsupportedOperationException("Not implemented yet");
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
 }
 }

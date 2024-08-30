@@ -1227,6 +1227,11 @@ public boolean getVisible () {
 //	return false;
 //}
 
+public Cursor getCursor() {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+	return null;
+}
+
 /**
  * Invokes platform specific functionality to allocate a new GC handle.
  * <p>
