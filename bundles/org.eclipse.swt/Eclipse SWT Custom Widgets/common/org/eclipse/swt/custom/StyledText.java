@@ -155,6 +155,9 @@ public class StyledText extends Canvas {
   int indent;
   int lineSpacing;
 
+  MouseNavigator mouseNavigator;
+  boolean middleClickPressed;
+
   final static boolean IS_CARBON, IS_GTK, IS_MOTIF;
   static {
     String platform = SWT.getPlatform();
@@ -8179,4 +8182,46 @@ void updateSelection(int startOffset, int replacedLength, int newLength) {
   }
   setCaretLocation();
 }
+/**
+ * Returns <code>true</code> if the mouse navigator is enabled.
+ * When mouse navigator is enabled, the user can navigate through the widget by pressing the middle button and moving the cursor
+ *
+ * @return the mouse navigator's enabled state
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @see #getEnabled
+ * @since 3.110
+ */
+public boolean getMouseNavigatorEnabled () {
+	checkWidget ();
+	return mouseNavigator != null;
+}
+/**
+ * Sets the enabled state of the mouse navigator. When the mouse navigator is enabled, the user can navigate through the widget
+ * by pressing the middle button and moving the cursor.
+ *
+ * @param enabled if true, the mouse navigator is enabled, if false the mouse navigator is deactivated
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ * @since 3.110
+ */
+public void setMouseNavigatorEnabled(boolean enabled) {
+	checkWidget();
+	if ((enabled && mouseNavigator != null) || (!enabled && mouseNavigator == null)) {
+		return;
+	}
+	if (enabled) {
+		mouseNavigator = new MouseNavigator(this);
+	} else {
+		mouseNavigator.dispose();
+		mouseNavigator = null;
+	}
+}
+
 }

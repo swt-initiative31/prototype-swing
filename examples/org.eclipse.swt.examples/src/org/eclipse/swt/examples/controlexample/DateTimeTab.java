@@ -18,13 +18,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Widget;
 
 class DateTimeTab extends Tab {
 	/* Example widgets and groups that contain them */
-	DateTime dateTime1;
+//	DateTime dateTime1;
+	Label dateTime1;
 	Group dateTimeGroup;
 
 	/* Style widgets added to the "Style" group */
@@ -70,7 +71,10 @@ class DateTimeTab extends Tab {
 		if (weekNumbersButton.getSelection ()) style |= SWT.CALENDAR_WEEKNUMBERS;
 
 		/* Create the example widgets */
-		dateTime1 = new DateTime (dateTimeGroup, style);
+//		dateTime1 = new DateTime (dateTimeGroup, style);
+		dateTime1 = new Label(dateTimeGroup, style);
+		dateTime1.setText("TO-DO: not implemented");
+		System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
 	}
 
 	/**
