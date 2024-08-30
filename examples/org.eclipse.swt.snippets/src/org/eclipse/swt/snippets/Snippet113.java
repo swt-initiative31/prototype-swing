@@ -32,13 +32,15 @@ public static void main (String [] args) {
 	Table table = new Table (shell, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 	for (int i=0; i<12; i++) {
 		TableItem item = new TableItem (table, SWT.NONE);
-		item.setText ("Item " + i);
+		item.setText ("My Item " + i);
 	}
 	Rectangle clientArea = shell.getClientArea ();
 	table.setBounds (clientArea.x, clientArea.y, 100, 100);
 	table.addListener (SWT.Selection, event -> {
 		String string = event.detail == SWT.CHECK ? "Checked" : "Selected";
-		System.out.println (event.item + " " + string);
+		TableItem i = (TableItem) event.item;
+		String checked = i.getChecked() ? "(x)" : "( )";
+		System.out.println (event.item + checked + " " + string);
 	});
 	shell.setSize (200, 200);
 	shell.open ();
