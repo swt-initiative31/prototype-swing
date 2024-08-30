@@ -44,6 +44,8 @@ import org.eclipse.swt.*;
  */
 public final class Compatibility {
 
+	private final static int MAX_OBVIOUS = 128;
+
 /**
  * Answers the most negative (i.e. closest to negative infinity)
  * integer value which is greater than or equal to the number obtained by dividing

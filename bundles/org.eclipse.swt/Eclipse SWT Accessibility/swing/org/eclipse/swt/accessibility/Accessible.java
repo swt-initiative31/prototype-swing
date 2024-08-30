@@ -53,6 +53,24 @@ public class Accessible {
   }
 
   /**
+	 * Constructs a new instance of this class given its parent.
+	 *
+	 * @param parent the Accessible parent, which must not be null
+	 *
+	 * @exception IllegalArgumentException <ul>
+	 *    <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
+	 * </ul>
+	 *
+	 * @see #dispose
+	 * @see Control#getAccessible
+	 *
+	 * @since 3.6
+	 */
+	public Accessible(Accessible parent) {
+		this.control = parent.control;
+	}
+
+/**
    * Invokes platform specific functionality to allocate a new accessible object.
    * <p>
    * <b>IMPORTANT:</b> This method is <em>not</em> part of the public
@@ -350,6 +368,15 @@ public void addRelation(int relationLabelFor, Accessible accStreetText) {
 public void addAccessibleAttributeListener(AccessibleAttributeAdapter accessibleAttributeAdapter) {
 	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
 
+}
+
+public void dispose() {
+	if (control != null) control.dispose();
+	control = null;
+}
+
+public void addAccessibleTableCellListener(AccessibleTableCellListener accessibleTableCellListener) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
 }
 
 }
