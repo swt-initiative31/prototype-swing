@@ -47,8 +47,6 @@ public class BidiUtil {
 	// switching
 	static Map<LONG, Runnable> languageMap = new HashMap<> ();
 	static Map<LONG, LONG> oldProcMap = new HashMap<> ();
-	static Callback callback = new Callback (BidiUtil.class, "windowProc", 4); //$NON-NLS-1$
-
 
 /*
  * Not implemented.

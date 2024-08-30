@@ -564,7 +564,7 @@ void createWidget () {
 	checkOrientation (parent);
 	createHandleInit ();
 	handle = createHandle ();
-  if(!(handle instanceof CControl)) throw new IllegalStateException("The widget should implement the CComponent interface!");
+//  if(!(handle instanceof CControl)) throw new IllegalStateException("The widget should implement the CComponent interface!");
   if(handle instanceof Window) {
     Dimension size = ((Window)handle).getSize();
     ((Window)handle).pack();
