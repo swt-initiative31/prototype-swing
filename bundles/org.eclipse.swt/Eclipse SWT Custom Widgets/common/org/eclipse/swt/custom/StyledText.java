@@ -113,6 +113,7 @@ public class StyledText extends Canvas {
   int topMargin;
   int rightMargin;
   int bottomMargin;
+  Color marginColor;
   int columnX;            // keep track of the horizontal caret position when changing lines/pages. Fixes bug 5935
   int caretOffset = 0;
   int caretAlignment;
@@ -4952,6 +4953,7 @@ void handleDispose(Event event) {
   }
   selectionBackground = null;
   selectionForeground = null;
+  marginColor = null;
   textChangeListener = null;
   selection = null;
   doubleClickSelection = null;
@@ -5204,8 +5206,9 @@ void handlePaint(Event event) {
       drawBackground(gc, 0, y, clientAreaWidth, endY - y);
     }
   }
+
   // fill the margin background
-  gc.setBackground(background);
+  gc.setBackground(marginColor != null ? marginColor : background);
   if (topMargin > 0) {
     drawBackground(gc, 0, 0, clientAreaWidth, topMargin);
   }
@@ -7257,7 +7260,7 @@ public void setLineSpacing(int lineSpacing) {
   setCaretLocation();
   super.redraw();
 }
-void setMargins (int leftMargin, int topMargin, int rightMargin, int bottomMargin) {
+public void setMargins (int leftMargin, int topMargin, int rightMargin, int bottomMargin) {
   checkWidget();
   this.leftMargin = leftMargin;
   this.topMargin = topMargin;
@@ -7265,6 +7268,44 @@ void setMargins (int leftMargin, int topMargin, int rightMargin, int bottomMargi
   this.bottomMargin = bottomMargin;
   setCaretLocation();
 }
+
+/**
+ * Sets the color of the margins.
+ *
+ * @param color the new color (or null)
+ * @exception IllegalArgumentException <ul>
+ *    <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
+ * </ul>
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @since 3.5
+ */
+public void setMarginColor(Color color) {
+	checkWidget();
+	if (color != null && color.isDisposed()) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+	marginColor = color;
+	super.redraw();
+}
+
+/**
+ * Returns the color of the margins.
+ *
+ * @return the color of the margins.
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @since 3.5
+ */
+public Color getMarginColor() {
+	checkWidget();
+	return marginColor != null ? marginColor : getBackground();
+}
+
 /**
  * Flips selection anchor based on word selection direction.
  */
