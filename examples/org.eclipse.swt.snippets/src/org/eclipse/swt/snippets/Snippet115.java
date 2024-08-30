@@ -47,6 +47,7 @@ public static void main (String [] args) {
 		}
 		Button button2 = (Button) event.widget;
 		button2.setSelection (true);
+		System.out.println(button2 + " selected");
 	};
 	for (int i=0; i<4; i++) {
 		Button button = new Button (c1, SWT.RADIO);
