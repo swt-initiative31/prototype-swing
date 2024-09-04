@@ -407,7 +407,7 @@ public void copyArea(int srcX, int srcY, int width, int height, int destX, int d
 @Override
 public void dispose() {
 	if (this.handle == null) return;
-//	if (data.device.isDisposed()) return;
+	if (data.device.isDisposed()) return;
 
 //	if (data.gdipGraphics != 0) Gdip.Graphics_delete(data.gdipGraphics);
 //	if (data.gdipPen != 0) Gdip.Pen_delete(data.gdipPen);
@@ -427,7 +427,7 @@ public void dispose() {
 //		OS.DeleteObject(data.hBrush);
 //		data.hBrush = 0;
 //	}
-
+//
 //	/*
 //	* Put back the original bitmap into the device context.
 //	* This will ensure that we have not left a bitmap
@@ -440,19 +440,21 @@ public void dispose() {
 //	}
 //	Image image = data.image;
 //	if (image != null) image.memGC = null;
-//
-//	/*
-//	* Dispose the HDC.
-//	*/
-  handle.dispose();
+
+	/*
+	* Dispose the HDC.
+	*/
+	handle.dispose();
 	Device device = data.device;
-	if (drawable != null) drawable.internal_dispose_GC(handle, data);
+	if (drawable != null)
+		drawable.internal_dispose_GC(handle, data);
 	drawable = null;
 	handle = null;
-//	data.image = null;
+	data.image = null;
 //	data.ps = null;
-	if (device.tracking) device.dispose_Object(this);
-//	data.device = null;
+	if (device.tracking)
+		device.dispose_Object(this);
+	data.device = null;
 	data = null;
 }
 

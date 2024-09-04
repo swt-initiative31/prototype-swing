@@ -163,6 +163,7 @@ public Device getDevice() {
 	return device;
 }
 
+// FIXME (VISJEE) Allowing this is a recipe for memory leaks
 void ignoreNonDisposed() {
 	if (tracker != null) {
 		tracker.ignoreMe = true;

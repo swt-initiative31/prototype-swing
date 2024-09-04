@@ -10,15 +10,11 @@
  *******************************************************************************/
 package org.eclipse.swt.graphics;
 
- 
-import java.awt.DisplayMode;
-import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.internal.swing.CGC;
-import org.eclipse.swt.internal.swing.LookAndFeelUtils;
+import java.awt.*;
+
+import org.eclipse.swt.*;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * This class is the abstract superclass of all device objects,
@@ -27,16 +23,16 @@ import org.eclipse.swt.internal.swing.LookAndFeelUtils;
  * can be drawn on by sending messages to the associated GC.
  */
 public abstract class Device implements Drawable {
-	
+
 	/* Debugging */
 	public static boolean DEBUG;
 	boolean debug = DEBUG;
 	boolean tracking = DEBUG;
 	Error [] errors;
 	Object [] objects;
-	
+
 //	/**
-//	 * Palette 
+//	 * Palette
 //	 * (Warning: This field is platform dependent)
 //	 * <p>
 //	 * <b>IMPORTANT:</b> This field is <em>not</em> part of the SWT
@@ -47,7 +43,7 @@ public abstract class Device implements Drawable {
 //	 */
 //	public int hPalette = 0;
 //	int [] colorRefCount;
-	
+
 //	/* Font Enumeration */
 //	int nFonts = 256;
 //	LOGFONT [] logFonts;
@@ -59,7 +55,7 @@ public abstract class Device implements Drawable {
 //	int [] gdipToken;
 
 	boolean disposed;
-	
+
   final static Object CREATE_LOCK = new Object();
 
 	/*
@@ -80,7 +76,7 @@ public abstract class Device implements Drawable {
 		try {
       Class.forName ("org.eclipse.swt.widgets.Display"); //$NON-NLS-1$
 		} catch (Throwable e) {}
-	}	
+	}
 
 /*
 * TEMPORARY CODE.
@@ -95,12 +91,12 @@ static synchronized Device getDevice () {
 /**
  * Constructs a new instance of this class.
  * <p>
- * You must dispose the device when it is no longer required. 
+ * You must dispose the device when it is no longer required.
  * </p>
  *
  * @see #create
  * @see #init
- * 
+ *
  * @since 3.1
  */
 public Device() {
@@ -110,7 +106,7 @@ public Device() {
 /**
  * Constructs a new instance of this class.
  * <p>
- * You must dispose the device when it is no longer required. 
+ * You must dispose the device when it is no longer required.
  * </p>
  *
  * @param data the DeviceData which describes the receiver
@@ -202,7 +198,7 @@ protected void create (DeviceData data) {
 //int computePoints(LOGFONT logFont) {
 //	int hDC = internal_new_GC (null);
 //	int logPixelsY = OS.GetDeviceCaps(hDC, OS.LOGPIXELSY);
-//	int pixels = 0; 
+//	int pixels = 0;
 //	if (logFont.lfHeight > 0) {
 //		/*
 //		 * Feature in Windows. If the lfHeight of the LOGFONT structure
@@ -353,7 +349,7 @@ public DeviceData getDeviceData () {
 /**
  * Returns a rectangle which describes the area of the
  * receiver which is capable of displaying data.
- * 
+ *
  * @return the client area
  *
  * @exception SWTException <ul>
@@ -369,7 +365,7 @@ public Rectangle getClientArea () {
 /**
  * Returns the bit depth of the screen, which is the number of
  * bits it takes to represent the number of unique colors that
- * the screen is currently capable of displaying. This number 
+ * the screen is currently capable of displaying. This number
  * will typically be one of 1, 8, 15, 16, 24 or 32.
  *
  * @return the depth of the screen
@@ -456,11 +452,11 @@ public FontData [] getFontList (String faceName, boolean scalable) {
     results[i] = new FontData(font.getFamily(), 12, SWT.NORMAL | (font.isBold()? SWT.BOLD: 0) | (font.isItalic()? SWT.ITALIC: 0));
   }
   return results;
-//  
+//
 //	/* Create the callback */
 //	Callback callback = new Callback (this, "EnumFontFamProc", 4);
 //	int lpEnumFontFamProc = callback.getAddress ();
-//		
+//
 //	/* Initialize the instance variables */
 //	logFonts = new LOGFONT [nFonts];
 //	for (int i=0; i<logFonts.length; i++) {
@@ -471,10 +467,10 @@ public FontData [] getFontList (String faceName, boolean scalable) {
 //	/* Enumerate */
 //	int offset = 0;
 //	int hDC = internal_new_GC (null);
-//	if (faceName == null) {	
+//	if (faceName == null) {
 //		/* The user did not specify a face name, so they want all versions of all available face names */
 //		OS.EnumFontFamilies (hDC, null, lpEnumFontFamProc, scalable ? 1 : 0);
-//		
+//
 //		/**
 //		 * For bitmapped fonts, EnumFontFamilies only enumerates once for each font, regardless
 //		 * of how many styles are available. If the user wants bitmapped fonts, enumerate on
@@ -513,7 +509,7 @@ public FontData [] getFontList (String faceName, boolean scalable) {
 //		LOGFONT logFont = logFonts [i+offset];
 //		result [i] = FontData.win32_new (logFont, computePoints(logFont));
 //	}
-//	
+//
 //	/* Clean up */
 //	callback.dispose ();
 //	logFonts = null;
@@ -522,13 +518,13 @@ public FontData [] getFontList (String faceName, boolean scalable) {
 
 //String getLastError () {
 //	int error = OS.GetLastError();
-//	if (error == 0) return ""; 
+//	if (error == 0) return "";
 //	return " [GetLastError=0x" + Integer.toHexString(error) + "]";
 //}
 //
 //String getLastErrorText () {
 //	int error = OS.GetLastError();
-//	if (error == 0) return ""; 
+//	if (error == 0) return "";
 //	int[] buffer = new int[1];
 //	int dwFlags = OS.FORMAT_MESSAGE_ALLOCATE_BUFFER | OS.FORMAT_MESSAGE_FROM_SYSTEM | OS.FORMAT_MESSAGE_IGNORE_INSERTS;
 //	int length = OS.FormatMessage(dwFlags, 0, error, OS.LANG_USER_DEFAULT, buffer, 0, 0);
@@ -631,7 +627,7 @@ public boolean getWarnings () {
  * If subclasses reimplement this method, they must
  * call the <code>super</code> implementation.
  * </p>
- * 
+ *
  * @see #create
  */
 protected void init () {
@@ -647,7 +643,7 @@ protected void init () {
 //		scripts = new int [piNumScripts [0]];
 //		OS.MoveMemory (scripts, ppSp [0], scripts.length * 4);
 //	}
-//	
+//
 //	/*
 //	 * If we're not on a device which supports palettes,
 //	 * don't create one.
@@ -656,13 +652,13 @@ protected void init () {
 //	int rc = OS.GetDeviceCaps (hDC, OS.RASTERCAPS);
 //	int bits = OS.GetDeviceCaps (hDC, OS.BITSPIXEL);
 //	int planes = OS.GetDeviceCaps (hDC, OS.PLANES);
-//	
+//
 //	bits *= planes;
 //	if ((rc & OS.RC_PALETTE) == 0 || bits != 8) {
 //		internal_dispose_GC (hDC, null);
 //		return;
 //	}
-//	
+//
 //	int numReserved = OS.GetDeviceCaps (hDC, OS.NUMRESERVED);
 //	int numEntries = OS.GetDeviceCaps (hDC, OS.SIZEPALETTE);
 //
@@ -682,16 +678,16 @@ protected void init () {
 //
 //	/* 4 bytes header + 4 bytes per entry * numEntries entries */
 //	byte [] logPalette = new byte [4 + 4 * numEntries];
-//	
+//
 //	/* 2 bytes = special header */
 //	logPalette [0] = 0x00;
 //	logPalette [1] = 0x03;
-//	
+//
 //	/* 2 bytes = number of colors, LSB first */
 //	logPalette [2] = 0;
 //	logPalette [3] = 1;
 //
-//	/* 
+//	/*
 //	* Create a palette which contains the system entries
 //	* as they are located in the system palette.  The
 //	* MSDN article 'Memory Device Contexts' describes
@@ -712,7 +708,7 @@ protected void init () {
 //	hPalette = OS.CreatePalette (logPalette);
 }
 
-/**	 
+/**
  * Invokes platform specific functionality to allocate a new GC handle.
  * <p>
  * <b>IMPORTANT:</b> This method is <em>not</em> part of the public
@@ -722,12 +718,13 @@ protected void init () {
  * application code.
  * </p>
  *
- * @param data the platform specific GC data 
+ * @param data the platform specific GC data
  * @return the platform specific GC handle
  */
+@Override
 public abstract CGC internal_new_GC (GCData data);
 
-/**	 
+/**
  * Invokes platform specific functionality to dispose a GC handle.
  * <p>
  * <b>IMPORTANT:</b> This method is <em>not</em> part of the public
@@ -738,8 +735,9 @@ public abstract CGC internal_new_GC (GCData data);
  * </p>
  *
  * @param handle the platform specific GC handle
- * @param data the platform specific GC data 
+ * @param data the platform specific GC data
  */
+@Override
 public abstract void internal_dispose_GC (CGC handle, GCData data);
 
 /**
@@ -824,6 +822,14 @@ protected void release () {
  */
 public void setWarnings (boolean warnings) {
 	checkDevice ();
+}
+
+public boolean isTracking() {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+	return false;
+}
+public void setTracking(boolean tracking) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
 }
 
 }

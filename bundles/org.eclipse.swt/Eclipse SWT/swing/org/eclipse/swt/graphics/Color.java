@@ -327,8 +327,7 @@ public static Color swing_new(Device device, java.awt.Color handle) {
 }
 
 public int getAlpha() {
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
-	return 0;
+	return handle.getAlpha();
 }
 
 }

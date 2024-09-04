@@ -2659,14 +2659,8 @@ public final Consumer<Error> getErrorHandler () {
 	return errorHandler;
 }
 
-public void addSkinnableWidget(Widget widget) {
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
-//		if (skinCount >= skinList.length) {
-//			Widget[] newSkinWidgets = new Widget [(skinList.length + 1) * 3 / 2];
-//			System.arraycopy (skinList, 0, newSkinWidgets, 0, skinList.length);
-//			skinList = newSkinWidgets;
-//		}
-//		skinList [skinCount++] = widget;
+void addSkinnableWidget(Widget widget) {
+	// TODO (visjee)
 }
 
 void sendPreEvent (int eventType) {
@@ -2773,5 +2767,7 @@ public Menu getMenuBar() {
 	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
 	return null;
 }
+
+
 
 }

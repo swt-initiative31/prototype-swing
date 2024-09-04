@@ -11,20 +11,15 @@
 package org.eclipse.swt.widgets;
 
 
+import java.awt.*;
 import java.awt.Color;
-import java.awt.Frame;
-import java.awt.Window;
-import java.awt.font.TextAttribute;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.font.*;
+import java.util.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
+import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.PaletteData;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.internal.swing.JFontChooser;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class allow the user to select a font
@@ -43,7 +38,7 @@ import org.eclipse.swt.internal.swing.JFontChooser;
 public class FontDialog extends Dialog {
 	FontData fontData;
 	RGB rgb;
-	
+
 /**
  * Constructs a new instance of this class given only its parent.
  *
@@ -67,7 +62,7 @@ public FontDialog (Shell parent) {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -93,10 +88,11 @@ public FontDialog (Shell parent, int style) {
 /**
  * Returns a FontData object describing the font that was
  * selected in the dialog, or null if none is available.
- * 
+ *
  * @return the FontData for the selected font, or null
  * @deprecated use #getFontList ()
  */
+@Deprecated
 public FontData getFontData () {
 	return fontData;
 }
@@ -104,7 +100,7 @@ public FontData getFontData () {
 /**
  * Returns a FontData set describing the font that was
  * selected in the dialog, or null if none is available.
- * 
+ *
  * @return the FontData for the selected font, or null
  * @since 2.1.1
  */
@@ -122,7 +118,7 @@ public FontData [] getFontList () {
  * @return the RGB value for the selected color, or null
  *
  * @see PaletteData#getRGBs
- * 
+ *
  * @since 2.1
  */
 public RGB getRGB () {
@@ -157,7 +153,7 @@ public FontData open () {
     int height = Math.round(fontData.getHeight() * dpi / 72.0f);
     int style = fontData.getStyle();
     style = (((style & SWT.ITALIC) != 0? java.awt.Font.ITALIC: 0)) | (((style & SWT.BOLD) != 0? java.awt.Font.BOLD: 0));
-    
+
     java.awt.Font defaultFont;
     if(fontData.data != null) {
       Map attributeMap = new HashMap(fontData.data);
@@ -189,10 +185,11 @@ public FontData open () {
  * Sets a FontData object describing the font to be
  * selected by default in the dialog, or null to let
  * the platform choose one.
- * 
+ *
  * @param fontData the FontData to use initially, or null
  * @deprecated use #setFontList (FontData [])
  */
+@Deprecated
 public void setFontData (FontData fontData) {
 	this.fontData = fontData;
 }
@@ -201,12 +198,12 @@ public void setFontData (FontData fontData) {
  * Sets the set of FontData objects describing the font to
  * be selected by default in the dialog, or null to let
  * the platform choose one.
- * 
+ *
  * @param fontData the set of FontData objects to use initially, or null
  *        to let the platform select a default when open() is called
  *
  * @see Font#getFontData
- * 
+ *
  * @since 2.1.1
  */
 public void setFontList (FontData [] fontData) {
@@ -225,11 +222,16 @@ public void setFontList (FontData [] fontData) {
  *        the platform select a default when open() is called
  *
  * @see PaletteData#getRGBs
- * 
+ *
  * @since 2.1
  */
 public void setRGB (RGB rgb) {
 	this.rgb = rgb;
+}
+
+public void setEffectsVisible(boolean selection) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
 }
 
 }

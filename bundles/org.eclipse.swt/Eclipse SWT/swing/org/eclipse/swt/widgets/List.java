@@ -11,21 +11,17 @@
 package org.eclipse.swt.widgets;
 
 
-import java.awt.AWTEvent;
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.util.EventObject;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
-import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.internal.swing.CList;
-import org.eclipse.swt.internal.swing.UIThreadUtils;
+import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.internal.swing.*;
 
-/** 
+/**
  * Instances of this class represent a selectable user interface
  * object that displays a list of strings and issues notificiation
  * when a string selected.  A list may be single or multi select.
@@ -51,7 +47,7 @@ public class List extends Scrollable {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -167,7 +163,7 @@ static int checkStyle (int style) {
 
 /**
  * Deselects the items at the given zero-relative indices in the receiver.
- * If the item at the given zero-relative index in the receiver 
+ * If the item at the given zero-relative index in the receiver
  * is selected, it is deselected.  If the item at the index
  * was not selected, it remains deselected. Indices that are out
  * of range and duplicate indices are ignored.
@@ -193,6 +189,7 @@ public void deselect (int [] indices) {
   }
 }
 
+@Override
 Container createHandle () {
   return (Container)CList.Factory.newInstance(this, style);
 }
@@ -216,7 +213,7 @@ public void deselect (int index) {
 
 /**
  * Deselects the items at the given zero-relative indices in the receiver.
- * If the item at the given zero-relative index in the receiver 
+ * If the item at the given zero-relative index in the receiver
  * is selected, it is deselected.  If the item at the index
  * was not selected, it remains deselected.  The range of the
  * indices is inclusive. Indices that are out of range are ignored.
@@ -335,11 +332,11 @@ public int getItemHeight () {
 
 /**
  * Returns a (possibly empty) array of <code>String</code>s which
- * are the items in the receiver. 
+ * are the items in the receiver.
  * <p>
  * Note: This is not the actual structure used by the receiver
  * to maintain its list of items, so modifying the array will
- * not affect the receiver. 
+ * not affect the receiver.
  * </p>
  *
  * @return the items in the receiver's list
@@ -364,7 +361,7 @@ public String [] getItems () {
  * <p>
  * Note: This is not the actual structure used by the receiver
  * to maintain its selection, so modifying the array will
- * not affect the receiver. 
+ * not affect the receiver.
  * </p>
  * @return an array representing the selection
  *
@@ -425,7 +422,7 @@ public int getSelectionIndex () {
  * <p>
  * Note: This is not the actual structure used by the receiver
  * to maintain its selection, so modifying the array will
- * not affect the receiver. 
+ * not affect the receiver.
  * </p>
  * @return the array of indices of the selected items
  *
@@ -480,7 +477,7 @@ public int indexOf (String string) {
 }
 
 /**
- * Searches the receiver's list starting at the given, 
+ * Searches the receiver's list starting at the given,
  * zero-relative index until an item is found that is equal
  * to the argument, and returns the index of that item. If
  * no item is found or the starting index is out of range,
@@ -576,7 +573,7 @@ public void remove (int index) {
 
 /**
  * Removes the items from the receiver which are
- * between the given zero-relative start and end 
+ * between the given zero-relative start and end
  * indices (inclusive).
  *
  * @param start the start of the range
@@ -600,7 +597,7 @@ public void remove (int start, int end) {
 
 /**
  * Searches the receiver's list starting at the first item
- * until an item is found that is equal to the argument, 
+ * until an item is found that is equal to the argument,
  * and removes that item from the list.
  *
  * @param string the item to remove
@@ -657,7 +654,7 @@ public void removeSelectionListener(SelectionListener listener) {
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (eventTable == null) return;
 	eventTable.unhook (SWT.Selection, listener);
-	eventTable.unhook (SWT.DefaultSelection,listener);	
+	eventTable.unhook (SWT.DefaultSelection,listener);
 }
 
 boolean isAdjustingSelection;
@@ -681,7 +678,7 @@ boolean isAdjustingSelection;
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see List#setSelection(int[])
  */
 public void select (int [] indices) {
@@ -698,7 +695,7 @@ public void select (int [] indices) {
 }
 
 /**
- * Selects the item at the given zero-relative index in the receiver's 
+ * Selects the item at the given zero-relative index in the receiver's
  * list.  If the item at the index was already selected, it remains
  * selected. Indices that are out of range are ignored.
  *
@@ -735,7 +732,7 @@ public void select (int index) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see List#setSelection(int,int)
  */
 public void select (int start, int end) {
@@ -808,7 +805,7 @@ public void setItem (int index, String string) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public void setItems (String [] items) {
+public void setItems (String... items) {
 	checkWidget ();
 	if (items == null) error (SWT.ERROR_NULL_ARGUMENT);
 	for (int i=0; i<items.length; i++) {
@@ -887,7 +884,7 @@ public void setSelection (String [] items) {
 }
 
 /**
- * Selects the item at the given zero-relative index in the receiver. 
+ * Selects the item at the given zero-relative index in the receiver.
  * If the item at the index was already selected, it remains selected.
  * The current selection is first cleared, then the new item is selected.
  * Indices that are out of range are ignored.
@@ -974,6 +971,7 @@ public void showSelection () {
   ((CList)handle).showSelection();
 }
 
+@Override
 public void processEvent(EventObject e) {
   if(e instanceof ListSelectionEvent) {
     if(!hooks(SWT.Selection) || isAdjustingSelection) { super.processEvent(e); return; }
@@ -998,6 +996,7 @@ public void processEvent(EventObject e) {
   }
 }
 
+@Override
 public void processEvent(AWTEvent e) {
   int id = e.getID();
   switch(id) {

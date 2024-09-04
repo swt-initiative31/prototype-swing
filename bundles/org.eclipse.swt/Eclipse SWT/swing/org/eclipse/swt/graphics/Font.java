@@ -11,13 +11,10 @@
 package org.eclipse.swt.graphics;
 
 
-import java.awt.font.TextAttribute;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.font.*;
+import java.util.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTError;
-import org.eclipse.swt.SWTException;
+import org.eclipse.swt.*;
 
 /**
  * Instances of this class manage operating system resources that
@@ -25,7 +22,7 @@ import org.eclipse.swt.SWTException;
  * by providing a device and either name, size and style information
  * or a <code>FontData</code> object which encapsulates this data.
  * <p>
- * Application code must explicitly invoke the <code>Font.dispose()</code> 
+ * Application code must explicitly invoke the <code>Font.dispose()</code>
  * method to release the operating system resources managed by each instance
  * when those instances are no longer required.
  * </p>
@@ -34,7 +31,7 @@ import org.eclipse.swt.SWTException;
  */
 
 public final class Font extends Resource {
-	
+
 	/**
 	 * the handle to the OS font resource
 	 * (Warning: This field is platform dependent)
@@ -46,25 +43,25 @@ public final class Font extends Resource {
 	 * </p>
 	 */
 	public java.awt.Font handle;
-	
+
   FontData fontData;
-  
+
 /**
  * Prevents uninitialized instances from being created outside the package.
  */
 Font() {
 }
 
-/**	 
+/**
  * Constructs a new font given a device and font data
  * which describes the desired font's appearance.
  * <p>
- * You must dispose the font when it is no longer required. 
+ * You must dispose the font when it is no longer required.
  * </p>
  *
  * @param device the device to create the font on
  * @param fd the FontData that describes the desired font (must not be null)
- * 
+ *
  * @exception IllegalArgumentException <ul>
  *    <li>ERROR_NULL_ARGUMENT - if device is null and there is no current device</li>
  *    <li>ERROR_NULL_ARGUMENT - if the fd argument is null</li>
@@ -77,20 +74,20 @@ public Font(Device device, FontData fd) {
 	if (device == null) device = Device.getDevice();
 	if (device == null) SWT.error(SWT.ERROR_NULL_ARGUMENT);
 	init(device, fd);
-	if (device.tracking) device.new_Object(this);	
+	if (device.tracking) device.new_Object(this);
 }
 
-/**	 
+/**
  * Constructs a new font given a device and an array
  * of font data which describes the desired font's
  * appearance.
  * <p>
- * You must dispose the font when it is no longer required. 
+ * You must dispose the font when it is no longer required.
  * </p>
  *
  * @param device the device to create the font on
  * @param fds the array of FontData that describes the desired font (must not be null)
- * 
+ *
  * @exception IllegalArgumentException <ul>
  *    <li>ERROR_NULL_ARGUMENT - if device is null and there is no current device</li>
  *    <li>ERROR_NULL_ARGUMENT - if the fds argument is null</li>
@@ -100,7 +97,7 @@ public Font(Device device, FontData fd) {
  * @exception SWTError <ul>
  *    <li>ERROR_NO_HANDLES - if a font could not be created from the given font data</li>
  * </ul>
- * 
+ *
  * @since 2.1
  */
 public Font(Device device, FontData[] fds) {
@@ -112,22 +109,22 @@ public Font(Device device, FontData[] fds) {
 		if (fds[i] == null) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 	}
 	init(device, fds[0]);
-	if (device.tracking) device.new_Object(this);	
+	if (device.tracking) device.new_Object(this);
 }
 
-/**	 
+/**
  * Constructs a new font given a device, a font name,
  * the height of the desired font in points, and a font
  * style.
  * <p>
- * You must dispose the font when it is no longer required. 
+ * You must dispose the font when it is no longer required.
  * </p>
  *
  * @param device the device to create the font on
  * @param name the name of the font (must not be null)
  * @param height the font height in points
  * @param style a bit or combination of NORMAL, BOLD, ITALIC
- * 
+ *
  * @exception IllegalArgumentException <ul>
  *    <li>ERROR_NULL_ARGUMENT - if device is null and there is no current device</li>
  *    <li>ERROR_NULL_ARGUMENT - if the name argument is null</li>
@@ -142,7 +139,7 @@ public Font(Device device, String name, int height, int style) {
 	if (device == null) SWT.error(SWT.ERROR_NULL_ARGUMENT);
 	if (name == null) SWT.error(SWT.ERROR_NULL_ARGUMENT);
 	init(device, new FontData (name, height, style));
-	if (device.tracking) device.new_Object(this);	
+	if (device.tracking) device.new_Object(this);
 }
 
 /**
@@ -150,6 +147,7 @@ public Font(Device device, String name, int height, int style) {
  * the font. Applications must dispose of all fonts which
  * they allocate.
  */
+@Override
 public void dispose() {
 	if (handle == null) return;
 	if (device.isDisposed()) return;
@@ -168,6 +166,7 @@ public void dispose() {
  *
  * @see #hashCode
  */
+@Override
 public boolean equals(Object object) {
 	if (object == this) return true;
 	if (!(object instanceof Font)) return false;
@@ -177,8 +176,8 @@ public boolean equals(Object object) {
 
 /**
  * Returns an array of <code>FontData</code>s representing the receiver.
- * On Windows, only one FontData will be returned per font. On X however, 
- * a <code>Font</code> object <em>may</em> be composed of multiple X 
+ * On Windows, only one FontData will be returned per font. On X however,
+ * a <code>Font</code> object <em>may</em> be composed of multiple X
  * fonts. To support this case, we return an array of font data objects.
  *
  * @return an array of font data objects describing the receiver
@@ -193,8 +192,8 @@ public FontData[] getFontData() {
 }
 
 /**
- * Returns an integer hash code for the receiver. Any two 
- * objects that return <code>true</code> when passed to 
+ * Returns an integer hash code for the receiver. Any two
+ * objects that return <code>true</code> when passed to
  * <code>equals</code> must return the same value for this
  * method.
  *
@@ -202,6 +201,7 @@ public FontData[] getFontData() {
  *
  * @see #equals
  */
+@Override
 public int hashCode () {
 	return handle == null? 0: handle.hashCode();
 }
@@ -236,6 +236,7 @@ void init (Device device, FontData fd) {
  *
  * @return <code>true</code> when the font is disposed and <code>false</code> otherwise
  */
+@Override
 public boolean isDisposed() {
 	return handle == null;
 }
@@ -246,12 +247,13 @@ public boolean isDisposed() {
  *
  * @return a string representation of the receiver
  */
+@Override
 public String toString () {
 	if (isDisposed()) return "Font {*DISPOSED*}";
 	return "Font {" + handle + "}";
 }
 
-/**	 
+/**
  * Invokes platform specific functionality to allocate a new font.
  * <p>
  * <b>IMPORTANT:</b> This method is <em>not</em> part of the public
@@ -268,6 +270,14 @@ public String toString () {
 public static Font swing_new(Device device, java.awt.Font handle) {
 	if (device == null) device = Device.getDevice();
 	Font font = new Font();
+
+	/*
+	 * When created this way, Font doesn't own its .handle, and
+	 * for this reason it can't be disposed. Tell leak detector
+	 * to just ignore it.
+	 */
+	font.ignoreNonDisposed();
+
 	font.handle = handle;
 	font.device = device;
   int style = handle.getStyle();

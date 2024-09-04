@@ -367,4 +367,9 @@ public PrinterData open() {
 //	}
 //	return data;
 }
+
+public void setPrinterData(PrinterData printerData) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+}
 }

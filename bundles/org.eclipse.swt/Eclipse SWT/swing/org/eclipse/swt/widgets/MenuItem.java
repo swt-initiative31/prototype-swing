@@ -496,6 +496,11 @@ void releaseWidget () {
 //	if (accelerator != 0) {
 //		parent.destroyAccelerators ();
 //	}
+	if (itemToolTip!= null && !itemToolTip.isDisposed()) {
+		itemToolTip.setVisible (false);
+		itemToolTip.dispose();
+		itemToolTip = null;
+	}
 	accelerator = 0;
 	display.removeMenuItem (this);
 }
@@ -834,6 +839,7 @@ boolean setRadioSelection (boolean value) {
 }
 
 boolean adjustSelection;
+private ToolTip itemToolTip;
 
 /**
  * Sets the selection state of the receiver.
@@ -1175,8 +1181,51 @@ void createHandle() {
 }
 
 public void setToolTipText(String toolTip) {
+	checkWidget ();
+
+	if (toolTip == null && itemToolTip != null) {
+		 if(!itemToolTip.isDisposed()) {
+			 itemToolTip.setVisible (false);
+			 itemToolTip.dispose();
+		 }
+		itemToolTip = null;
+	}
+
+	if (toolTip == null || toolTip.trim().length() == 0
+			|| (itemToolTip != null && !itemToolTip.isDisposed() && toolTip.equals(itemToolTip.getMessage()))) return;
+
+	if (itemToolTip != null) itemToolTip.dispose();
+	itemToolTip = new ToolTip (this.getParent().getShell(), SWT.NONE);
+	itemToolTip.setMessage (toolTip);
+	itemToolTip.setVisible (false);
+}
+
+/**
+ * Returns the receiver's tool tip text, or null if it has not been set.
+ *
+ * @return the receiver's tool tip text
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @since 3.104
+ */
+public String getToolTipText () {
 	checkWidget();
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+	return (itemToolTip == null || itemToolTip.isDisposed()) ? null : itemToolTip.getMessage();
+}
+
+void showTooltip (int x, int y) {
+	if (itemToolTip == null || itemToolTip.isDisposed()) return;
+	itemToolTip.setLocationInPixels (x, y);
+	itemToolTip.setVisible (true);
+}
+
+void hideToolTip () {
+	if (itemToolTip == null || itemToolTip.isDisposed()) return;
+	itemToolTip.setVisible (false);
 }
 
 }

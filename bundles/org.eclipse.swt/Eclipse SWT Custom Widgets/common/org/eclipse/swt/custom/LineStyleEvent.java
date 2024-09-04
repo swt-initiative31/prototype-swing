@@ -121,10 +121,10 @@ public LineStyleEvent(StyledTextEvent e) {
 	alignment = e.alignment;
 	justify = e.justify;
 	indent = e.indent;
-	verticalIndent = e.verticalIndent;
-	wrapIndent = e.wrapIndent;
+//	verticalIndent = e.verticalIndent;
+//	wrapIndent = e.wrapIndent;
 	bullet = e.bullet;
 	bulletIndex = e.bulletIndex;
-	tabStops = e.tabStops;
+//	tabStops = e.tabStops;
 }
 }
