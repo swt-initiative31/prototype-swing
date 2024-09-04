@@ -11,12 +11,12 @@
 package org.eclipse.swt.widgets;
 
 
-import java.awt.TrayIcon.MessageType;
+import java.awt.TrayIcon.*;
 
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.internal.swing.Utils;
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class represent popup windows that are used
@@ -32,7 +32,7 @@ import org.eclipse.swt.events.*;
  * IMPORTANT: This class is intended to be subclassed <em>only</em>
  * within the SWT implementation.
  * </p>
- * 
+ *
  * @since 3.2
  */
 
@@ -51,7 +51,7 @@ public class ToolTip extends Widget {
    * <p>
    * The style value is either one of the style constants defined in
    * class <code>SWT</code> which is applicable to instances of this
-   * class, or must be built by <em>bitwise OR</em>'ing together 
+   * class, or must be built by <em>bitwise OR</em>'ing together
    * (that is, using the <code>int</code> "|" operator) two or more
    * of those <code>SWT</code> style constants. The class description
    * lists the style constants that are applicable to the class.
@@ -117,6 +117,7 @@ public void addSelectionListener (SelectionListener listener) {
 	addListener (SWT.DefaultSelection,typedListener);
 }
 
+@Override
 void destroyWidget () {
   Utils.notImplemented();
 //	if (parent != null) parent.destroyToolTip (this);
@@ -133,7 +134,7 @@ void destroyWidget () {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  */
 public boolean getAutoHide () {
 	checkWidget();
@@ -244,12 +245,14 @@ public boolean isVisible () {
 	return getVisible ();
 }
 
+@Override
 void releaseHandle () {
 	super.releaseHandle ();
 	parent = null;
 	item = null;
 }
 
+@Override
 void releaseWidget () {
 	super.releaseWidget ();
 	if (item == null) {
@@ -296,7 +299,7 @@ public void removeSelectionListener (SelectionListener listener) {
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (eventTable == null) return;
 	eventTable.unhook (SWT.Selection, listener);
-	eventTable.unhook (SWT.DefaultSelection,listener);	
+	eventTable.unhook (SWT.DefaultSelection,listener);
 }
 
 /**
@@ -309,7 +312,7 @@ public void removeSelectionListener (SelectionListener listener) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @see #getVisible
  * @see #setVisible
  */
@@ -338,6 +341,10 @@ public void setAutoHide (boolean autoHide) {
  */
 public void setLocation (int x, int y) {
 	checkWidget ();
+	setLocationInPixels(x, y); // TODO (visjee) add HiDPI suppport
+}
+
+void setLocationInPixels (int x, int y) {
 	this.x = x;
 	this.y = y;
 	hasLocation = true;
@@ -414,7 +421,7 @@ public void setText (String string) {
 
 /**
  * Marks the receiver as visible if the argument is <code>true</code>,
- * and marks it invisible otherwise. 
+ * and marks it invisible otherwise.
  * <p>
  * If one of the receiver's ancestors is not visible or some
  * other condition makes the receiver not visible, marking
@@ -494,7 +501,7 @@ public void setVisible (boolean visible) {
 //			}
 //			int lParam = nX | (nY << 16);
 //			OS.SendMessage (hwndToolTip, OS.TTM_TRACKPOSITION, 0, lParam);
-//			
+//
 //			/*
 //			* Feature in Windows.  Windows will not show a tool tip
 //			* if the cursor is outside the parent window (even on XP,
@@ -517,7 +524,7 @@ public void setVisible (boolean visible) {
 //			} else {
 //				OS.SendMessage (hwndToolTip, OS.TTM_TRACKACTIVATE, 1, lpti);
 //			}
-//			
+//
 //			int time = OS.SendMessage (hwndToolTip, OS.TTM_GETDELAYTIME, OS.TTDT_AUTOPOP, 0);
 //			OS.SetTimer (hwndToolTip, TIMER_ID, time, 0);
 //		} else {
@@ -564,4 +571,6 @@ public void setVisible (boolean visible) {
 //		}
 //	}
 }
+
+
 }

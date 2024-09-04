@@ -8223,5 +8223,13 @@ public void setMouseNavigatorEnabled(boolean enabled) {
 		mouseNavigator = null;
 	}
 }
+public int[] getSelectionRanges() {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+	return new int[] {};
+}
+
+public void setBlockSelectionBounds(int x, int y, int width, int height) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+}
 
 }

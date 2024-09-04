@@ -941,4 +941,9 @@ public Object evaluate (String script, boolean trusted) throws SWTException {
 	if (script == null) SWT.error (SWT.ERROR_NULL_ARGUMENT);
 	return webBrowser.evaluate (script, trusted);
 }
+
+public static void setCookie(String string, String string2) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+}
 }

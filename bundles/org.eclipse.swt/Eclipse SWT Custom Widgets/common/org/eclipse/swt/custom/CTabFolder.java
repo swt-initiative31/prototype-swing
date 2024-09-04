@@ -17,8 +17,6 @@ import org.eclipse.swt.*;
 import org.eclipse.swt.accessibility.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.internal.*;
-import org.eclipse.swt.internal.DPIUtil.*;
 import org.eclipse.swt.widgets.*;
 
 /**
@@ -725,7 +723,10 @@ Image createButtonImage(Display display, int button) {
 	tempGC.dispose();
 
 	Rectangle trim = renderer.computeTrim(button, SWT.NONE, 0, 0, 0, 0);
-	Image image = new Image (display, size.x - trim.width, size.y - trim.height);
+	int width = size.x - trim.width;
+	int height = size.y - trim.height;
+
+	Image image = new Image (display, width, height);
 	GC gc = new GC (image);
 	Color transColor = renderer.parent.getBackground();
 	gc.setBackground(transColor);
@@ -733,11 +734,12 @@ Image createButtonImage(Display display, int button) {
 	renderer.draw(button, SWT.NONE, new Rectangle(trim.x, trim.y, size.x, size.y), gc);
 	gc.dispose ();
 
-	final ImageData imageData = image.getImageData (DPIUtil.getDeviceZoom ());
-	imageData.transparentPixel = imageData.palette.getPixel(transColor.getRGB());
+//	final ImageData imageData = image.getImageData (DPIUtil.getDeviceZoom ());
+//	imageData.transparentPixel = imageData.palette.getPixel(transColor.getRGB());
 	image.dispose();
-	image = new Image(display, new AutoScaleImageDataProvider(display, imageData, DPIUtil.getDeviceZoom()));
-	return image;
+
+//	return new Image(display, new AutoScaleImageDataProvider(display, imageData, DPIUtil.getDeviceZoom()));
+	return new Image(display, width, height);
 }
 
 private void notifyItemCountChange() {
@@ -826,11 +828,6 @@ void destroyItem (CTabItem item) {
 	requestLayout();
 	updateFolder(UPDATE_TAB_HEIGHT | REDRAW_TABS);
 	notifyItemCountChange();
-}
-
-@Override
-public void requestLayout() {
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }
 
 /**

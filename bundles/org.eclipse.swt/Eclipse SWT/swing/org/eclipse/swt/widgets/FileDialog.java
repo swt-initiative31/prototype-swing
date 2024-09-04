@@ -11,16 +11,14 @@
 package org.eclipse.swt.widgets;
 
 
-import java.io.File;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.*;
+import java.util.regex.*;
 
-import javax.swing.JFileChooser;
+import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.internal.swing.Compatibility;
+import org.eclipse.swt.*;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class allow the user to navigate
@@ -68,7 +66,7 @@ public FileDialog (Shell parent) {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -95,7 +93,7 @@ public FileDialog (Shell parent, int style) {
  * Returns the path of the first file that was
  * selected in the dialog relative to the filter path, or an
  * empty string if no such file has been selected.
- * 
+ *
  * @return the relative path of the file
  */
 public String getFileName () {
@@ -105,7 +103,7 @@ public String getFileName () {
 /**
  * Returns a (possibly empty) array with the paths of all files
  * that were selected in the dialog relative to the filter path.
- * 
+ *
  * @return the relative paths of the files
  */
 public String [] getFileNames () {
@@ -138,7 +136,7 @@ public String [] getFilterNames () {
  * in the dialog, filtered according to the filter extensions.
  *
  * @return the directory path string
- * 
+ *
  * @see #setFilterExtensions
  */
 public String getFilterPath () {
@@ -182,7 +180,8 @@ public String open () {
       final String[] filters = filterExtensions[i].split(";");
       final String description = (filterNames == null || i >= filterNames.length)? filterExtension: filterNames[i];
       fileChooser.addChoosableFileFilter(new FileFilter() {
-        public boolean accept(File f) {
+        @Override
+		public boolean accept(File f) {
           if(f.isDirectory()) {
             return true;
           }
@@ -206,11 +205,12 @@ public String open () {
           }
           return false;
         }
-        public String getDescription() {
+        @Override
+		public String getDescription() {
           return description;
         }
       });
-      
+
     }
     fileChooser.setFileFilter(fileChooser.getChoosableFileFilters()[0]);
   }
@@ -246,7 +246,7 @@ public String open () {
  * select by default when opened to the argument,
  * which may be null.  The name will be prefixed with
  * the filter path when one is supplied.
- * 
+ *
  * @param string the file name
  */
 public void setFileName (String string) {
@@ -264,7 +264,7 @@ public void setFileName (String string) {
  * </p>
  *
  * @param extensions the file extension filter
- * 
+ *
  * @see #setFilterNames to specify the user-friendly
  * names corresponding to the extensions
  */
@@ -283,7 +283,7 @@ public void setFilterExtensions (String [] extensions) {
  * </p>
  *
  * @param names the list of filter names, or null for no filter names
- * 
+ *
  * @see #setFilterExtensions
  */
 public void setFilterNames (String [] names) {
@@ -304,11 +304,26 @@ public void setFilterNames (String [] names) {
  * </p>
  *
  * @param string the directory path
- * 
+ *
  * @see #setFilterExtensions
  */
 public void setFilterPath (String string) {
 	filterPath = string;
+}
+
+public void setOverwrite(boolean b) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+}
+
+public void setFilterIndex(int i) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+}
+
+public int getFilterIndex() {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+	return 0;
 }
 
 }

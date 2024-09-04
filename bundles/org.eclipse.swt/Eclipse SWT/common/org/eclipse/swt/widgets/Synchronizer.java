@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.*;
 
 /**
  * Instances of this class provide synchronization support
@@ -159,56 +160,56 @@ boolean runAsyncMessages (boolean all) {
  * @see #asyncExec
  */
 protected void syncExec (Runnable runnable) {
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
-//	RunnableLock lock = null;
-//	synchronized (Device.class) {
-//		if (display == null || display.isDisposed ()) SWT.error (SWT.ERROR_DEVICE_DISPOSED);
-//		if (!display.isValidThread ()) {
-//			if (runnable == null) {
-//				display.wake ();
-//				return;
-//			}
-//			lock = new RunnableLock (runnable);
-//			/*
-//			 * Only remember the syncThread for syncExec.
-//			 */
-//			lock.thread = Thread.currentThread();
-//			addLast (lock);
-//		}
-//	}
-//	if (lock == null) {
-//		if (runnable != null) {
-//			display.sendPreEvent(SWT.None);
-//			try {
-//				runnable.run();
-//			} catch (RuntimeException exception) {
-//				display.getRuntimeExceptionHandler ().accept (exception);
-//			} catch (Error error) {
-//				display.getErrorHandler ().accept (error);
-//			} finally {
-//				if (display != null && !display.isDisposed()) {
-//					display.sendPostEvent(SWT.None);
-//				}
-//			}
-//		}
-//		return;
-//	}
-//	synchronized (lock) {
-//		boolean interrupted = false;
-//		while (!lock.done ()) {
-//			try {
-//				lock.wait ();
-//			} catch (InterruptedException e) {
-//				interrupted = true;
-//			}
-//		}
-//		if (interrupted) {
-//			Thread.currentThread().interrupt();
-//		}
-//		if (lock.throwable != null) {
-//			SWT.error (SWT.ERROR_FAILED_EXEC, lock.throwable);
-//		}
-//	}
+//	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+	RunnableLock lock = null;
+	synchronized (Device.class) {
+		if (display == null || display.isDisposed ()) SWT.error (SWT.ERROR_DEVICE_DISPOSED);
+		if (!display.isValidThread ()) {
+			if (runnable == null) {
+				display.wake ();
+				return;
+			}
+			lock = new RunnableLock (runnable);
+			/*
+			 * Only remember the syncThread for syncExec.
+			 */
+			lock.thread = Thread.currentThread();
+			addLast (lock);
+		}
+	}
+	if (lock == null) {
+		if (runnable != null) {
+			display.sendPreEvent(SWT.None);
+			try {
+				runnable.run();
+			} catch (RuntimeException exception) {
+				display.getRuntimeExceptionHandler ().accept (exception);
+			} catch (Error error) {
+				display.getErrorHandler ().accept (error);
+			} finally {
+				if (display != null && !display.isDisposed()) {
+					display.sendPostEvent(SWT.None);
+				}
+			}
+		}
+		return;
+	}
+	synchronized (lock) {
+		boolean interrupted = false;
+		while (!lock.done ()) {
+			try {
+				lock.wait ();
+			} catch (InterruptedException e) {
+				interrupted = true;
+			}
+		}
+		if (interrupted) {
+			Thread.currentThread().interrupt();
+		}
+		if (lock.throwable != null) {
+			SWT.error (SWT.ERROR_FAILED_EXEC, lock.throwable);
+		}
+	}
 }
 
 }

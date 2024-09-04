@@ -1,51 +1,30 @@
 /*
  * Christopher Deckers (chrriis@nextencia.net)
  * http://www.nextencia.net
- * 
+ *
  * See the file "readme.txt" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 package org.eclipse.swt.internal.swing;
 
-import java.awt.AWTEvent;
+import java.awt.*;
 import java.awt.Canvas;
-import java.awt.Component;
+import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.KeyboardFocusManager;
 import java.awt.Point;
-import java.awt.dnd.DnDConstants;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.util.Collections;
+import java.awt.dnd.*;
+import java.awt.event.*;
+import java.util.*;
 
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.LookAndFeel;
-import javax.swing.RepaintManager;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
-import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.custom.*;
+import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Layout;
-import org.eclipse.swt.widgets.Shell;
 
 /**
  * General util methods.
@@ -110,8 +89,8 @@ public class Utils {
       } catch(Exception e) {}
     }
   }
-  
-  
+
+
   protected static Boolean isLookAndFeelDecorated() {
     String value = System.getProperty(LOOK_AND_FEEL_DECORATED_PROPERTY);
     return value == null? null: new Boolean(value);
@@ -121,7 +100,7 @@ public class Utils {
     String value = System.getProperty(DEFAULT_ARROW_BUTTONS_PROPERTY);
     return value == null? null: new Boolean(value);
   }
-  
+
   protected static Canvas panel = new Canvas();
 
   public static Component getDefaultComponent() {
@@ -130,35 +109,38 @@ public class Utils {
 
   static void installMouseListener(Component component, final Control control) {
     component.addMouseListener(new MouseListener() {
-      public void mousePressed(MouseEvent e) {
+      @Override
+	public void mousePressed(MouseEvent e) {
         control.processEvent(e);
       }
-      public void mouseReleased(MouseEvent e) {
+      @Override
+	public void mouseReleased(MouseEvent e) {
         control.processEvent(e);
       }
-      public void mouseClicked(MouseEvent e) {
+      @Override
+	public void mouseClicked(MouseEvent e) {
         control.processEvent(e);
       }
-      public void mouseEntered(MouseEvent e) {
+      @Override
+	public void mouseEntered(MouseEvent e) {
         control.processEvent(e);
       }
-      public void mouseExited(MouseEvent e) {
+      @Override
+	public void mouseExited(MouseEvent e) {
         control.processEvent(e);
       }
     });
     component.addMouseMotionListener(new MouseMotionListener() {
-      public void mouseDragged(MouseEvent e) {
+      @Override
+	public void mouseDragged(MouseEvent e) {
         control.processEvent(e);
       }
-      public void mouseMoved(MouseEvent e) {
-        control.processEvent(e);
-      }
-    });
-    component.addMouseWheelListener(new MouseWheelListener() {
-      public void mouseWheelMoved(MouseWheelEvent e) {
+      @Override
+	public void mouseMoved(MouseEvent e) {
         control.processEvent(e);
       }
     });
+    component.addMouseWheelListener(e -> control.processEvent(e));
   }
 
   static void installKeyListener(Component component, final Control control) {
@@ -166,13 +148,16 @@ public class Utils {
     component.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
     component.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
     component.addKeyListener(new KeyAdapter() {
-      public void keyPressed(KeyEvent e) {
+      @Override
+	public void keyPressed(KeyEvent e) {
         control.processEvent(e);
       }
-      public void keyReleased(KeyEvent e) {
+      @Override
+	public void keyReleased(KeyEvent e) {
         control.processEvent(e);
       }
-      public void keyTyped(KeyEvent e) {
+      @Override
+	public void keyTyped(KeyEvent e) {
         control.processEvent(e);
       }
     });
@@ -180,10 +165,12 @@ public class Utils {
 
   static void installFocusListener(Component component, final Control control) {
     component.addFocusListener(new FocusListener() {
-      public void focusGained(FocusEvent e) {
+      @Override
+	public void focusGained(FocusEvent e) {
         control.processEvent(e);
       }
-      public void focusLost(FocusEvent e) {
+      @Override
+	public void focusLost(FocusEvent e) {
         control.processEvent(e);
       }
     });
@@ -191,16 +178,20 @@ public class Utils {
 
   static void installComponentListener(Component component, final Control control) {
     component.addComponentListener(new ComponentListener() {
-      public void componentHidden(ComponentEvent e) {
+      @Override
+	public void componentHidden(ComponentEvent e) {
         control.processEvent(e);
       }
-      public void componentShown(ComponentEvent e) {
+      @Override
+	public void componentShown(ComponentEvent e) {
         control.processEvent(e);
       }
-      public void componentResized(ComponentEvent e) {
+      @Override
+	public void componentResized(ComponentEvent e) {
         control.processEvent(e);
       }
-      public void componentMoved(ComponentEvent e) {
+      @Override
+	public void componentMoved(ComponentEvent e) {
         control.processEvent(e);
       }
     });
@@ -339,7 +330,7 @@ public class Utils {
     }
     return swingActions;
   }
-  
+
   static long timeStamp = System.currentTimeMillis();
 
   public static int getCurrentTime () {
@@ -380,7 +371,7 @@ public class Utils {
     }
     return -1;
   }
-  
+
   /**
    * Indicates that the method is not implemented. It prints the corresponding frame from
    * the stack trace to the standard error if the "swt.swing.debug" property is defined.
@@ -440,7 +431,7 @@ public class Utils {
       }
     }
   }
-  
+
   public static void paintComponentImmediately(Component component) {
     if(SwingUtilities.isEventDispatchThread()) {
       synchronized(component.getTreeLock()) {
@@ -463,7 +454,7 @@ public class Utils {
     Dimension size = component.getSize();
     paintTiledImage(g, backgroundImageIcon, 0, 0, size.width, size.height);
   }
-  
+
   public static void paintTiledImage(Graphics g, ImageIcon backgroundImageIcon, int x, int y, int width, int height) {
     if(backgroundImageIcon == null) {
       return;
@@ -482,7 +473,7 @@ public class Utils {
       }
     }
   }
-  
+
   public static void throwUncheckedException(Throwable e) {
     if(e == null) {
       return;
@@ -495,7 +486,7 @@ public class Utils {
       e.printStackTrace();
     }
   }
-  
+
   public static int previousModifiersEx;
   public static int modifiersEx;
 
@@ -503,12 +494,12 @@ public class Utils {
     Utils.previousModifiersEx = Utils.modifiersEx;
     Utils.modifiersEx = modifiersEx;
   }
-  
+
   public static boolean isLocalDragAndDropInProgress;
-  
+
   protected static Point mouseLocation;
   protected static Component mouseComponent;
-  
+
   public static void trackMouseProperties(MouseEvent me) {
     Component c = me.getComponent();
     if(c.isShowing()) {
@@ -523,11 +514,11 @@ public class Utils {
       }
     }
   }
-  
+
   public static Point getTrakedMouseLocation() {
     return mouseLocation == null? new Point(0, 0): mouseLocation;
   }
-  
+
   public static Control getTrakedMouseControl() {
     if(mouseComponent == null) {
       return null;
@@ -539,9 +530,9 @@ public class Utils {
     }
     return null;
   }
-  
+
   public static Control capturedControl;
-  
+
   public static boolean redispatchEvent(Control control, AWTEvent e) {
     if(e instanceof MouseEvent && capturedControl != null && capturedControl != control) {
       Component target = ((CControl)capturedControl.handle).getClientArea();
@@ -558,11 +549,14 @@ public class Utils {
     }
     return false;
   }
-  
+
   public static Cursor globalCursor;
-  
+
   public static void setGlobalCursor(Cursor globalCursor) {
     Utils.globalCursor = globalCursor;
   }
-  
+
+  public static Color toAWT(org.eclipse.swt.graphics.Color c) {
+	  return new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+  }
 }

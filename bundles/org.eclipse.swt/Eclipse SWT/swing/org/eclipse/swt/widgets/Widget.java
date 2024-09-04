@@ -79,6 +79,9 @@ public abstract class Widget {
   static final int RELEASED   = 1<<11;
   static final int DISPOSE_SENT = 1<<12;
 
+  /* Notify of the opportunity to skin this widget */
+  static final int SKIN_NEEDED = 1<<21;
+
   /* Default size for widgets */
 	static final int DEFAULT_WIDTH	= 64;
 	static final int DEFAULT_HEIGHT	= 64;
@@ -163,15 +166,30 @@ public Widget (Widget parent, int style) {
 public void addListener (int eventType, Listener listener) {
 	checkWidget();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
+	_addListener(eventType, listener);
+}
+
+protected void addTypedListener (EventListener listener, int... eventTypes) {
+	checkWidget();
+	if (listener == null) {
+		SWT.error(SWT.ERROR_NULL_ARGUMENT);
+	}
+	TypedListener typedListener = new TypedListener(listener);
+	for (int eventType : eventTypes) {
+		_addListener(eventType, typedListener);
+	}
+}
+
+void _addListener (int eventType, Listener listener) {
 	if (eventTable == null) eventTable = new EventTable ();
 	eventTable.hook (eventType, listener);
 }
 
-protected void addTypedListener (EventListener listener, int... eventTypes) {
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
-}
 protected void removeTypedListener (int eventType, EventListener listener) {
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+	checkWidget();
+	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
+	if (eventTable == null) return;
+	eventTable.unhook (eventType, listener);
 }
 
 /**
@@ -2222,12 +2240,17 @@ public String toString () {
 //	return new LRESULT (result);
 //
 public void reskin(int flags) {
-	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+	checkWidget ();
+	reskinWidget ();
+	if ((flags & SWT.ALL) != 0) reskinChildren (flags);
 }
 void reskinChildren (int flags) {
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+	// must be implemented by subclasses
 }
 void reskinWidget() {
-	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+	if ((state & SKIN_NEEDED) != SKIN_NEEDED) {
+		this.state |= SKIN_NEEDED;
+		display.addSkinnableWidget(this);
+	}
 }
 }

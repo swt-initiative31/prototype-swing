@@ -386,6 +386,19 @@ Shell (Display display, Shell parent, int style, long handle, boolean embedded) 
 	createWidget ();
 }
 
+@Override
+void reskinChildren (int flags) {
+	for (Shell shell : getShells ()) {
+		if (shell != null) shell.reskin (flags);
+	}
+//	if (toolTips != null) {
+//		for (ToolTip toolTip : toolTips) {
+//			if (toolTip != null) toolTip.reskin (flags);
+//		}
+//	}
+	super.reskinChildren (flags);
+}
+
 static int checkStyle (Shell parent, int style) {
 	style = Decorations.checkStyle (style);
 	style &= ~SWT.TRANSPARENT;
@@ -1429,6 +1442,7 @@ public void setRegion (Region region) {
 //}
 
 Control initialFocusedControl;
+private boolean modified;
 
 void setInitialFocusedControl(Control initialFocusedControl) {
   this.initialFocusedControl = initialFocusedControl;
@@ -2151,8 +2165,38 @@ public void setAlpha (int alpha) {
 //	}
 }
 
-public void setModified(boolean enabled) {
-	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+/**
+ * Sets the receiver's modified state as specified by the argument.
+ *
+ * @param modified the new modified state for the receiver
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @since 3.5
+ */
+public void setModified (boolean modified) {
+	checkWidget ();
+	this.modified = modified;
+}
+
+/**
+ * Gets the receiver's modified state.
+ *
+ * @return <code>true</code> if the receiver is marked as modified, or <code>false</code> otherwise
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @since 3.5
+ */
+public boolean getModified () {
+	checkWidget ();
+	return modified;
 }
 
 public void setFullScreen(boolean selection) {

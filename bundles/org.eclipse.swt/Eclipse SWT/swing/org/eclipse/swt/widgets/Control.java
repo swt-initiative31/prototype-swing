@@ -23,6 +23,7 @@ import org.eclipse.swt.accessibility.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.graphics.Color;
@@ -1636,7 +1637,9 @@ public void moveAbove (Control control) {
       cParent.repaint();
       return;
     }
-    cParent.setComponentZOrder(handle, 0);
+    if (cParent != null) {
+    	cParent.setComponentZOrder(handle, 0);
+    }
   }
 //	int topHandle = topHandle (), hwndAbove = OS.HWND_TOP;
 //	if (control != null) {
@@ -4913,7 +4916,7 @@ public void setTextDirection(int textDirection) {
 
 public void requestLayout () {
 	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
-//	getShell ().layout (new Control[] {this}, SWT.DEFER);
+//	getShell ().layout (new Control[] {this}/*, SWT.DEFER*/);
 }
 
 /**
@@ -4968,6 +4971,29 @@ public void addDragDetectListener (DragDetectListener listener) {
 	addTypedListener(listener, SWT.DragDetect);
 }
 
+/**
+ * Sets the receiver's drag detect state. If the argument is
+ * <code>true</code>, the receiver will detect drag gestures,
+ * otherwise these gestures will be ignored.
+ *
+ * @param dragDetect the new drag detect state
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @since 3.3
+ */
+public void setDragDetect (boolean dragDetect) {
+	checkWidget ();
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+}
+
+public boolean dragDetect (MouseEvent event) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+	return false;
+}
 /**
  * Sets the orientation of the receiver, which must be one of the constants
  * <code>SWT.LEFT_TO_RIGHT</code> or <code>SWT.RIGHT_TO_LEFT</code>.

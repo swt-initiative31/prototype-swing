@@ -11,22 +11,15 @@
 package org.eclipse.swt.widgets;
 
 
-import java.awt.Container;
-import java.util.EventObject;
+import java.awt.*;
+import java.util.*;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.DocumentEvent;
+import javax.swing.event.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.internal.swing.CSpinner;
-import org.eclipse.swt.internal.swing.TextFilterEvent;
-import org.eclipse.swt.internal.swing.UIThreadUtils;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class are selectable user interface
@@ -42,20 +35,20 @@ import org.eclipse.swt.internal.swing.UIThreadUtils;
  * </p><p>
  * IMPORTANT: This class is <em>not</em> intended to be subclassed.
  * </p>
- * 
+ *
  * @since 3.1
  */
 public class Spinner extends Composite {
 //	boolean ignoreModify;
 	int pageIncrement;
-	
+
 /**
  * Constructs a new instance of this class given its parent
  * and a style value describing its behavior and appearance.
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -93,15 +86,18 @@ static int checkStyle (int style) {
 	return style & ~(SWT.H_SCROLL | SWT.V_SCROLL);
 }
 
+@Override
 protected void checkSubclass () {
 	if (!isValidSubclass ()) error (SWT.ERROR_INVALID_SUBCLASS);
 }
 
+@Override
 void createHandleInit() {
   super.createHandleInit();
   state &= ~(CANVAS | THEME_BACKGROUND);
 }
 
+@Override
 protected Container createHandle () {
   return (Container)CSpinner.Factory.newInstance(this, style);
 }
@@ -224,7 +220,7 @@ void addVerifyListener (VerifyListener listener) {
 //
 //public Rectangle computeTrim (int x, int y, int width, int height) {
 //	checkWidget ();
-//	
+//
 //	/* Get the trim of the text control */
 //	RECT rect = new RECT ();
 //	OS.SetRect (rect, x, y, x + width, y + height);
@@ -233,7 +229,7 @@ void addVerifyListener (VerifyListener listener) {
 //	OS.AdjustWindowRectEx (rect, bits0, false, bits1);
 //	width = rect.right - rect.left;
 //	height = rect.bottom - rect.top;
-//	
+//
 //	/*
 //	* The preferred height of a single-line text widget
 //	* has been hand-crafted to be the same height as
@@ -253,6 +249,7 @@ void addVerifyListener (VerifyListener listener) {
 //	return new Rectangle (x, y, width, height);
 //}
 
+@Override
 public Point computeSize (int wHint, int hHint, boolean changed) {
   Point p = super.computeSize(wHint, hHint, changed);
   return new Point(p.x, handle.getPreferredSize().height);
@@ -372,7 +369,7 @@ public int getPageIncrement () {
 /**
  * Returns the <em>selection</em>, which is the receiver's position.
  *
- * @return the selection 
+ * @return the selection
  *
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -428,7 +425,7 @@ public void removeModifyListener (ModifyListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (eventTable == null) return;
-	eventTable.unhook (SWT.Modify, listener);	
+	eventTable.unhook (SWT.Modify, listener);
 }
 
 /**
@@ -453,7 +450,7 @@ public void removeSelectionListener(SelectionListener listener) {
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (eventTable == null) return;
 	eventTable.unhook (SWT.Selection, listener);
-	eventTable.unhook (SWT.DefaultSelection,listener);	
+	eventTable.unhook (SWT.DefaultSelection,listener);
 }
 
 /**
@@ -477,7 +474,7 @@ void removeVerifyListener (VerifyListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (eventTable == null) return;
-	eventTable.unhook (SWT.Verify, listener);	
+	eventTable.unhook (SWT.Verify, listener);
 }
 
 //boolean sendKeyEvent (int type, int msg, int wParam, int lParam, Event event) {
@@ -493,7 +490,7 @@ void removeVerifyListener (VerifyListener listener) {
 ////	if (!hooks (SWT.Verify) && !filters (SWT.Verify)) return true;
 //	char key = event.character;
 //	int stateMask = event.stateMask;
-//	
+//
 //	/*
 //	* Disable all magic keys that could modify the text
 //	* and don't send events when Alt, Shift or Ctrl is
@@ -568,17 +565,17 @@ void removeVerifyListener (VerifyListener listener) {
  * Sets the number of decimal places used by the receiver.
  * <p>
  * The digit setting is used to allow for floating point values in the receiver.
- * For example, to set the selection to a floating point value of 1.37 call setDigits() with 
+ * For example, to set the selection to a floating point value of 1.37 call setDigits() with
  * a value of 2 and setSelection() with a value of 137. Similarly, if getDigits() has a value
  * of 2 and getSelection() returns 137 this should be interpreted as 1.37. This applies to all
- * numeric APIs. 
+ * numeric APIs.
  * </p>
- * 
+ *
  * @param value the new digits (must be greater than or equal to zero)
- * 
+ *
  * @exception IllegalArgumentException <ul>
  *    <li>ERROR_INVALID_ARGUMENT - if the value is less than zero</li>
- * </ul> 
+ * </ul>
  * @exception SWTException <ul>
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
@@ -687,7 +684,7 @@ public void setSelection (int value) {
  * value, digits, increment and page increment all at once.
  * <p>
  * Note: This is similar to setting the values individually
- * using the appropriate methods, but may be implemented in a 
+ * using the appropriate methods, but may be implemented in a
  * more efficient fashion on some platforms.
  * </p>
  *
@@ -702,7 +699,7 @@ public void setSelection (int value) {
  *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
- * 
+ *
  * @since 3.2
  */
 public void setValues (int selection, int minimum, int maximum, int digits, int increment, int pageIncrement) {
@@ -756,7 +753,7 @@ public void setValues (int selection, int minimum, int maximum, int digits, int 
 //			case OS.WM_SYSCHAR:		result = wmSysChar (hwnd, wParam, lParam); break;
 //			case OS.WM_SYSKEYDOWN:	result = wmSysKeyDown (hwnd, wParam, lParam); break;
 //			case OS.WM_SYSKEYUP:	result = wmSysKeyUp (hwnd, wParam, lParam); break;
-//	
+//
 //			/* Mouse Messages */
 //			case OS.WM_LBUTTONDBLCLK:	result = wmLButtonDblClk (hwnd, wParam, lParam); break;
 //			case OS.WM_LBUTTONDOWN:		result = wmLButtonDown (hwnd, wParam, lParam); break;
@@ -774,17 +771,17 @@ public void setValues (int selection, int minimum, int maximum, int digits, int 
 //			case OS.WM_XBUTTONDBLCLK:	result = wmXButtonDblClk (hwnd, wParam, lParam); break;
 //			case OS.WM_XBUTTONDOWN:		result = wmXButtonDown (hwnd, wParam, lParam); break;
 //			case OS.WM_XBUTTONUP:		result = wmXButtonUp (hwnd, wParam, lParam); break;
-//			
+//
 //			/* Focus Messages */
 //			case OS.WM_SETFOCUS:		result = wmSetFocus (hwnd, wParam, lParam); break;
 //			case OS.WM_KILLFOCUS:		result = wmKillFocus (hwnd, wParam, lParam); break;
-//	
+//
 //			/* Paint messages */
 //			case OS.WM_PAINT:			result = wmPaint (hwnd, wParam, lParam); break;
-//	
+//
 //			/* Menu messages */
 //			case OS.WM_CONTEXTMENU:		result = wmContextMenu (hwnd, wParam, lParam);
-//				
+//
 //			/* Clipboard messages */
 //			case OS.WM_CLEAR:
 //			case OS.WM_CUT:
@@ -831,9 +828,9 @@ public void setValues (int selection, int minimum, int maximum, int digits, int 
 //	int width = lParam & 0xFFFF, height = lParam >> 16;
 //    int upDownWidth = OS.GetSystemMetrics (OS.SM_CXVSCROLL);
 //    int textWidth = width - upDownWidth;
-//    int flags = OS.SWP_NOZORDER | OS.SWP_DRAWFRAME | OS.SWP_NOACTIVATE;    
+//    int flags = OS.SWP_NOZORDER | OS.SWP_DRAWFRAME | OS.SWP_NOACTIVATE;
 //    SetWindowPos (hwndText, 0, 0, 0, textWidth, height, flags);
-//    SetWindowPos (hwndUpDown, 0, textWidth, 0, upDownWidth, height, flags);              	
+//    SetWindowPos (hwndUpDown, 0, textWidth, 0, upDownWidth, height, flags);
 //	return result;
 //}
 //
@@ -852,7 +849,7 @@ public void setValues (int selection, int minimum, int maximum, int digits, int 
 //			int value = getSelectionText ();
 //			setSelection (value, true);
 //			postEvent (SWT.DefaultSelection);
-//			// FALL THROUGH		
+//			// FALL THROUGH
 //		case SWT.TAB:
 //		case SWT.ESC: return LRESULT.ZERO;
 //	}
@@ -914,7 +911,7 @@ public void setValues (int selection, int minimum, int maximum, int digits, int 
 //				int hHeap = OS.GetProcessHeap ();
 //				int byteCount = buffer.length () * TCHAR.sizeof;
 //				int pszText = OS.HeapAlloc (hHeap, OS.HEAP_ZERO_MEMORY, byteCount);
-//				OS.MoveMemory (pszText, buffer, byteCount); 
+//				OS.MoveMemory (pszText, buffer, byteCount);
 //				int code = OS.CallWindowProc (EditProc, hwndText, msg, wParam, pszText);
 //				OS.HeapFree (hHeap, 0, pszText);
 //				return new LRESULT (code);
@@ -942,7 +939,7 @@ public void setValues (int selection, int minimum, int maximum, int digits, int 
 //LRESULT wmKeyDown (int hwnd, int wParam, int lParam) {
 //	LRESULT result = super.wmKeyDown (hwnd, wParam, lParam);
 //	if (result != null) return result;
-//	
+//
 //	/* Increment the value */
 //	UDACCEL udaccel = new UDACCEL ();
 //	OS.SendMessage (hwndUpDown, OS.UDM_GETACCEL, 1, udaccel);
@@ -965,7 +962,7 @@ public void setValues (int selection, int minimum, int maximum, int digits, int 
 //		newValue = Math.min (Math.max (min [0], newValue), max [0]);
 //		if (value != newValue) setSelection (newValue, true);
 //	}
-//	
+//
 //	/*  Stop the edit control from moving the caret */
 //	switch (wParam) {
 //		case OS.VK_UP:
@@ -1006,6 +1003,7 @@ String verifyText (String string, int start, int end, Event keyEvent) {
   return event.text;
 }
 
+@Override
 public void processEvent(EventObject e) {
   if(e instanceof ChangeEvent) {
     if(!hooks(SWT.Selection)) { super.processEvent(e); return; }
@@ -1046,6 +1044,11 @@ public void processEvent(DocumentEvent e) {
   } finally {
     UIThreadUtils.stopExclusiveSection();
   }
+}
+
+public String getText() {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+	return null;
 }
 
 }

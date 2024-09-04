@@ -563,11 +563,11 @@ public void layout (Control [] changed) {
 		if (control == null) error (SWT.ERROR_INVALID_ARGUMENT);
 		if (control.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
 		boolean ancestor = false;
-		Composite composite = control.parent;
-		while (composite != null) {
-			ancestor = composite == this;
+		Composite parent = control.parent;
+		while (parent != null) {
+			ancestor = parent == this;
 			if (ancestor) break;
-			composite = composite.parent;
+			parent = parent.parent;
 		}
 		if (!ancestor) error (SWT.ERROR_INVALID_PARENT);
 	}

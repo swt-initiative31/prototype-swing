@@ -15,9 +15,11 @@ import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
 
+import javax.imageio.*;
 import javax.swing.*;
 
 import org.eclipse.swt.*;
+import org.eclipse.swt.internal.*;
 import org.eclipse.swt.internal.DPIUtil.*;
 import org.eclipse.swt.internal.swing.*;
 import org.eclipse.swt.widgets.*;
@@ -110,6 +112,8 @@ public final class Image extends Resource implements Drawable {
 	 * The height of the image.
 	 */
 	int height = -1;
+
+	private ImageData imageData;
 //	/**
 //	 * specifies the transparent pixel
 //	 */
@@ -195,6 +199,7 @@ public Image(Device device, Image srcImage, int flag) {
 	this.device = device;
 	if (srcImage == null) SWT.error(SWT.ERROR_NULL_ARGUMENT);
 	if (srcImage.isDisposed()) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+	this.imageData = srcImage.imageData;
 	switch (flag) {
 		case SWT.IMAGE_COPY: {
 		  handle = new BufferedImage(srcImage.handle.getWidth(), srcImage.handle.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -1153,6 +1158,7 @@ void init(ImageData image) {
 //	handle = handle.initWithSize(size);
 	this.width = image.width;
 	this.height = image.height;
+	this.imageData = image;
 //	TODO
 //	if (alphaInfo_100 == null) alphaInfo_100 = new AlphaInfo();
 //	NSBitmapImageRep rep = createRepresentation(image, alphaInfo_100);
@@ -1174,6 +1180,8 @@ static void init(Device device, Image image, ImageData data) {
 ////  SImageData.serialize(image, data);
 //	if(true) return;
   image.device = device;
+  image.imageData = data;
+
   if(image.handle == null) {
     BufferedImage bufferedImage = new BufferedImage(data.width, data.height, BufferedImage.TYPE_INT_ARGB);
     image.handle = bufferedImage;
@@ -1712,14 +1720,79 @@ static BufferedImage duplicateImage(java.awt.Image handle) {
   return bHandle;
 }
 
-public ImageData getImageData(int deviceZoom) {
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
+/**
+ * Returns an {@link ImageData} for the given zoom level based on the
+ * receiver.
+ * <p>
+ * Note that this method is mainly intended to be used by custom
+ * implementations of {@link ImageDataProvider} that draw a composite image
+ * at the requested zoom level based on other images. For custom zoom
+ * levels, the image data may be an auto-scaled version of the native image
+ * and may look more blurred or mangled than expected.
+ * </p>
+ * <p>
+ * Modifications made to the returned {@code ImageData} will not affect this
+ * {@code Image}.
+ * </p>
+ *
+ * @param zoom
+ *            The zoom level in % of the standard resolution (which is 1
+ *            physical monitor pixel == 1 SWT logical point). Typically 100,
+ *            150, or 200.
+ * @return an <code>ImageData</code> containing the image's data and
+ *         attributes at the given zoom level
+ *
+ * @exception SWTException <ul>
+ *    <li>ERROR_GRAPHIC_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_INVALID_IMAGE - if the image is not a bitmap or an icon</li>
+ * </ul>
+ *
+ * @since 3.106
+ */
+public ImageData getImageData (int zoom) {
+	if (isDisposed()) SWT.error(SWT.ERROR_GRAPHIC_DISPOSED);
+
+	return DPIUtil.scaleImageData (device, getImageDataAtCurrentZoom (), zoom, 100);
+}
+
+public ImageData getImageDataAtCurrentZoom() {
+	if (imageData != null)
+		return imageData;
+
+	 ByteArrayOutputStream baos = new ByteArrayOutputStream();
+     try {
+		ImageIO.write(handle, "png", baos);
+		byte[] data = baos.toByteArray();
+
+		// Get the pixel size (in bits)
+		ColorModel colorModel = handle.getColorModel();
+        int depth = colorModel.getPixelSize();
+        int[] data2 = ((DataBufferInt)handle.getData().getDataBuffer()).getData();
+
+        new ImageData(handle.getWidth(), handle.getHeight(), depth, getPaletteData(depth), height, data);
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+
+	// something went wrong
 	return null;
 }
 
-public Object getImageDataAtCurrentZoom() {
-	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
-	return null;
+private PaletteData getPaletteData(int depth) {
+	/* Calculate the palette */
+	PaletteData palette = null;
+	if (depth <= 8) {
+		throw new UnsupportedOperationException("Not implemented yet");
+	} else if (depth == 16) {
+		palette = new PaletteData(0x7C00, 0x3E0, 0x1F);
+	} else if (depth == 24) {
+		palette = new PaletteData(0xFF, 0xFF00, 0xFF0000);
+	} else if (depth == 32) {
+		palette = new PaletteData(0xFF00, 0xFF0000, 0xFF000000);
+	} else {
+		SWT.error(SWT.ERROR_UNSUPPORTED_DEPTH);
+	}
+	return palette;
 }
 
 //private static BufferedImage createBufferedImageIndexPalette(ImageData data, PaletteData p) {

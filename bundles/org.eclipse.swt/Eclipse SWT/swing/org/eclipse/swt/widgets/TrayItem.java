@@ -468,4 +468,9 @@ public void setVisible (boolean visible) {
   }
 }
 
+public void setHighlightImage(Image image) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+
+}
+
 }

@@ -10,18 +10,20 @@
  *******************************************************************************/
 package org.eclipse.swt.graphics;
 
+import java.awt.*;
+
 import org.eclipse.swt.*;
-import org.eclipse.swt.internal.swing.Utils;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class represent patterns to use while drawing. Patterns
  * can be specified either as bitmaps or gradients.
  * <p>
- * Application code must explicitly invoke the <code>Pattern.dispose()</code> 
+ * Application code must explicitly invoke the <code>Pattern.dispose()</code>
  * method to release the operating system resources managed by each instance
  * when those instances are no longer required.
  * </p>
- * 
+ *
  * @since 3.1
  */
 public class Pattern extends Resource {
@@ -36,15 +38,15 @@ public class Pattern extends Resource {
 	 * platforms and should never be accessed from application code.
 	 * </p>
 	 */
-	public int handle;
+	public GradientPaint handle;
 
 /**
  * Constructs a new Pattern given an image. Drawing with the resulting
  * pattern will cause the image to be tiled over the resulting area.
- * 
+ *
  * @param device the device on which to allocate the pattern
  * @param image the image that the pattern will draw
- * 
+ *
  * @exception IllegalArgumentException <ul>
  *    <li>ERROR_NULL_ARGUMENT - if the device is null and there is no current device, or the image is null</li>
  *    <li>ERROR_INVALID_ARGUMENT - if the image has been disposed</li>
@@ -52,7 +54,7 @@ public class Pattern extends Resource {
  * @exception SWTError <ul>
  *    <li>ERROR_NO_HANDLES if a handle for the pattern could not be obtained/li>
  * </ul>
- * 
+ *
  * @see #dispose()
  */
 public Pattern(Device device, Image image) {
@@ -67,7 +69,7 @@ public Pattern(Device device, Image image) {
 //	int img = gdipImage[0];
 //	int width = Gdip.Image_GetWidth(img);
 //	int height = Gdip.Image_GetHeight(img);
-//	handle = Gdip.TextureBrush_new(img, Gdip.WrapModeTile, 0, 0, width, height);	
+//	handle = Gdip.TextureBrush_new(img, Gdip.WrapModeTile, 0, 0, width, height);
 //	Gdip.Bitmap_delete(img);
 //	if (gdipImage[1] != 0) {
 //		int hHeap = OS.GetProcessHeap ();
@@ -81,7 +83,7 @@ public Pattern(Device device, Image image) {
  * Constructs a new Pattern that represents a linear, two color
  * gradient. Drawing with the pattern will cause the resulting area to be
  * tiled with the gradient specified by the arguments.
- * 
+ *
  * @param device the device on which to allocate the pattern
  * @param x1 the x coordinate of the starting corner of the gradient
  * @param y1 the y coordinate of the starting corner of the gradient
@@ -89,16 +91,16 @@ public Pattern(Device device, Image image) {
  * @param y2 the y coordinate of the ending corner of the gradient
  * @param color1 the starting color of the gradient
  * @param color2 the ending color of the gradient
- * 
+ *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_NULL_ARGUMENT - if the device is null and there is no current device, 
+ *    <li>ERROR_NULL_ARGUMENT - if the device is null and there is no current device,
  *                              or if either color1 or color2 is null</li>
  *    <li>ERROR_INVALID_ARGUMENT - if either color1 or color2 has been disposed</li>
  * </ul>
  * @exception SWTError <ul>
  *    <li>ERROR_NO_HANDLES if a handle for the pattern could not be obtained/li>
  * </ul>
- * 
+ *
  * @see #dispose()
  */
 public Pattern(Device device, float x1, float y1, float x2, float y2, Color color1, Color color2) {
@@ -109,7 +111,7 @@ public Pattern(Device device, float x1, float y1, float x2, float y2, Color colo
  * Constructs a new Pattern that represents a linear, two color
  * gradient. Drawing with the pattern will cause the resulting area to be
  * tiled with the gradient specified by the arguments.
- * 
+ *
  * @param device the device on which to allocate the pattern
  * @param x1 the x coordinate of the starting corner of the gradient
  * @param y1 the y coordinate of the starting corner of the gradient
@@ -119,18 +121,18 @@ public Pattern(Device device, float x1, float y1, float x2, float y2, Color colo
  * @param alpha1 the starting alpha value of the gradient
  * @param color2 the ending color of the gradient
  * @param alpha2 the ending alpha value of the gradient
- * 
+ *
  * @exception IllegalArgumentException <ul>
- *    <li>ERROR_NULL_ARGUMENT - if the device is null and there is no current device, 
+ *    <li>ERROR_NULL_ARGUMENT - if the device is null and there is no current device,
  *                              or if either color1 or color2 is null</li>
  *    <li>ERROR_INVALID_ARGUMENT - if either color1 or color2 has been disposed</li>
  * </ul>
  * @exception SWTError <ul>
  *    <li>ERROR_NO_HANDLES if a handle for the pattern could not be obtained/li>
  * </ul>
- * 
+ *
  * @see #dispose()
- * 
+ *
  * @since 3.2
  */
 public Pattern(Device device, float x1, float y1, float x2, float y2, Color color1, int alpha1, Color color2, int alpha2) {
@@ -141,7 +143,8 @@ public Pattern(Device device, float x1, float y1, float x2, float y2, Color colo
 	if (color2 == null) SWT.error(SWT.ERROR_NULL_ARGUMENT);
 	if (color2.isDisposed()) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 	this.device = device;
-  Utils.notImplemented();
+
+	handle = new GradientPaint(x1, y1, Utils.toAWT(color1), x2, y2, Utils.toAWT(color2), true);
 //	device.checkGDIP();
 //	int colorRef1 = color1.handle;
 //	int rgb = ((colorRef1 >> 16) & 0xFF) | (colorRef1 & 0xFF00) | ((colorRef1 & 0xFF) << 16);
@@ -170,14 +173,15 @@ public Pattern(Device device, float x1, float y1, float x2, float y2, Color colo
 //	Gdip.Color_delete(backColor);
 //	if (device.tracking) device.new_Object(this);
 }
-	
+
 /**
  * Disposes of the operating system resources associated with
  * the Pattern. Applications must dispose of all Patterns that
  * they allocate.
  */
+@Override
 public void dispose() {
-	if (handle == 0) return;
+	if (handle == null) return;
 	if (device.isDisposed()) return;
 //	int type = Gdip.Brush_GetType(handle);
 //	switch (type) {
@@ -194,7 +198,7 @@ public void dispose() {
 //			Gdip.TextureBrush_delete(handle);
 //			break;
 //	}
-	handle = 0;
+	handle = null;
 	if (device.tracking) device.dispose_Object(this);
 	device = null;
 }
@@ -209,8 +213,9 @@ public void dispose() {
  *
  * @return <code>true</code> when the Pattern is disposed, and <code>false</code> otherwise
  */
+@Override
 public boolean isDisposed() {
-	return handle == 0;
+	return handle == null;
 }
 
 /**
@@ -219,9 +224,10 @@ public boolean isDisposed() {
  *
  * @return a string representation of the receiver
  */
+@Override
 public String toString() {
 	if (isDisposed()) return "Pattern {*DISPOSED*}";
 	return "Pattern {" + handle + "}";
 }
-	
+
 }
