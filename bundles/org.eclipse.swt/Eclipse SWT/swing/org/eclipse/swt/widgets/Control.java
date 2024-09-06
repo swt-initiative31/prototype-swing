@@ -4440,6 +4440,7 @@ public void processEvent(AWTEvent e) {
           canvas.caret.paintCaret (event.gc);
         }
       }
+      event.gc.dispose();
       break;
     }
     case java.awt.event.MouseEvent.MOUSE_DRAGGED: {
