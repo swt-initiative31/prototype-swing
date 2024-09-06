@@ -8232,4 +8232,62 @@ public void setBlockSelectionBounds(int x, int y, int width, int height) {
 	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
 }
 
+/**
+ * Returns the offset of the character at the given point relative
+ * to the first character in the document.
+ * <p>
+ * The return value reflects the character offset that the caret will
+ * be placed at if a mouse click occurred at the specified point.
+ * If the x coordinate of the point is beyond the center of a character
+ * the returned offset will be behind the character.
+ * </p>
+ * Note: This method is functionally similar to {@link #getOffsetAtLocation(Point)} except that
+ * it does not throw an exception when no character is found and thus performs faster.
+ *
+ * @param point the origin of character bounding box relative to
+ *  the origin of the widget client area.
+ * @return offset of the character at the given point relative
+ *  to the first character in the document.
+ * -1 when there is no character at the specified location.
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ * @exception IllegalArgumentException <ul>
+ *   <li>ERROR_NULL_ARGUMENT when point is <code>null</code></li>
+ * </ul>
+ *
+ * @since 3.107
+ */
+public int getOffsetAtPoint(Point point) {
+	checkWidget();
+	if (point == null) {
+		SWT.error(SWT.ERROR_NULL_ARGUMENT);
+	}
+	int[] trailing = new int[1];
+	int offset = getOffsetAtPoint(point.x, point.y, trailing, true);
+	return offset != -1 ? offset + trailing[0] : -1;
+}
+int getOffsetAtPoint(int x, int y, int[] trailing, boolean inTextOnly) {
+	if (inTextOnly && y + getVerticalScrollOffset() < 0 || x + horizontalScrollOffset < 0) {
+		return -1;
+	}
+	int bottomIndex = getPartialBottomIndex();
+	int height = getLinePixel(bottomIndex + 1);
+	if (inTextOnly && y > height) {
+		return -1;
+	}
+	int lineIndex = getLineIndex(y);
+	int lineOffset = content.getOffsetAtLine(lineIndex);
+	TextLayout layout = renderer.getTextLayout(lineIndex);
+	x += horizontalScrollOffset - leftMargin;
+	y -= getLinePixel(lineIndex);
+	int offset = layout.getOffset(x, y, trailing);
+	Rectangle rect = layout.getLineBounds(layout.getLineIndex(offset));
+	renderer.disposeTextLayout(layout);
+	if (inTextOnly && !(rect.x  <= x && x <=  rect.x + rect.width)) {
+		return -1;
+	}
+	return offset + lineOffset;
+}
 }
