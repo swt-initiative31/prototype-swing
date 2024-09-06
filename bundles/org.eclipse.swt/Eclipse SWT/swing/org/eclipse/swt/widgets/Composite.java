@@ -541,6 +541,19 @@ public void layout (boolean changed, boolean all) {
  * (potentially) optimize the work it is doing by assuming that none of the
  * peers of the changed control have changed state since the last layout.
  * If an ancestor does not have a layout, skip it.
+ * <p>
+ * It is normally more efficient to invoke {@link Control#requestLayout()}
+ * on every control which has changed in the layout than it is to invoke
+ * this method on the layout itself. Clients are encouraged to use
+ * {@link Control#requestLayout()} where possible instead of calling
+ * this method.
+ * </p>
+ * <p>
+ * Note: Layout is different from painting. If a child is
+ * moved or resized such that an area in the parent is
+ * exposed, then the parent will paint. If no child is
+ * affected, the parent will not paint.
+ * </p>
  *
  * @param changed a control that has had a state change which requires a recalculation of its size
  *
@@ -558,42 +571,121 @@ public void layout (boolean changed, boolean all) {
 public void layout (Control [] changed) {
 	checkWidget ();
 	if (changed == null) error (SWT.ERROR_INVALID_ARGUMENT);
-	for (int i=0; i<changed.length; i++) {
-		Control control = changed [i];
-		if (control == null) error (SWT.ERROR_INVALID_ARGUMENT);
-		if (control.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
-		boolean ancestor = false;
-		Composite parent = control.parent;
-		while (parent != null) {
-			ancestor = parent == this;
-			if (ancestor) break;
-			parent = parent.parent;
+	layout (changed, SWT.NONE);
+}
+
+/**
+ * Forces a lay out (that is, sets the size and location) of all widgets that
+ * are in the parent hierarchy of the changed control up to and including the
+ * receiver.
+ * <p>
+ * The parameter <code>flags</code> may be a combination of:
+ * </p>
+ * <dl>
+ * <dt><b>SWT.ALL</b></dt>
+ * <dd>all children in the receiver's widget tree should be laid out</dd>
+ * <dt><b>SWT.CHANGED</b></dt>
+ * <dd>the layout must flush its caches</dd>
+ * <dt><b>SWT.DEFER</b></dt>
+ * <dd>layout will be deferred</dd>
+ * </dl>
+ * <p>
+ * When the <code>changed</code> array is specified, the flags <code>SWT.ALL</code>
+ * and <code>SWT.CHANGED</code> have no effect. In this case, the layouts in the
+ * hierarchy must not rely on any information cached about the changed control or
+ * any of its ancestors.  The layout may (potentially) optimize the
+ * work it is doing by assuming that none of the peers of the changed
+ * control have changed state since the last layout.
+ * If an ancestor does not have a layout, skip it.
+ * </p>
+ * <p>
+ * When the <code>changed</code> array is not specified, the flag <code>SWT.ALL</code>
+ * indicates that the whole widget tree should be laid out. And the flag
+ * <code>SWT.CHANGED</code> indicates that the layouts should flush any cached
+ * information for all controls that are laid out.
+ * </p>
+ * <p>
+ * The <code>SWT.DEFER</code> flag always causes the layout to be deferred by
+ * calling <code>Composite.setLayoutDeferred(true)</code> and scheduling a call
+ * to <code>Composite.setLayoutDeferred(false)</code>, which will happen when
+ * appropriate (usually before the next event is handled). When this flag is set,
+ * the application should not call <code>Composite.setLayoutDeferred(boolean)</code>.
+ * </p>
+ * <p>
+ * Note: Layout is different from painting. If a child is
+ * moved or resized such that an area in the parent is
+ * exposed, then the parent will paint. If no child is
+ * affected, the parent will not paint.
+ * </p>
+ *
+ * @param changedControls a control that has had a state change which requires a recalculation of its size
+ * @param flags the flags specifying how the layout should happen
+ *
+ * @exception IllegalArgumentException <ul>
+ *    <li>ERROR_INVALID_ARGUMENT - if any of the controls in changed is null or has been disposed</li>
+ *    <li>ERROR_INVALID_PARENT - if any control in changed is not in the widget tree of the receiver</li>
+ * </ul>
+ * @exception SWTException <ul>
+ *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+ *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+ * </ul>
+ *
+ * @since 3.6
+ */
+public void layout (Control [] changedControls, int flags) {
+	checkWidget ();
+	if (changedControls != null) {
+		for (Control changed : changedControls) {
+			if (changed == null) error (SWT.ERROR_INVALID_ARGUMENT);
+			if (changed.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
+			boolean isChild = false;
+			Composite parent = changed.parent;
+			while (parent != null) {
+				isChild = parent == this;
+				if (isChild) break;
+				parent = parent.parent;
+			}
+			if (!isChild) error (SWT.ERROR_INVALID_PARENT);
 		}
-		if (!ancestor) error (SWT.ERROR_INVALID_PARENT);
-	}
-	int updateCount = 0;
-	Composite [] update = new Composite [16];
-	for (int i=0; i<changed.length; i++) {
-		Control child = changed [i];
-		Composite composite = child.parent;
-		while (child != this) {
-			if (composite.layout != null) {
-				composite.state |= LAYOUT_NEEDED;
-				if (!composite.layout.flushCache (child)) {
-					composite.state |= LAYOUT_CHANGED;
+		int updateCount = 0;
+		Composite [] update = new Composite [16];
+		for (Control element : changedControls) {
+			Control child = element;
+			Composite composite = child.parent;
+			// Update layout when the list of children has changed.
+			// See bug 497812.
+			child.markLayout(false, false);
+			while (child != this) {
+				if (composite.layout != null) {
+					composite.state |= LAYOUT_NEEDED;
+					if (!composite.layout.flushCache (child)) {
+						composite.state |= LAYOUT_CHANGED;
+					}
 				}
+				if (updateCount == update.length) {
+					Composite [] newUpdate = new Composite [update.length + 16];
+					System.arraycopy (update, 0, newUpdate, 0, update.length);
+					update = newUpdate;
+				}
+				child = update [updateCount++] = composite;
+				composite = child.parent;
 			}
-			if (updateCount == update.length) {
-				Composite [] newUpdate = new Composite [update.length + 16];
-				System.arraycopy (update, 0, newUpdate, 0, update.length);
-				update = newUpdate;
-			}
-			child = update [updateCount++] = composite;
-			composite = child.parent;
 		}
-	}
-	for (int i=updateCount-1; i>=0; i--) {
-		update [i].updateLayout (true, false);
+		if (/*!display.externalEventLoop && */(flags & SWT.DEFER) != 0) {
+			setLayoutDeferred (true);
+			display.addLayoutDeferred (this);
+		}
+		for (int i=updateCount-1; i>=0; i--) {
+			update [i].updateLayout (false);
+		}
+	} else {
+		if (layout == null && (flags & SWT.ALL) == 0) return;
+		markLayout ((flags & SWT.CHANGED) != 0, (flags & SWT.ALL) != 0);
+		if (/*!display.externalEventLoop && */(flags & SWT.DEFER) != 0) {
+			setLayoutDeferred (true);
+			display.addLayoutDeferred (this);
+		}
+		updateLayout ((flags & SWT.ALL) != 0);
 	}
 }
 
@@ -938,6 +1030,10 @@ void updateBackgroundMode () {
     children [i].updateBackgroundMode ();
   }
 //  this.backgroundMode = oldMode;
+}
+
+void updateLayout (boolean all) {
+	updateLayout (true, all);
 }
 
 @Override
@@ -1423,6 +1519,7 @@ public int getOrientation() {
 	return SWT.LEFT_TO_RIGHT;
 }
 
+@Override
 public void setOrientation(int a) {
 	System.out.println("WARN: Not implemented yet: "+ new Throwable().getStackTrace()[0]);
 }

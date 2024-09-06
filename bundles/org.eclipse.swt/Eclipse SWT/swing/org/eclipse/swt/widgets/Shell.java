@@ -387,6 +387,11 @@ Shell (Display display, Shell parent, int style, long handle, boolean embedded) 
 }
 
 @Override
+public void requestLayout () {
+	layout (null, SWT.DEFER);
+}
+
+@Override
 void reskinChildren (int flags) {
 	for (Shell shell : getShells ()) {
 		if (shell != null) shell.reskin (flags);
