@@ -4915,8 +4915,7 @@ public void setTextDirection(int textDirection) {
 }
 
 public void requestLayout () {
-	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
-//	getShell ().layout (new Control[] {this}/*, SWT.DEFER*/);
+	getShell ().layout (new Control[] {this}, SWT.DEFER);
 }
 
 /**
