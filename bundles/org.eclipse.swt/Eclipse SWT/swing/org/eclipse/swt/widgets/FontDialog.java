@@ -234,4 +234,9 @@ public void setEffectsVisible(boolean selection) {
 
 }
 
+public boolean getEffectsVisible() {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+	return false;
+}
+
 }

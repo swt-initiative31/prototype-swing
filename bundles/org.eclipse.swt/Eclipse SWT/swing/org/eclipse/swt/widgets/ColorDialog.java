@@ -11,12 +11,10 @@
 package org.eclipse.swt.widgets;
 
 
-import javax.swing.JColorChooser;
+import javax.swing.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.graphics.PaletteData;
-import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.*;
 
 /**
  * Instances of this class allow the user to select a color
@@ -35,7 +33,7 @@ import org.eclipse.swt.graphics.RGB;
 
 public class ColorDialog extends Dialog {
 	RGB rgb;
-	
+
 /**
  * Constructs a new instance of this class given only its parent.
  *
@@ -63,7 +61,7 @@ public ColorDialog (Shell parent) {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -146,6 +144,37 @@ public RGB open () {
  */
 public void setRGB (RGB rgb) {
 	this.rgb = rgb;
+}
+
+/**
+ * Sets the receiver's list of custom colors to be the given array
+ * of <code>RGB</code>s, which may be null to let the platform select
+ * a default when open() is called.
+ *
+ * @param rgbs the array of RGBs, which may be null
+ *
+ * @exception IllegalArgumentException <ul>
+ *    <li>ERROR_INVALID_ARGUMENT - if an RGB in the rgbs array is null</li>
+ * </ul>
+ *
+ * @since 3.8
+ */
+public void setRGBs(RGB[] rgbs) {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+}
+
+/**
+ * Returns an array of <code>RGB</code>s which are the list of
+ * custom colors selected by the user in the receiver, or null
+ * if no custom colors were selected.
+ *
+ * @return the array of RGBs, which may be null
+ *
+ * @since 3.8
+ */
+public RGB[] getRGBs() {
+	System.out.println("WARN: Not implemented yet: " + new Throwable().getStackTrace()[0]);
+	return null;
 }
 
 }
