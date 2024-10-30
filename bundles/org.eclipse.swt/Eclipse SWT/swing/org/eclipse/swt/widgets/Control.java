@@ -909,7 +909,9 @@ public Rectangle getBounds () {
 	checkWidget ();
   java.awt.Rectangle rect = handle.getBounds();
   Point offset = parent == null? new Point(0, 0): parent.getInternalOffset();
-  return new Rectangle (rect.x + offset.x, rect.y + offset.y, rect.width, rect.height);
+  Rectangle bounds = new Rectangle (rect.x + offset.x, rect.y + offset.y, rect.width, rect.height);
+  System.out.println("Control.getBounds(): " + bounds);
+return bounds;
 //
 //	RECT rect = new RECT ();
 //	OS.GetWindowRect (topHandle (), rect);
@@ -1162,6 +1164,7 @@ public Shell getShell () {
 public Point getSize () {
 	checkWidget ();
   java.awt.Dimension size = handle.getSize();
+  System.out.println("Control.getSize(): " + size);
   return new Point(size.width, size.height);
 }
 

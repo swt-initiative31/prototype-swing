@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.swt.*;
 import org.eclipse.swt.custom.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.program.*;
@@ -374,6 +375,14 @@ public class SnippetExplorer {
 		descriptionView = new StyledText(infoTabs, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);
 
 		sourceView = new StyledText(infoTabs, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+		sourceView.addPaintListener(new PaintListener() {
+
+			@Override
+			public void paintControl(PaintEvent e) {
+				System.out.println("Activating anti-alias");
+				e.gc.setTextAntialias(SWT.ON);
+			}
+		});
 		setMonospaceFont(sourceView);
 
 		final ScrolledComposite previewContainer = new ScrolledComposite(infoTabs, SWT.V_SCROLL | SWT.H_SCROLL);
@@ -402,6 +411,8 @@ public class SnippetExplorer {
 	 */
 	private void setMonospaceFont(Control control) {
 		final FontData[] fontData = control.getFont().getFontData();
+		System.out.println("Font height: " + fontData[0].getHeight());
+		fontData[0].setHeight(11);
 		Font font = null;
 		if (font == null) {
 			font = tryCreateFont("Consolas", fontData);
@@ -429,6 +440,7 @@ public class SnippetExplorer {
 		}
 
 		if (font != null) {
+			System.out.println("Setting font: " + font);
 			control.setFont(font);
 		}
 	}

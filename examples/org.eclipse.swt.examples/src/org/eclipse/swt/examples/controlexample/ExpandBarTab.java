@@ -15,6 +15,7 @@ package org.eclipse.swt.examples.controlexample;
 
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -52,6 +53,8 @@ class ExpandBarTab extends Tab {
 		expandBarGroup.setLayout (new GridLayout ());
 		expandBarGroup.setLayoutData (new GridData (SWT.FILL, SWT.FILL, true, true));
 		expandBarGroup.setText ("ExpandBar");
+
+		expandBarGroup.setBackground(new Color(0,255,255)); // Cyan
 	}
 
 	/**
@@ -67,6 +70,7 @@ class ExpandBarTab extends Tab {
 
 		/* Create the example widgets */
 		expandBar1 = new ExpandBar (expandBarGroup, style);
+		expandBar1.setBackground(new Color(255,0,255)); // Magenta
 
 		// First item
 		Composite composite = new Composite (expandBar1, SWT.NONE);
@@ -98,6 +102,10 @@ class ExpandBarTab extends Tab {
 		item.setControl(composite);
 		item.setImage(instance.images[ControlExample.ciOpenFolder]);
 		item.setExpanded(true);
+
+		System.out.println("=============================================");
+		System.out.println("expandBar1 size: " + expandBar1.getSize() + " |  bounds: " + expandBar1.getBounds());
+		System.out.println("=============================================");
 	}
 
 	/**

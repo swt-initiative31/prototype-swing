@@ -30,26 +30,16 @@ public static void main (String [] args) {
 	Shell shell = new Shell (display);
 	shell.setText("Snippet 47");
 
-	Image image = new Image (display, 20, 20);
-	Color color = display.getSystemColor (SWT.COLOR_BLUE);
-	GC gc = new GC (image);
-	gc.setBackground (color);
-	gc.fillRectangle (image.getBounds ());
-	gc.dispose ();
+	Image image = extracted(display, SWT.COLOR_BLUE);
 
-	Image disabledImage = new Image (display, 20, 20);
-	color = display.getSystemColor (SWT.COLOR_GREEN);
-	gc = new GC (disabledImage);
-	gc.setBackground (color);
-	gc.fillRectangle (disabledImage.getBounds ());
-	gc.dispose ();
+	Image disabledImage = extracted(display, SWT.COLOR_GREEN);
 
-	Image hotImage = new Image (display, 20, 20);
-	color = display.getSystemColor (SWT.COLOR_RED);
-	gc = new GC (hotImage);
-	gc.setBackground (color);
-	gc.fillRectangle (hotImage.getBounds ());
-	gc.dispose ();
+	Image hotImage = extracted(display, SWT.COLOR_RED);
+
+
+	image = extracted2(display);
+	disabledImage = extracted2(display);
+	hotImage = extracted2(display);
 
 	ToolBar bar = new ToolBar (shell, SWT.BORDER | SWT.FLAT);
 	Rectangle clientArea = shell.getClientArea ();
@@ -70,5 +60,18 @@ public static void main (String [] args) {
 	disabledImage.dispose ();
 	hotImage.dispose ();
 	display.dispose ();
+}
+
+private static Image extracted(Display display, int color2) {
+	Image disabledImage = new Image (display, 20, 20);
+	GC gc = new GC (disabledImage);
+	gc.setBackground (display.getSystemColor (color2));
+	gc.fillRectangle (disabledImage.getBounds ());
+	gc.dispose ();
+	return disabledImage;
+}
+
+private static Image extracted2(Display display) {
+	return new Image(display, "C:\\Users\\visjee\\Pictures\\u.png");
 }
 }
