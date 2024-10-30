@@ -84,7 +84,10 @@ class CoolBarTab extends Tab {
 	void createExampleGroup () {
 		super.createExampleGroup ();
 		coolBarGroup = new Group (exampleGroup, SWT.NONE);
-		coolBarGroup.setLayout (new GridLayout ());
+		GridLayout gridLayout = new GridLayout ();
+		coolBarGroup.setLayout (gridLayout);
+		gridLayout.numColumns = 2;
+
 		coolBarGroup.setLayoutData (new GridData (SWT.FILL, SWT.FILL, true, true));
 		coolBarGroup.setText ("CoolBar");
 	}
@@ -219,7 +222,7 @@ class CoolBarTab extends Tab {
 			coolItem.setPreferredSize(coolSize);
 			coolItem.setSize(coolSize);
 		}
-
+coolBar.getSize();
 		/* If we have saved state, restore it */
 		if (order != null && order.length == coolBar.getItemCount()) {
 			coolBar.setItemLayout(order, wrapIndices, sizes);

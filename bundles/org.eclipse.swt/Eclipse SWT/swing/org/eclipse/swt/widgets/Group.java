@@ -11,11 +11,11 @@
 package org.eclipse.swt.widgets;
 
 
-import java.awt.Container;
+import java.awt.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.internal.swing.CGroup;
+import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.internal.swing.*;
 
 /**
  * Instances of this class provide an etched border
@@ -41,7 +41,7 @@ import org.eclipse.swt.internal.swing.CGroup;
 public class Group extends Composite {
 
   String text;
-  
+
 //	static final int CLIENT_INSET = 3;
 //	static final int GroupProc;
 //	static final TCHAR GroupClass = new TCHAR (0, OS.IsWinCE ? "BUTTON" : "SWT_GROUP", true);
@@ -54,7 +54,7 @@ public class Group extends Composite {
 //		* register a new window class without these bits and
 //		* implement special code that damages only the exposed
 //		* area.
-//		* 
+//		*
 //		* Feature in WinCE.  On certain devices, defining
 //		* a new window class which looks like BUTTON causes
 //		* CreateWindowEx() to crash.  The workaround is to use
@@ -89,7 +89,7 @@ public class Group extends Composite {
  * <p>
  * The style value is either one of the style constants defined in
  * class <code>SWT</code> which is applicable to instances of this
- * class, or must be built by <em>bitwise OR</em>'ing together 
+ * class, or must be built by <em>bitwise OR</em>'ing together
  * (that is, using the <code>int</code> "|" operator) two or more
  * of those <code>SWT</code> style constants. The class description
  * lists the style constants that are applicable to the class.
@@ -117,6 +117,7 @@ public class Group extends Composite {
  */
 public Group (Composite parent, int style) {
 	super (parent, checkStyle (style));
+	setBackground(new Color(255,255,0)); // yellow
 }
 
 //int callWindowProc (int hwnd, int msg, int wParam, int lParam) {
@@ -128,7 +129,7 @@ public Group (Composite parent, int style) {
 //	*/
 //	switch (msg) {
 //		case OS.WM_LBUTTONDOWN:
-//		case OS.WM_LBUTTONDBLCLK: 
+//		case OS.WM_LBUTTONDBLCLK:
 //			return OS.DefWindowProc (hwnd, msg, wParam, lParam);
 //	}
 //	return OS.CallWindowProc (GroupProc, hwnd, msg, wParam, lParam);
@@ -146,6 +147,7 @@ static int checkStyle (int style) {
 	return style & ~(SWT.H_SCROLL | SWT.V_SCROLL);
 }
 
+@Override
 protected void checkSubclass () {
 	if (!isValidSubclass ()) error (SWT.ERROR_INVALID_SUBCLASS);
 }
@@ -193,12 +195,14 @@ protected void checkSubclass () {
 //	return trim;
 //}
 
+@Override
 void createHandleInit() {
   super.createHandleInit();
   state |= DRAW_BACKGROUND;
   state &= ~CANVAS;
 }
 
+@Override
 protected Container createHandle () {
   return (Container)CGroup.Factory.newInstance(this, style);
 //	super.createHandle ();
@@ -223,6 +227,7 @@ protected Container createHandle () {
 //	return new Rectangle (x, y, width, height);
 //}
 
+@Override
 String getNameText () {
 	return getText ();
 }
@@ -244,10 +249,12 @@ public String getText () {
   return text == null? "": text;
 }
 
+@Override
 boolean mnemonicHit (char key) {
 	return setFocus ();
 }
 
+@Override
 boolean mnemonicMatch (char key) {
 	char mnemonic = findMnemonic (getText ());
 	if (mnemonic == '\0') return false;
@@ -324,7 +331,7 @@ public void setText (String string) {
 //	* Feaure in Windows.  Group boxes do not erase
 //	* the background before drawing.  The fix is to
 //	* fill the background.
-//	* 
+//	*
 //	* NOTE:  This work around causes flashing on XP
 //	* and is not necessary when a parent has a theme.
 //	*/

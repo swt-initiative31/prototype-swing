@@ -84,6 +84,10 @@ class ButtonTab extends AlignableTab {
 		textButtonGroup.setLayoutData (new GridData (SWT.FILL, SWT.FILL, true, true));
 		textButtonGroup.setText (ControlExample.getResourceString("Text_Buttons"));
 
+//		coolBarGroup = new Group (exampleGroup, SWT.NONE);
+//		coolBarGroup.setLayout (new GridLayout ());
+//		coolBarGroup.setLayoutData (new GridData (SWT.FILL, SWT.FILL, true, true));
+
 		/* Create a group for the image buttons */
 		imageButtonGroup = new Group(exampleGroup, SWT.NONE);
 		gridLayout = new GridLayout();
