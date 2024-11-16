@@ -27,7 +27,7 @@ Export-Package:
  org.eclipse.swt.internal.ole.win32; x-internal:=true,
  org.eclipse.swt.internal.win32; x-internal:=true,
  org.eclipse.swt.internal.opengl.win32; x-internal:=true
-Eclipse-PlatformFilter: (& (osgi.ws=win32) (osgi.os=win32) (osgi.arch=aarch64))
+Eclipse-PlatformFilter: (& (osgi.ws=undefined) (osgi.os=win32) (osgi.arch=aarch64))
 SWT-WS: win32
 SWT-OS: win32
 SWT-Arch: aarch64

@@ -23,7 +23,7 @@ Export-Package:
  org.eclipse.swt.internal; x-friends:="org.eclipse.ui",
  org.eclipse.swt.internal.image; x-internal:=true,
  org.eclipse.swt.internal.cocoa; x-friends:="org.eclipse.ui"
-Eclipse-PlatformFilter: (& (osgi.ws=cocoa) (osgi.os=macosx) (osgi.arch=x86_64) )
+Eclipse-PlatformFilter: (& (osgi.ws=undefined) (osgi.os=macosx) (osgi.arch=x86_64) )
 SWT-WS: cocoa
 SWT-OS: macosx
 SWT-Arch: x86_64

@@ -28,7 +28,7 @@ Export-Package:
  org.eclipse.swt.internal.gtk3; x-internal:=true,
  org.eclipse.swt.internal.gtk4; x-internal:=true,
  org.eclipse.swt.internal.opengl.glx; x-internal:=true
-Eclipse-PlatformFilter: (& (osgi.ws=gtk) (osgi.os=linux) (osgi.arch=ppc64le))
+Eclipse-PlatformFilter: (& (osgi.ws=undefined) (osgi.os=linux) (osgi.arch=ppc64le))
 SWT-WS: gtk
 SWT-OS: linux
 SWT-Arch: ppc64le
