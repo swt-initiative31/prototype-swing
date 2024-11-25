@@ -13,17 +13,22 @@ Note that the Swing prototype is currently on tested on Windows and may not work
 
 ### Setup
 
+The easiest way to try this port is to import only the most basic plugins that you need into a clean workspace. In order to do that:
+
 1. Set up a recent Eclipse IDE for Committers (currently 2024-09 or newer including nightly builds), e.g.:
    - [Eclipse IDE for Committers 2024-09](https://www.eclipse.org/downloads/packages/release/2024-09/r/eclipse-ide-eclipse-committers)
-   - [Eclipse SDK Development Environment](https://github.com/eclipse-platform/eclipse.platform?tab=readme-ov-file#how-to-contribute)
-2. Clone this repository
+2. Clone this repository and switch to the branch named `swing`
 3. Start the downloaded IDE and import the following projects:
    - The SWT bundle `org.eclipse.swt`
    - The Swing fragment `org.eclipse.swt.swing`
-   - The OS-specific fragment `org.eclipse.swt.$WS.$OS.$ARCH` with the placeholders according to your environment, such as `org.eclipse.swt.win32.win32.x86_64` for the Windows fragment; this is only to _disable_ that native fragment and ensure that the Swing one is used (the OS-specific fragment has been modified to not match the actual system)
-   - _Optional:_ For testing purposes `org.eclipse.swt.examples`
+   - _Optional:_ For testing purposes `org.eclipse.swt.examples` and/or `org.eclipse.swt.snippets`
+4. Make sure that there are no plugins that are specific to your environment in the _Target Platform_ (_e.g._ on Windows,  disable every plugin/fragment that contains **win32** in its name):
+   - Go to _Window > Preferences_ and open _Plug-in Development > Target Platform_
+   - Double click the active target platform and open the _Content_ tab 
+   - Filter out the platform-specific plugins and fragments and disable all of them.
 
 The resulting workspace should look something like this:
+
 ![Workspace after setup](readme_images/workspace_after_setup.png)
 
 ### Examples
@@ -34,13 +39,27 @@ Starting with this, you can try out the SWT implementation with whatever applica
 
 The `ControlExample` is part of the example project. It is placed in `org.eclipse.swt.examples.controlexample`. You can run this class as a Java application. Everything you see in this application is rendered with SWT using only Swing.
 
-#### Theming
+#### `SnippetExplorer`
 
-You can apply any Swing theme of your choice and it will be applied to the application. For example, in the `ControlExample`, define the theme in the `main` method of the `ControlExample` class right after instantiating the `ControlExample` class within that method. A Swing-provided theme can, e.g., be set via:
-````java
-UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-````
-More sophisticated third-party themes can also be used by just placing the JAR of that theme on the classpath and setting up the theme at the same line of code.
+This one is an explorer that lets you discover each and every available snippet inside `org.eclipse.swt.snippets`, search through them, see their source code and (sometimes) even see a screenshot of them.
+
+#### `GraphicsExample`
+
+This snippet showcases some interesting features for graphics like **anti-aliasing** and more. Some other capabilities showcased here are still not functional though.
+
+### Theming
+
+You can apply any Swing theme of your choice and it will be applied to the application. All you have to do is add the _VM-argument_ `-Dswt.swing.laf` to the run configuration, _e.g._:
+
+```java
+-Dswt.swing.laf=com.sun.java.swing.plaf.motif.MotifLookAndFeel
+```
+
+More sophisticated third-party themes can also be used by just placing the JAR of that theme on the classpath and selecting the proper theme _e.g._ [FlatLaf's **Darcula**](https://www.formdev.com/flatlaf/themes/) theme:
+
+```java
+-Dswt.swing.laf=com.formdev.flatlaf.FlatDarculaLaf
+```
 
 
 ## State
